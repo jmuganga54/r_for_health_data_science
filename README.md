@@ -4,21 +4,16 @@
 
 This project contains **R scripts** designed to support learning the basics of health data science with R.
 
-It introduces essential commands and workflows for data management and analysis, with a focus on applications in **health data science**. The content is inspired by the Statistics Team at the University of Manchester’s *Introduction to R for Health Data Science*.   
+It introduces essential commands and workflows for data manipulation and analysis, with a focus on applications in **health data science**. The content is inspired by the Statistics Team at the University of Manchester’s `Introduction to R for Health Data Science`.   
 
 The repository is free for public use and open to contributions from anyone interested in improving or expanding the materials.
 
 ## Goals
 
-- Get started with R and become familiar with its environment  
-- Learn about core **data structures** in R  
-- Practice handling and transforming data using the **Tidyverse**  
-- Import, export, and manage data efficiently in R  
-- Use **control structures** (loops and conditions) to write flexible code  
-- Create and document your own **functions**  
-- Apply good practices for **projects and reproducibility**  
-- Explore data visualization, from basic plotting to **ggplot2**  
-- Develop a consistent **programming style** and prepare for advanced topics  
+* Get you ‘up and running’ using `R` and `RStudio` on your machine.
+* Introduce the basics of programming in R (a key skill for a health data scientist).
+* Introduce good practices of workflows and reproducibility in data science.
+* Enable you to develop your skills independently in programming and data science workflow.
 
 ## Structure  
 
