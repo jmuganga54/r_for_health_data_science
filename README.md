@@ -20,24 +20,23 @@ The repository is free for public use and open to contributions from anyone inte
 - Explore data visualization, from basic plotting to **ggplot2**  
 - Develop a consistent **programming style** and prepare for advanced topics  
 
-## Structure
+## Structure  
 
-Inside the `/public` folder, you will find organized subfolders for each chapter.  
-Each chapter contains:  
+You will see each chapter or section organized in its own folder.  
+Within each folder, you may find:  
 
-- **Scripts** – R scripts with data management and analysis examples  
-- **Data** – Practice datasets to support hands-on learning  
+- **Scripts** – R scripts with data manipulation and analysis examples  
+- **Data** – Practice datasets to support hands-on learning (if applicable)  
 
-Example structure:  
+Example:  
+
 ```
-/public
-├── chapter1/
-│ ├── scripts/
-│ └── data/
-├── chapter2/
-│ ├── scripts/
-│ └── data/
-└── ...
+chapter1/
+├── scripts/
+└── data/
+chapter2/
+├── scripts/
+└── data/
 ```
 
 ## Dependencies
