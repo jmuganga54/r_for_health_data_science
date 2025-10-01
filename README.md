@@ -29,7 +29,7 @@ Each chapter contains:
 - **Data** – Practice datasets to support hands-on learning  
 
 Example structure:  
-
+```
 /public
 ├── chapter1/
 │ ├── scripts/
@@ -38,6 +38,7 @@ Example structure:
 │ ├── scripts/
 │ └── data/
 └── ...
+```
 
 ## Dependencies
 
