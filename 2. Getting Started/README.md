@@ -144,6 +144,8 @@ Key notes:
 >[!TIP] 
 >Try typing these snippets into a script and run them to see how R handles math, vectors, and logic.
 
+### 2.6 Installing and loading R packages to add more functions
+
 One of the main reasons `R` is so popular is its huge collection of user-written packages, available through CRAN and Bioconductor. 
 
 Packages extend `R’s functionality`, from advanced statistics to data import and visualization. You only need to install a package once, but you must load it each time you want to use it. 
@@ -165,8 +167,6 @@ library(tidyverse)  # load for current session
 In `RStudio`, you can also install packages through the `Packages tab` by clicking Install.
 
 Always ensure your R version supports the package; otherwise, update R or install an older compatible version. The variety of packages is vast, enabling tasks from importing data to creating advanced graphics.
-
-### 2.6 Installing and loading R packages to add more functions
 
 
 ### 2.7 I need some help!
