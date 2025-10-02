@@ -7,7 +7,7 @@ In this session, we will discuss:
 * [2.4 R Scripts](#24-r-scripts)
 * [2.5 R as a Calculator](#25-r-as-a-calculator)
 * [2.6 Installing and loading R packages to add more functions](#26-installing-and-loading-r-packages-to-add-more-functions)
-* [2.7 I need some help!](#27-i-need-some-help!)
+* [2.7 I need some help!](#27-i-need-some-help)
 * [2.8 Common R functions](#28-common-r-functions)
 
 ## keywords & Notes
