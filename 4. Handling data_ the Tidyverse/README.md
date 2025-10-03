@@ -141,7 +141,6 @@ install.packages("nycflights13")
     $ dep_delay <dbl> 2, 4, 2, -1, ...
     $ carrier  <chr> "UA", "UA", "AA", ...
     $ time_hour <dttm> 2013-01-01 05:00:00, ...
-
   ```
   
   >[!TIP]
@@ -182,18 +181,18 @@ install.packages("nycflights13")
        
     * How to create a tibble
       You can use the `tibble()` function:
+      
       ```
-      library(tibble)
-  
-      # Create a tibble
-      tb <- tibble(
-      ID = c("N198", "N805", "N333"),
-      Age = c(30, 60, 26),
-      Blood = c(0.4, 0.2, 0.6)
-      )
-  
-      tb
-  
+        library(tibble)
+    
+        # Create a tibble
+        tb <- tibble(
+        ID = c("N198", "N805", "N333"),
+        Age = c(30, 60, 26),
+        Blood = c(0.4, 0.2, 0.6)
+        )
+    
+        tb
       ```
       Output:
       
@@ -204,7 +203,6 @@ install.packages("nycflights13")
         1 N198     30   0.4
         2 N805     60   0.2
         3 N333     26   0.6
-  
       ```
       >[!NOTE]
       > Notice how it prints neatly, shows types (`<chr>`, `<dbl>`), and      doesn’t overwhelm you with all rows.
@@ -222,7 +220,6 @@ install.packages("nycflights13")
   
         tb2 <- as_tibble(df)   # convert to tibble
         tb2
-
       ```
       
       > [!NOTE]
@@ -252,7 +249,6 @@ install.packages("nycflights13")
         tb[c("x","y")] # tibble with both columns
         tb[1:2, ]     # first two rows
         tb[2, "x"]    # tibble with 1 cell
-
       ```
 
   
@@ -299,22 +295,18 @@ Let’s say we want the *average arrival delay* of flights going to *Houston* (I
     summarize(
       avg_delay = mean(arr_delay, na.rm = TRUE)  # calculate mean delay
     )
-
-
 ```
 
 Output (first few rows):
 
 ```
-# A tibble: 365 × 4
-   year month   day avg_delay
-  <int> <int> <int>     <dbl>
-1  2013     1     1      7.33
-2  2013     1     2     -6.45
-3  2013     1     3      2.80
-...
-
-
+  # A tibble: 365 × 4
+     year month   day avg_delay
+    <int> <int> <int>     <dbl>
+  1  2013     1     1      7.33
+  2  2013     1     2     -6.45
+  3  2013     1     3      2.80
+  ...
 ```
 
 Groups of dplyr verbs
