@@ -328,9 +328,9 @@ Groups of dplyr verbs
 >[!TIP]
 >In short:  
 dplyr verbs always start with your data.  
-* Use the pipe |> to say “then” and connect steps.  
-* Learn the main verbs: filter(), select(), mutate(), arrange(),   
-* summarize(), and group_by().  
+> * Use the pipe |> to say “then” and connect steps.  
+> * Learn the main verbs: filter(), select(), mutate(), arrange(),   
+> * summarize(), and group_by().  
  
       
 
