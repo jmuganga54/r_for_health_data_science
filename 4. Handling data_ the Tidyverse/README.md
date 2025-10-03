@@ -80,20 +80,20 @@ install.packages("nycflights13")
   `General Syntax`: Whenever you want to be explicit about where a function comes from, use:
   
   ```
-  packagename::functionname()
+    packagename::functionname()
 
   ```
   For example:
   
   ```
   
-  # dplyr filter - used for subsetting rows in data frames
-  dplyr::filter(mtcars, cyl == 6)
-  ## Returns only rows from 'mtcars' where cyl == 6
-  
-  # base R stats filter - used for time series, not data frames
-  stats::filter(1:10, rep(1/3, 3))
-  ## Applies a moving average filter on numbers 1 to 10
+    # dplyr filter - used for subsetting rows in data frames
+    dplyr::filter(mtcars, cyl == 6)
+    ## Returns only rows from 'mtcars' where cyl == 6
+    
+    # base R stats filter - used for time series, not data frames
+    stats::filter(1:10, rep(1/3, 3))
+    ## Applies a moving average filter on numbers 1 to 10
 
   
   ```
@@ -114,12 +114,12 @@ install.packages("nycflights13")
   Output (first few rows only, since it’s a tibble):
   
   ```
-      # A tibble: 336,776 × 19
-       year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
-       <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
-     1  2013     1     1      517            515         2      830            819
-     2  2013     1     1      533            529         4      850            830
-     3  2013     1     1      542            540         2      923            850
+    # A tibble: 336,776 × 19
+     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+     <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+   1  2013     1     1      517            515         2      830            819
+   2  2013     1     1      533            529         4      850            830
+   3  2013     1     1      542            540         2      923            850
      
   ```
   >[!NOTE]
@@ -133,14 +133,14 @@ install.packages("nycflights13")
   Output (shortened):
   
   ```
-        Rows: 336,776
-      Columns: 19
-      $ year     <int> 2013, 2013, 2013, ...
-      $ month    <int> 1, 1, 1, 1, ...
-      $ dep_time <int> 517, 533, 542, ...
-      $ dep_delay <dbl> 2, 4, 2, -1, ...
-      $ carrier  <chr> "UA", "UA", "AA", ...
-      $ time_hour <dttm> 2013-01-01 05:00:00, ...
+      Rows: 336,776
+    Columns: 19
+    $ year     <int> 2013, 2013, 2013, ...
+    $ month    <int> 1, 1, 1, 1, ...
+    $ dep_time <int> 517, 533, 542, ...
+    $ dep_delay <dbl> 2, 4, 2, -1, ...
+    $ carrier  <chr> "UA", "UA", "AA", ...
+    $ time_hour <dttm> 2013-01-01 05:00:00, ...
 
   ```
   
@@ -198,12 +198,12 @@ install.packages("nycflights13")
       Output:
       
       ```
-          # A tibble: 3 × 3
-          ID      Age Blood
-          <chr> <dbl> <dbl>
-          1 N198     30   0.4
-          2 N805     60   0.2
-          3 N333     26   0.6
+        # A tibble: 3 × 3
+        ID      Age Blood
+        <chr> <dbl> <dbl>
+        1 N198     30   0.4
+        2 N805     60   0.2
+        3 N333     26   0.6
   
       ```
       >[!NOTE]
@@ -215,13 +215,13 @@ install.packages("nycflights13")
       If you already know data.frame(), you can convert it:
       
       ```
-          df <- data.frame(
-            ID = c("N198","N805","N333"), Age = c(30,60,26), 
-            Blood = c(0.4,0.2,0.6)
-          )
-    
-          tb2 <- as_tibble(df)   # convert to tibble
-          tb2
+        df <- data.frame(
+          ID = c("N198","N805","N333"), Age = c(30,60,26), 
+          Blood = c(0.4,0.2,0.6)
+        )
+  
+        tb2 <- as_tibble(df)   # convert to tibble
+        tb2
 
       ```
       
@@ -242,16 +242,16 @@ install.packages("nycflights13")
       For example:
       
       ```
-          library(tibble)
-    
-          tb <- tibble(x = 1:3, y = letters[1:3])
-          
-          tb["x"]       # tibble with 1 column
-          tb[["x"]]     # numeric vector
-          tb$x          # numeric vector
-          tb[c("x","y")] # tibble with both columns
-          tb[1:2, ]     # first two rows
-          tb[2, "x"]    # tibble with 1 cell
+        library(tibble)
+  
+        tb <- tibble(x = 1:3, y = letters[1:3])
+        
+        tb["x"]       # tibble with 1 column
+        tb[["x"]]     # numeric vector
+        tb$x          # numeric vector
+        tb[c("x","y")] # tibble with both columns
+        tb[1:2, ]     # first two rows
+        tb[2, "x"]    # tibble with 1 cell
 
       ```
 
@@ -279,8 +279,8 @@ The Pipe `|>`
 Think of `|>` as saying “then”.
 
 ```
-x |> f(y)         # same as f(x, y)
-x |> f(y) |> g(z) # same as g(f(x, y), z)
+  x |> f(y)         # same as f(x, y)
+  x |> f(y) |> g(z) # same as g(f(x, y), z)
 
 ```
 
@@ -293,12 +293,12 @@ Let’s say we want the *average arrival delay* of flights going to *Houston* (I
 
 ```
 
-    flights |> 
-      filter(dest == "IAH") |>       # keep flights going to IAH
-      group_by(year, month, day) |>  # group the data by date
-      summarize(
-        avg_delay = mean(arr_delay, na.rm = TRUE)  # calculate mean delay
-      )
+  flights |> 
+    filter(dest == "IAH") |>       # keep flights going to IAH
+    group_by(year, month, day) |>  # group the data by date
+    summarize(
+      avg_delay = mean(arr_delay, na.rm = TRUE)  # calculate mean delay
+    )
 
 
 ```
