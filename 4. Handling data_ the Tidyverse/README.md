@@ -348,69 +348,160 @@ When working with data, sometimes you only want certain rows or you want to reor
 >[!NOTE]
 > These functions only affect rows, not columns (except `distinct()` if you tell it to).
 
-* filter() — choose rows
-
-```
-  # Keep only flights in January
-  jan_flights <- flights |> filter(month == 1)
+###### 3.2.1 `filter()` – keep rows that match conditions
   
-  jan_flights
-```
-
-Output (first rows):
-```
-  # A tibble: ... × 19
-     year month day dep_time sched_dep_time dep_delay arr_time ...
-   1 2013     1   1      517            515         2      830 ...
-   2 2013     1   1      533            529         4      850 ...
- ...
-```
-
-* `arrange()` — reorder rows
-
-```
-  # Order flights by departure delay (smallest to largest)
-  flights |> arrange(dep_delay)
+  `filter()` lets you keep only the rows that meet certain conditions.
   
-  # Order flights by longest delay first
-  flights |> arrange(desc(dep_delay))
-```
+  ```
+    # Flights with departure delay greater than 120 minutes
+    flights |> filter(dep_delay > 120)
+  
+  ```
+  Output (first rows, tibble preview):
+  
+  ```
+      # A tibble: 9,723 × 19
+         year month day dep_time dep_delay arr_time arr_delay carrier ...
+        2013     1   1      848       853     1001      851    MQ
+        2013     1   1      957       144     1056      123    UA
+    ...
+  
+  ```
+  
+  >[!NOTE]
+  > You can use comparisons:
+  > * `>` greater than
+  > * `<` less than
+  > * `>=` greater or equal
+  > * `<=` less or equal
+  > * `==` equal to
+  > * `!=` not equal to
+  
+  
+  Combine conditions
+  
+  ```
+    # Flights on January 1
+    flights |> filter(month == 1 & day == 1)
+    
+    # Flights in January OR February
+    flights |> filter(month == 1 | month == 2)
+    
+    # Shortcut using %in%
+    flights |> filter(month %in% c(1, 2))
+  ```
+  
+  > [!NOTE]
+  > `%in%` is a shortcut for checking multiple values.
+  
+  
+  Saving results
+  
+  ```
+  jan1 <- flights |> filter(month == 1 & day == 1)
+  
+  ```
+  
+  >[!CAUTION]
+  > Common mistakes
+  > Using `=` instead of `==`:
+  
+  ```
+    flights |> filter(month = 1)  
+    # Error: Did you mean `month == 1`?
+  
+  ```
+  >[!CAUTION]
+  > Writing conditions like English:
+  
+  ```
+    flights |> filter(month == 1 | 2)
+    # Doesn’t work as expected!
+  
+  ```
 
-* `distinct()` — unique rows
 
-```
-# Find all unique destinations
-flights |> distinct(dest)
+###### 3.2.3 `arrange()` – reorder rows
 
-# Find unique pairs of origin and destination
-flights |> distinct(origin, dest)
+  `arrange()` reorders rows based on column values.
+  
+  ```
+    # Sort flights by year, month, day, and departure time
+    flights |> arrange(year, month, day, dep_time)
+  
+  ```
+  `Earliest flights appear first.`
+  
+  ```
+    # Sort by largest delay first
+    flights |> arrange(desc(dep_delay))
+  
+  ```
+  `Flights with longest delays at the top.`
+  
+  > [!NOTE]
+  > `arrange()` only changes the order, not the number of rows.
 
-```
-Output:
+###### 3.2.4 `distinct()` – unique rows
 
-```
-# A tibble: ... × 2
-  origin dest
-  <chr>  <chr>
-1 EWR    IAH
-2 LGA    IAH
-3 JFK    MIA
-...
+  `distinct()` removes duplicates.
+  
+  ```
+    # Unique destinations
+    flights |> distinct(dest)
+    
+    # Unique origin-destination pairs
+    flights |> distinct(origin, dest)
+  
+  ```
+  Example output:
+  
+  ```
+    # A tibble: 224 × 2
+      origin dest
+      <chr>  <chr>
+    1 EWR    IAH
+    2 LGA    IAH
+    3 JFK    MIA
+    ...
+  ```
+  Keep all other columns with `.keep_all = TRUE`:
+  
+  ```
+  flights |> distinct(origin, dest, .keep_all = TRUE)
+  
+  ```
+  
+  *Counting instead of distinct* 
+  
+  If you want to know how many times each pair occurs, use count():
+  
+  ```
+    flights |> count(origin, dest, sort = TRUE)
+  
+  ```
+  
+  Example output:
+  
+  ```
+    # A tibble: 224 × 3
+      origin dest      n
+      <chr>  <chr> <int>
+    1 JFK    LAX   11262
+    2 LGA    ATL   10263
+    3 LGA    ORD    8857
+    ...
+  
+  ```
 
-```
-
-> [!TIP] 
-> In short for beginners:    
-> Use `filter()` to keep some rows.    
-> Use `arrange()` to reorder rows.    
-> Use `distinct()` to remove duplicates (unique rows).    
-
+>[!TIP]
+> Summary
+> * `filter()` → keep rows matching conditions (e.g., delays, dates).
+> * `arrange()` → reorder rows (ascending or descending).
+> * `distinct()` → keep only unique rows (optionally keep other columns).
+> * `count()` → count how often each combination appears.
 
 
-
-###### 3.1.1 dplyr basics
-###### 3.1.1 dplyr basics
-###### 3.1.1 dplyr basics
 
 
 ### 4.1 dplyr verbs: select, mutate, filter, arrange
