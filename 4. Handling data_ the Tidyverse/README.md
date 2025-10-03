@@ -401,9 +401,9 @@ Output:
 
 >[!TIP]
 > In short for beginners:
->Use `filter()` to keep some rows.
->Use `arrange()` to reorder rows.
->Use `distinct()` to remove duplicates (unique rows).
+> Use `filter()` to keep some rows.
+> Use `arrange()` to reorder rows.
+> Use `distinct()` to remove duplicates (unique rows).
 
 
 
