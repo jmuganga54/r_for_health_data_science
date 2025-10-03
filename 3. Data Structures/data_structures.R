@@ -178,3 +178,9 @@ plot(my_data$Age, my_data$Blood, main = "Age vs Blood")
 # Creating or modifying a column
 my_data$Age_in_Years <- my_data$Age + 1
 my_data
+
+
+# DATA AVAILABLE IN R
+data()  # list available datasets
+?AirPassengers # open help for dataset
+head(AirPassengers) # view first rows

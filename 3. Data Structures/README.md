@@ -290,4 +290,26 @@ my_data
 > use `$` when you want to directly call, analyze, or modify a single column in a data frame.
 
 ### 3.5 Data available in R
+
+R comes with many built-in datasets, usually in data frame format, which you can list using data(). For example, AirPassengers contains airline passenger data from 1949–1960. 
+
+Installing extra packages can give access to more datasets, such as flight data in the nycflights13 package.
+
+You can learn more about any dataset with ?DatasetName (e.g., ?AirPassengers). Most datasets are rectangular tables with column headings, stored as data frames or tibbles, where columns can be called by their names.
+
+```
+data()            # list available datasets
+?AirPassengers    # open help for dataset
+head(AirPassengers) # view first rows
+
+```
+
+
 ### 3.6 Further Reading
+
+
+* **Data Structures in R**  
+  See [Chapter 4 of *R for Data Science*](https://bookdown.org/rdpeng/rprogdatascience/r-nuts-and-bolts.html) for a detailed explanation of data structures.  
+
+* **Subsetting R Objects**  
+  See [Chapter 9 of *R for Data Science*](https://bookdown.org/rdpeng/rprogdatascience/subsetting-r-objects.html) for an in-depth guide on subsetting objects in R.  
