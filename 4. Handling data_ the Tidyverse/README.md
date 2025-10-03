@@ -307,20 +307,9 @@ head(AirPassengers) # view first rows
 
 ### 3.6 Further Reading
 
- 
+
 * **Data Structures in R**  
   See [Chapter 4 of *R for Data Science*](https://bookdown.org/rdpeng/rprogdatascience/r-nuts-and-bolts.html) for a detailed explanation of data structures.  
 
 * **Subsetting R Objects**  
   See [Chapter 9 of *R for Data Science*](https://bookdown.org/rdpeng/rprogdatascience/subsetting-r-objects.html) for an in-depth guide on subsetting objects in R.  
-
-
-## Summary
-
-In this session, we learned how to assign values to variables in R using `<- (preferred)` or `=`, and why variable names should avoid reserved functions like c or mean. We explored basic summary functions `(length(), mean(), summary())` and how R works with vectors, including subsetting with `[ ]`, and combining them into matrices using `cbind()` and `rbind()`. 
-
-We saw that R uses 1-based indexing and that all elements in a matrix must be of the same type. 
-
-We then moved on to data frames, which are more flexible since each column can be a different type. We practiced exploring them with functions like `summary(), head(), nrow(),` and selecting columns using `$ or [ , ]`. We also noted that `$` is useful for working with a single column, such as analyzing, plotting, or creating new columns.
-
-Finally, we learned that R has many `built-in datasets` accessible with `data()`, and we can explore them with `?DatasetName`. For deeper study, R for Data Science `Chapter 4` covers data structures and `Chapter 9` explains subsetting in more detail.
