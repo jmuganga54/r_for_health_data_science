@@ -277,7 +277,6 @@ Think of `|>` as saying “then”.
 ```
   x |> f(y)         # same as f(x, y)
   x |> f(y) |> g(z) # same as g(f(x, y), z)
-
 ```
 
 >[!IMPORTANT]
@@ -288,7 +287,6 @@ Example with flights
 Let’s say we want the *average arrival delay* of flights going to *Houston* (IAH), grouped by *day*.
 
 ```
-
   flights |> 
     filter(dest == "IAH") |>       # keep flights going to IAH
     group_by(year, month, day) |>  # group the data by date
