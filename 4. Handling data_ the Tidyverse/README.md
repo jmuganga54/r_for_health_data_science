@@ -327,13 +327,90 @@ Groups of dplyr verbs
 
 >[!TIP]
 >In short:  
-dplyr verbs always start with your data.  
+>dplyr verbs always start with your data.  
 > * Use the pipe |> to say “then” and connect steps.  
 > * Learn the main verbs: filter(), select(), mutate(), arrange(),   
 > * summarize(), and group_by().  
  
       
+##### 3.2 Rows
 
+`Row` Verbs in `dplyr`
+
+When working with data, sometimes you only want certain rows or you want to reorder them. The main dplyr verbs for rows are:
+
+  1. `filter()` → keeps rows that match a condition (doesn’t change order).
+  
+  2. `arrange()` → changes the order of rows (doesn’t remove any).
+  
+  3. `distinct()` → keeps only unique rows (can also check uniqueness on specific columns).
+
+>[!NOTE]
+> These functions only affect rows, not columns (except `distinct()` if you tell it to).
+
+* filter() — choose rows
+
+```
+  # Keep only flights in January
+  jan_flights <- flights |> filter(month == 1)
+  
+  jan_flights
+```
+
+Output (first rows):
+```
+  # A tibble: ... × 19
+     year month day dep_time sched_dep_time dep_delay arr_time ...
+   1 2013     1   1      517            515         2      830 ...
+   2 2013     1   1      533            529         4      850 ...
+ ...
+```
+
+* `arrange()` — reorder rows
+
+```
+  # Order flights by departure delay (smallest to largest)
+  flights |> arrange(dep_delay)
+  
+  # Order flights by longest delay first
+  flights |> arrange(desc(dep_delay))
+```
+
+* `distinct()` — unique rows
+
+```
+# Find all unique destinations
+flights |> distinct(dest)
+
+# Find unique pairs of origin and destination
+flights |> distinct(origin, dest)
+
+```
+Output:
+
+```
+# A tibble: ... × 2
+  origin dest
+  <chr>  <chr>
+1 EWR    IAH
+2 LGA    IAH
+3 JFK    MIA
+...
+
+```
+
+>[!TIP]
+> In short for beginners:
+>Use `filter()` to keep some rows.
+>Use `arrange()` to reorder rows.
+>Use `distinct()` to remove duplicates (unique rows).
+
+
+
+
+###### 3.1.1 dplyr basics
+###### 3.1.1 dplyr basics
+###### 3.1.1 dplyr basics
 
 
 ### 4.1 dplyr verbs: select, mutate, filter, arrange
