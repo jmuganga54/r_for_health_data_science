@@ -307,7 +307,7 @@ head(AirPassengers) # view first rows
 
 ### 3.6 Further Reading
 
-
+ 
 * **Data Structures in R**  
   See [Chapter 4 of *R for Data Science*](https://bookdown.org/rdpeng/rprogdatascience/r-nuts-and-bolts.html) for a detailed explanation of data structures.  
 
