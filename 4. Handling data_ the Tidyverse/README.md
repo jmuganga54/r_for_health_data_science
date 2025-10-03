@@ -114,12 +114,13 @@ install.packages("nycflights13")
   Output (first few rows only, since it’s a tibble):
   
   ```
-  # A tibble: 336,776 × 19
-   year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
-   <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
- 1  2013     1     1      517            515         2      830            819
- 2  2013     1     1      533            529         4      850            830
- 3  2013     1     1      542            540         2      923            850
+      # A tibble: 336,776 × 19
+       year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+       <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+     1  2013     1     1      517            515         2      830            819
+     2  2013     1     1      533            529         4      850            830
+     3  2013     1     1      542            540         2      923            850
+     
   ```
 
   
