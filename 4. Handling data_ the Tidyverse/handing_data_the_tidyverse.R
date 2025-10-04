@@ -147,4 +147,35 @@ flights |> filter(arr_delay > 120 & dep_delay == 0)
 flights |> filter(dep_delay >= 60, (dep_delay - arr_delay) > 30)
 
 
+# 2. Sort flights to find the flights with the longest departure delays. Find the flights that left earliest in the morning.
+flights |> 
+  arrange(desc(dep_delay)) |> 
+  head()
+
+# 3. Sort flights to find the fastest flights. (Hint: Try including a math calculation inside of your function.)
+
+glimpse(flights)
+view(flights |>
+  filter(!is.na(air_time), air_time > 0) |>       # keep valid rows
+  arrange(desc(distance / air_time * 60)) |>      # compute mph inside arrange
+  head(10))
+
+# 4. Was there a flight on every day of 2013?
+flights |>
+  distinct(year, day, month) |>
+  summarise(n_days=n())
+
+# 5. Which flights traveled the farthest distance? Which traveled the least distance?
+# Farthest flight(s)
+flights |>
+  filter(distance == max(distance, na.rm = TRUE)) |>
+  select(year, month, day, carrier, flight, origin, dest, distance)
+
+# Shortest flight(s)
+flights |>
+  filter(distance == min(distance, na.rm = TRUE)) |>
+  select(year, month, day, carrier, flight, origin, dest, distance)
+  
+
+
 
