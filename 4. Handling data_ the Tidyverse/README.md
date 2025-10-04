@@ -270,7 +270,7 @@ What all `dplyr verbs` have in common:
   
 
 
-The Pipe `|>`
+**The Pipe `|>`**
 
 Think of `|>` as saying “then”.
 
@@ -307,7 +307,7 @@ Output (first few rows):
   ...
 ```
 
-Groups of dplyr verbs
+**Groups of dplyr verbs**
 
 * Row verbs → pick rows
 
@@ -472,7 +472,7 @@ When working with data, sometimes you only want certain rows or you want to reor
   
   ```
   
-  *Counting instead of distinct* 
+  **Counting instead of distinct** 
   
   If you want to know how many times each pair occurs, use count():
   
@@ -559,7 +559,7 @@ Output:
   * Arrived more than two hours late but didn’t leave late
   * Were delayed by at least an hour, but made up over 30 minutes in flight
   
-  *Solution*
+  **Solution**
   
   ```
   # Arrival delay of two or more hours
@@ -584,7 +584,7 @@ Output:
   
 2. Sort flights to find the flights with the longest departure delays. Find the flights that left earliest in the morning.
   
-  *Solution*
+  **Solution**
   ```
   flights |> 
   arrange(desc(dep_delay)) |> 
@@ -593,7 +593,7 @@ Output:
   
 3. Sort flights to find the fastest flights. (Hint: Try including a math calculation inside of your function.)
  
- *Solution*
+ **Solution**
   ```
     flights |>
       filter(!is.na(air_time), air_time > 0) |>       # keep valid rows
@@ -611,7 +611,7 @@ Output:
   
 4. Was there a flight on every day of 2013?
 
-  *Solution*
+  **Solution**
   ```
   flights |>
     distinct(year, day, month) |>
@@ -621,7 +621,7 @@ Output:
 
 5. Which flights traveled the farthest distance? Which traveled the least distance?
 
-  *Solution*
+  **Solution**
   ```
     # Farthest flight(s)
     flights |>
@@ -644,9 +644,9 @@ Output:
   
 6. Does it matter what order you used `filter()` and `arrange()` if you’re using both? Why/why not? Think about the results and how much work the functions would have to do.
 
-  *Solution*  
+  **Solution**  
   
-  Yes — the results are the same, but the amount of work R has to do is different depending on the order.    
+  Yes — the results are the same, but the amount of work R has to do is different depending on the order.      
       * `filter()` first: You reduce the dataset to only the rows you care about, then sort them. This is usually faster and more efficient.  
       * `arrange()` first: You sort the entire dataset before filtering. This is slower and unnecessary work, because many rows will be discarded after filtering anyway.  
     
