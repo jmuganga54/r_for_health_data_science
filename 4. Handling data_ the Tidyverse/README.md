@@ -646,9 +646,10 @@ Output:
 
   **Solution**  
   
-  **Yes**, the results are the same, but the amount of work R has to do is different depending on the order.    
-      * `filter()` first: You reduce the dataset to only the rows you care about, then sort them. This is usually faster and more efficient.  
-      * `arrange()` first: You sort the entire dataset before filtering. This is slower and unnecessary work, because many rows will be discarded after filtering anyway.  
+  **Yes**, the results are the same, but the amount of work R has to do is different depending on the order.  
+      1. `filter()` first: You reduce the dataset to only the rows you care about, then sort them. This is usually faster and more efficient.  
+      
+      2. `arrange()` first: You sort the entire dataset before filtering. This is slower and unnecessary work, because many rows will be discarded after filtering anyway.  
     
   > [!IMPORTANT]
   > * The final result looks the same.  
