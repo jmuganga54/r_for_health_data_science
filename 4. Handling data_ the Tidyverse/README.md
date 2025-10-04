@@ -647,11 +647,10 @@ Output:
   **Solution**  
   
   **Yes**, the results will be the same, but the amount of work R does depends on the order you use:  
-
-    - **`filter()` first**: Narrow down the dataset to only the rows you need, *then* sort them.  
+    - `filter()` first: Narrow down the dataset to only the rows you need, then sort them.    
       ✅ Faster and more efficient.  
     
-    - **`arrange()` first**: Sort the entire dataset (even rows you’ll later throw away), *then* filter.  
+    - `arrange()` first: Sort the entire dataset (even rows you’ll later throw away), then filter.  
       ❌ Slower and unnecessary extra work.  
  
     
