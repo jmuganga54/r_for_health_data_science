@@ -604,10 +604,10 @@ Output:
   
   >[!TIP]
   > What’s happening on above solution?
-  > `distance / air_time * 60` is the speed in miles per hour.
-  > `arrange(desc(...))` sorts from fastest to slowest.
-  > `head(10)` just shows the first 10 fastest flights.
-  > speed = distance / time
+  > * `distance / air_time * 60` is the speed in miles per hour.
+  > * `arrange(desc(...))` sorts from fastest to slowest.
+  > * `head(10)` just shows the first 10 fastest flights.
+  > * speed = distance / time
   
 4. Was there a flight on every day of 2013?
 
