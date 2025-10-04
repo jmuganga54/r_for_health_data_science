@@ -602,7 +602,7 @@ Output:
   
   ```
   
-  >![TIP]
+  >[!TIP]
   > What’s happening on above solution?
   > `distance / air_time * 60` is the speed in miles per hour.
   > `arrange(desc(...))` sorts from fastest to slowest.
@@ -635,11 +635,11 @@ Output:
   
   ```
   >[!TIP]
-  >What happens above:
-  > `max(distance, na.rm = TRUE)` → finds the longest distance, ignoring any missing values.
-  > `min(distance, na.rm = TRUE)` → finds the shortest distance.
-  > `filter()` → keeps only rows that match those values.
-  > `select()` → just displays useful columns so the output is clear.
+  > What happens above: 
+  > `max(distance, na.rm = TRUE)` → finds the longest distance, ignoring any missing values.  
+  > `min(distance, na.rm = TRUE)` → finds the shortest distance.  
+  > `filter()` → keeps only rows that match those values.  
+  > `select()` → just displays useful columns so the output is clear.  
   
   
 6. Does it matter what order you used `filter()` and `arrange()` if you’re using both? Why/why not? Think about the results and how much work the functions would have to do.
