@@ -636,22 +636,23 @@ Output:
   ```
   >[!TIP]
   > What happens above: 
-  > `max(distance, na.rm = TRUE)` → finds the longest distance, ignoring any missing values.  
-  > `min(distance, na.rm = TRUE)` → finds the shortest distance.  
-  > `filter()` → keeps only rows that match those values.  
-  > `select()` → just displays useful columns so the output is clear.  
+  > * `max(distance, na.rm = TRUE)` → finds the longest distance, ignoring any missing values.  
+  > * `min(distance, na.rm = TRUE)` → finds the shortest distance.  
+  > * `filter()` → keeps only rows that match those values.  
+  > * `select()` → just displays useful columns so the output is clear.  
   
   
 6. Does it matter what order you used `filter()` and `arrange()` if you’re using both? Why/why not? Think about the results and how much work the functions would have to do.
 
   *Solution*  
-  Yes — the results are the same, but the amount of work R has to do is different depending on the order.
-    * `filter()` first: You reduce the dataset to only the rows you care about, then sort them. This is usually faster and more efficient.
-    * `arrange()` first: You sort the entire dataset before filtering. This is slower and unnecessary work, because many rows will be discarded after filtering anyway.
+  
+  Yes — the results are the same, but the amount of work R has to do is different depending on the order.  
+    * `filter()` first: You reduce the dataset to only the rows you care about, then sort them. This is usually faster and more efficient.  
+    * `arrange()` first: You sort the entire dataset before filtering. This is slower and unnecessary work, because many rows will be discarded after filtering anyway.  
     
   > [!IMPORTANT]
-  > The final result looks the same.
-  > But filtering first is better because R only sorts the smaller dataset, not the whole thing.
+  > * The final result looks the same.  
+  > * But filtering first is better because R only sorts the smaller dataset, not the whole thing.
   
   >[!TIP]
   >Rule of thumb: Filter early, arrange later.
