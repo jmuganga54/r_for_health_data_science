@@ -502,7 +502,89 @@ When working with data, sometimes you only want certain rows or you want to reor
 > * `count()` → count how often each combination appears.
 
 
+>[!TIP]
+> In `filter(),` commas act like `&`.
+> So `filter(a, b) = filter(a & b)`.
+> If you want “or”, you must use `|` (there’s no comma shortcut for “or”).
 
+```
+  filter(dep_delay >= 60, (dep_delay - arr_delay) > 30) 
+  # same as
+  filter(dep_delay >= 60 & (dep_delay - arr_delay) > 30)
+
+```
+
+>[!TIP]
+> `na.rm = TRUE` → "drop missing values before doing the calculation".
+> Without it, many summary functions (`mean()`, `sum()`, `min()`, etc.) will give back NA if there’s even one missing value.
+
+```
+  flights |> 
+    summarise(avg_delay = mean(dep_delay, na.rm = TRUE))
+```
+
+
+
+>[!TIP]
+> `n()` is a special dplyr function that simply counts how many rows are in each group.
+> * If no grouping, it counts all rows.
+> * If grouped, it counts rows per group.
+> * The left-hand side (n) is just the column name you want to give to the result.
+> * The right-hand side (n()) is the function that does the counting.
+
+Example without grouping:
+
+```
+  flights |> 
+    summarise(n = n())
+
+```
+Output:
+```
+  # A tibble: 1 × 1
+        n
+    <int>
+  1 336776
+
+```
+
+###### 3.2.5 Exercises
+
+1.In a single pipeline for each condition, find all flights that meet the condition:
+
+  * Had an arrival delay of two or more hours
+  * Flew to Houston (IAH or HOU)
+  * Were operated by United, American, or Delta
+  * Departed in summer (July, August, and September)
+  * Arrived more than two hours late but didn’t leave late
+  * Were delayed by at least an hour, but made up over 30 minutes in flight
+  
+  *Solution*
+  
+  ```
+  # Arrival delay of two or more hours
+  flights |> filter(arr_delay >= 120, )
+  
+  # Flew to Houston (IAH or HOU)
+  flights |> filter(dest %in% c("IAH","HOU"))
+  
+  # Were operated by United, American, or Delta
+  flights |> filter(carrier %in% c("UA", "AA", "DL"))
+  
+  # Departed in summer (July, August, and September)
+  flights |> filter(month %in% 7:9)
+  
+  #Arrived more than two hours late but didn’t leave late
+  flights |> filter(arr_delay > 120 & dep_delay == 0)
+  
+  # Were delayed by at least an hour, but made up over 30 minutes in flight
+  filter(dep_delay >= 60, (dep_delay - arr_delay) > 30)
+  
+  ```
+  
+  
+  
+  
 
 ### 4.1 dplyr verbs: select, mutate, filter, arrange
 

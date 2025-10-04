@@ -71,5 +71,80 @@ flights |>
   )
 
 
-  
+#Rows
+# filter() - choose row
+jan_flights <- flights |> filter(month == 4)
+jan_flights
+
+
+flights |> filter(dep_delay > 120)
+
+# Flights on January 1
+flights |> filter(month == 2 & day == 2)
+
+# Flights in January OR February
+view(flights |> filter(month == 1 | month == 2))
+
+# Shortcut using %in%
+flights |> filter(month %in% c(1,2))
+
+# Saving results
+jan1 <- flights |> filter(month == 1 & day == 1)
+jan1
+
+# Order flights by departure delay (smallest to largest)
+flights |> arrange(dep_delay)
+flights |> arrange(day)
+
+# Sort flights by year, month, day, and departure time
+flights |> arrange(year, month, day, dep_time)
+
+# Sort by largest delay first
+flights |> arrange(desc(dep_delay))
     
+
+# Find all unique destinations
+flights |> distinct(dest)
+
+# Find unique pairs of origin and destination
+view(flights |> distinct(origin, dest))
+
+# Keep all other columns with .keep_all = TRUE:
+view(flights |> distinct(origin, dest, .keep_all = TRUE))
+
+# Counting instead of distinct
+# If you want to know how many times each pair occurs, use count():
+
+flights |> count(origin, dest, sort = TRUE)
+
+# Count how many rows there are (overall, or per group if grouped).
+flights |> summarise(n = n())
+
+
+#Exercise
+# 1.In a single pipeline for each condition, find all flights that meet the condition:
+
+# Had an arrival delay of two or more hours
+glimpse(flights)
+flights |> filter(arr_delay >= 120)
+
+
+# Flew to Houston (IAH or HOU)
+flights |> filter(dest %in% c("IAH","HOU"))
+
+
+# Were operated by United, American, or Delta
+flights |> filter(carrier %in% c("UA", "AA", "DL"))
+
+# Departed in summer (July, August, and September)
+flights |> filter(month %in% 7:9)
+
+
+# Arrived more than two hours late but didn’t leave late
+flights |> filter(arr_delay > 120 & dep_delay == 0)
+
+# Were delayed by at least an hour, but made up over 30 minutes in flight
+flights |> filter(dep_delay >= 60, (dep_delay - arr_delay) > 30)
+
+
+
