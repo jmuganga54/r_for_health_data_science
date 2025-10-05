@@ -856,8 +856,9 @@ it converts them into clean, consistent, and R-friendly names.
   *How they are related*
   
   You can think of it as a simple relationship:
-  
-  \text{dep_delay} = \text{dep_time} - \text{sched_dep_time}
+  ```
+    dep_delay = dep_time - sched_dep_time
+  ```
   
   (but measured in minutes, not clock time).
   
@@ -907,6 +908,41 @@ it converts them into clean, consistent, and R-friendly names.
   > * `dep_delay` = the difference (in minutes) between them
   > → A positive value = left late, negative = left early, zero = on time.
 
+
+2. Brainstorm as many ways as possible to select `dep_time`, `dep_delay`, `arr_time`, and `arr_delay` from flights.
+  
+  ```
+  # Easiest (name them directly)
+  flights |> select(dep_time, dep_delay, arr_time, arr_delay)
+  
+  #Using a vector of names (handy if you reuse it)
+  cols <- c("dep_time", "dep_delay", "arr_time", "arr_delay")
+  flights |> select(all_of(cols))    # strict: errors if a name is missing
+  flights |> select(any_of(cols))    # forgiving: ignores missing names
+  
+  # Pattern helpers (tidyselect)
+  #By prefix (safe & concise):
+  flights |> select(starts_with("dep") | starts_with("arr"))
+  
+  # By exact regex pattern (most precise):
+  flights |> select(matches("^(dep|arr)_(time|delay)$"))
+  
+  # Base R equivalents (no dplyr)
+  #Direct column name vector:
+  flights[,c("dep_time", "dep_delay", "arr_time", "arr_delay")]
+  
+  # With a regex on names:
+  flights[, grepl("^(dep|arr)_(time|delay)$", names(flights))]
+  
+  # Using subset() (base R helper):
+  subset(flights, select =c(dep_time, dep_delay, arr_time, arr_delay))
+
+  ```
+  >[!TIP]
+  > Rule of thumb:
+  > * Use exact names for clarity.
+  > * Use `starts_with()` or `matches()` when patterns make the code shorter and safer.
+  > * Use `all_of()` / `any_of()` when selecting from a dynamic list of names.
   
   
   
