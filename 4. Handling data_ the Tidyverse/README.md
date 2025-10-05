@@ -659,6 +659,18 @@ Output:
   
   >[!TIP]
   >Rule of thumb: Filter early, arrange later.
+  
+##### Columns
+
+There are four main verbs in `dplyr` that work with columns (without changing rows):
+
+  * `mutate()` → create new columns.
+  
+  * `select()` → choose which columns to keep.
+  
+  * `rename()` → rename columns.
+  
+  * `relocate()` → move columns around.
 
 ### 4.1 dplyr verbs: select, mutate, filter, arrange
 
