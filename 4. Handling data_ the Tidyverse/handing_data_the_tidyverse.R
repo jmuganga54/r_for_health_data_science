@@ -231,3 +231,18 @@ colnames(flights)
 
 # `rename()` – Rename columns
 flights |> rename(tail_num = tailnum)
+
+# `relocate()` – Move columns
+flights |> relocate(time_hour, air_time) # move to the front
+
+# You can also move columns relative to others:
+flights |> relocate(year:dep_time, .after = time_hour) # move after time_hour
+view(flights |> relocate(starts_with("arr"), .before = dep_time)) # move before dep_time
+
+
+# Exercises
+# 1. Compare `dep_time`, `sched_dep_time`, and `dep_delay`. How would you expect those three numbers to be related?
+
+flights |>
+  select(dep_time, sched_dep_time, dep_delay) |>
+  head(10)

@@ -793,6 +793,40 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
   ```
   >[!NOTE]
   > * Same as `select()`, but it doesn’t drop any columns.
+  
+  **Cleaning Column Names Automatically**
+  
+  Sometimes your dataset has messy or inconsistent column names, like this:
+  
+  ```
+    data <- data.frame(
+    "Flight Number" = c(1, 2),
+    "Departure Time" = c("10:00", "12:00"),
+    "Arrival-Time" = c("11:30", "13:30")
+  )
+  
+  colnames(data)
+  ## [1] "Flight Number" "Departure Time" "Arrival-Time"
+
+  ```
+  
+  Typing those long names with spaces or symbols is annoying 😩.
+  
+  You can fix them automatically using the `janitor` package:
+  
+  ```
+    library(janitor)
+    
+    clean_data <- data |> clean_names()
+    colnames(clean_data)
+    ## [1] "flight_number" "departure_time" "arrival_time"
+
+  ```
+  ✅ Now all column names are lowercase, use underscores instead of spaces, and are easy to type.
+  
+  >[!TIP]
+  > * Use `janitor::clean_names()` to automatically tidy up column names —
+it converts them into clean, consistent, and R-friendly names.
 
 ###### 3.3.4 `relocate()` – Move columns
   **Reorder columns to make the dataset easier to read.**
@@ -804,6 +838,77 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
     flights |> relocate(year:dep_time, .after = time_hour)   # move after time_hour
     flights |> relocate(starts_with("arr"), .before = dep_time) # move before dep_time
   ```
+###### 3.3.5 Exercises
+1. Compare `dep_time`, `sched_dep_time`, and `dep_delay`. How would you expect those three numbers to be related?
+
+  **Solution**
+  
+  __The three variables__
+  
+    | Column           | Meaning                                                                                 |
+  | ---------------- | --------------------------------------------------------------------------------------- |
+  | `dep_time`       | The **actual departure time** of the flight                                             |
+  | `sched_dep_time` | The **scheduled (planned)** departure time                                              |
+  | `dep_delay`      | The **difference** (in minutes) between the two — how early or late the flight departed |
+  
+  *How they are related*
+  
+  You can think of it as a simple relationship:
+  
+  \text{dep_delay} = \text{dep_time} - \text{sched_dep_time}
+  
+  (but measured in minutes, not clock time).
+  
+  
+  >[!NOTE]
+  > What to expect
+  > * If a flight left on time, then
+  >   `dep_delay = 0`
+  > * If a flight left late, then
+  >  `dep_delay` is positive (`dep_time` > `sched_dep_time`).
+  > * If a flight left early, then
+  >  `dep_delay` is negative (`dep_time` > `sched_dep_time`).
+  
+  **Example in R**
+  ```
+  flights |>
+    select(dep_time, sched_dep_time, dep_delay) |>
+    head(10)
+
+  ```
+  Example output:
+  
+  ```
+    # A tibble: 10 × 3
+     dep_time sched_dep_time dep_delay
+        <int>          <int>     <dbl>
+   1      517            515         2
+   2      533            529         4
+   3      542            540         2
+   4      544            545        -1
+   5      554            600        -6
+   6      554            558        -4
+   7      555            600        -5
+   8      557            600        -3
+   9      557            600        -3
+  10      558            600        -2
+
+  ```
+  >[!NOTE]
+  > * You can see that when `dep_time` is later than `sched_dep_time`,
+  > * `dep_delay` is positive — meaning the flight was late.
+  > * When it’s earlier, the delay is negative — meaning it left early.
+  
+  >[!TIP]
+  > * `dep_time` = actual departure time
+  > * `sched_dep_time` = planned departure time
+  > * `dep_delay` = the difference (in minutes) between them
+  > → A positive value = left late, negative = left early, zero = on time.
+
+  
+  
+  
+  
 
 ### 4.1 dplyr verbs: select, mutate, filter, arrange
 
