@@ -739,12 +739,27 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
   )
 
   ```
-  Now, flights_summary keeps those new columns and you can use it later.
+  Now, `flights_summary` keeps those new columns and you can use it later.
   
   >[!TIP]
   > * `.keep = "used"` → keeps only columns used or created.
   > * `<-` → saves your result to a new dataset (otherwise it disappears after printing).
   
+  
+###### 3.3.2 `select()` – Pick columns
+  **`select()` helps you focus on specific columns.**
+  ```
+    flights |> select(year, month, day)          # pick specific columns
+    flights |> select(year:day)                  # pick a range of columns
+    flights |> select(!year:day)                 # drop a range of columns
+    flights |> select(where(is.character))       # keep only character columns
+
+  ```
+  **You can also rename while selecting:**
+  
+  ```
+    flights |> select(tail_num = tailnum)
+  ```
   
 
 ### 4.1 dplyr verbs: select, mutate, filter, arrange
