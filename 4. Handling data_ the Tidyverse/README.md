@@ -845,11 +845,13 @@ it converts them into clean, consistent, and R-friendly names.
   
   __The three variables__
   
-    | Column           | Meaning                                                                                 |
+  | Column           | Meaning                                                                                 |
   | ---------------- | --------------------------------------------------------------------------------------- |
   | `dep_time`       | The **actual departure time** of the flight                                             |
   | `sched_dep_time` | The **scheduled (planned)** departure time                                              |
   | `dep_delay`      | The **difference** (in minutes) between the two — how early or late the flight departed |
+  
+
   
   *How they are related*
   
