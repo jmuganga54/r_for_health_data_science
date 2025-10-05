@@ -989,9 +989,9 @@ variables <- c("year", "month", "day", "dep_delay", "arr_delay")
   ```
   then:
   
-    * Using `all_of()` will cause an error ❌
-    * Using `any_of()` will ignore the missing name and still work ✅
-  
+  * Using `all_of()` will cause an error ❌
+  * Using `any_of()` will ignore the missing name and still work ✅
+
   ```
   # This works fine, ignoring "not_exist"
   flights |> select(any_of(variables))
