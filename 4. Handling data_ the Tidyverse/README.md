@@ -756,10 +756,14 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
 
   ```
   **You can also rename while selecting:**
+    You can rename columns directly inside `select()` by using `=`
+    – the new name goes on the `left`, and the old name on the `right`.
   
   ```
     flights |> select(tail_num = tailnum)
   ```
+    This keeps the column tailnum but shows it as tail_num in the output.
+    
   **Check columns names**
   
   ```
@@ -776,6 +780,9 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
 | `contains("ijk")`     | Selects columns that **contain** `"ijk"`       | `select(contains("delay"))`   | Picks `dep_delay`, `arr_delay` |
 | `num_range("x", 1:3)` | Selects numbered columns like `x1`, `x2`, `x3` | `select(num_range("x", 1:3))` | Picks `x1`, `x2`, `x3`         |
 
+
+    
+    
   
 ###### 3.3.2 `rename()` – Rename columns
   ```
