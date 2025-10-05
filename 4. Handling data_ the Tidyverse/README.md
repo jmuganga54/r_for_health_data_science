@@ -758,6 +758,7 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
   **You can also rename while selecting:**
   
   You can rename columns directly inside `select()` by using `=`
+  
   – the new name goes on the `left`, and the old name on the `right`.
   
   ```
