@@ -1098,6 +1098,401 @@ variables <- c("year", "month", "day", "dep_delay", "arr_delay")
 You can change that using `ignore.case = FALSE` if you want exact case matching.
   
   
+6. Rename `air_time` to `air_time_min` to indicate units of measurement and move it to the beginning of the data frame.
+
+  **Solution**
+  We can do both tasks at once using `rename()` and `relocate()` from `dplyr`.
+  ```
+
+  flights |> 
+    rename(air_time_min = air_time) |>     # Rename the column
+    relocate(air_time_min, .before = 1)    # Move it to the first column
+  ```
+  
+  **Output (simplified)**
+  
+  ```
+    # A tibble: 336,776 × 19
+     air_time_min  year month   day dep_time sched_dep_time dep_delay arr_time
+            <dbl> <int> <int> <int>    <int>          <int>     <dbl>    <int>
+   1          227  2013     1     1      517            515         2      830
+   2          227  2013     1     1      533            529         4      850
+   3          160  2013     1     1      542            540         2      923
+   4          183  2013     1     1      544            545        -1     1004
+
+  ```
+  >[!TIP]
+  > You can also move the column by name instead of position:
+  
+  ```
+  flights |> 
+  rename(air_time_min = air_time) |> 
+  relocate(air_time_min, .before = year)
+
+  ```
+  Both give the same result. ✅
+  
+7. Why doesn’t the following work, and what does the error mean?
+
+```
+  flights |> 
+    select(tailnum) |> 
+    arrange(arr_delay)
+  #> Error in `arrange()`:
+  #> ℹ In argument: `..1 = arr_delay`.
+  #> Caused by error:
+  #> ! object 'arr_delay' not found
+```
+  
+  **Solution**
+  
+  💥 What Happened
+  1. In the first step,
+  
+  ```
+    select(tailnum)
+  ```
+  you kept only one column — `tailnum`.
+  
+  2. Then, you tried to sort the data by arr_delay:
+  
+  ```
+  arrange(arr_delay)
+
+  ```
+  But since `arr_delay` was removed in the first step,  
+  R doesn’t know what it is — it’s not in your data anymore! 
+  
+  ✅ **The Fix**
+  You have two main options depending on what you want:
+  
+  **Option 1: Keep both columns**
+  If you want to arrange by `arr_delay`, keep it in the data:
+  
+  ```
+    flights |> 
+    select(tailnum, arr_delay) |> 
+    arrange(arr_delay)
+
+  ```
+  💡 Now R knows what `arr_delay` is — because it’s still in your dataset!
+  
+  **Option 2: Arrange first, then select**
+  If you only want to see `tailnum` but sort by delay:
+  
+  ```
+    flights |> 
+    arrange(arr_delay) |> 
+    select(tailnum)
+
+  ```
+  ✅ This works because you sort before removing arr_delay.
+  
+  >[!IMPORTANT]
+  > Key Takeaway
+  > * You can’t arrange (or filter) by a column that no longer exists in your dataset.
+  > * So, the order of functions matters when chaining with the pipe |>.
+  
+
+##### 3.4 The pipe 
+  
+  Chain small steps with the `pipe`
+  
+  The pipe `(|>)` lets you write data steps in the order you think:  
+  take `data` then `filter` then `create a column` then `pick columns` then `sort.`
+  
+  ```
+  flights |>
+    filter(dest == "IAH") |>                          # keep flights to IAH
+    mutate(speed = distance / air_time * 60) |>       # mph = miles / (min/60)
+    select(year:day, dep_time, carrier, flight, speed) |> 
+    arrange(desc(speed))                               # fastest first
+  ```
+  
+  Example output (first rows):
+  
+  ```
+    # A tibble: 7,198 × 7
+     year month   day dep_time carrier flight speed
+    <int> <int> <int>    <int> <chr>    <int> <dbl>
+  1  2013     7     9      707 UA         226  522.
+  2  2013     8    27     1850 UA        1128  521.
+  3  2013     8    28      902 UA        1711  519.
+  ...
+
+  ```
+  `Why this is nice`: the verb starts each line, so it reads like a recipe.
+  
+  **Without the pipe (harder to read)**
+  
+  a) **Nested calls (inside-inside-inside)**
+  
+  ```
+    arrange(
+    select(
+      mutate(
+        filter(flights, dest == "IAH"),
+        speed = distance / air_time * 60
+      ),
+      year:day, dep_time, carrier, flight, speed
+    ),
+    desc(speed)
+  )
+
+  ```
+  
+  b) **Many temporary objects**
+  
+  ```
+  flights1 <- filter(flights, dest == "IAH")
+  flights2 <- mutate(flights1, speed = distance / air_time * 60)
+  flights3 <- select(flights2, year:day, dep_time, carrier, flight, speed)
+  arrange(flights3, desc(speed))
+
+  ```
+  Both work, but the pipe is usually easier to write and read.
+  
+  >[!TIP]
+  >How to insert the pipe quickly
+  > * RStudio shortcut: Ctrl/Cmd + Shift + M
+  
+  >[!TIP]
+  > If your shortcut still inserts `%>%`, here’s how to switch it:
+  > * Go to Tools ▸ Global Options
+  > * Select Code ▸ Editing
+  > * Under “Use native pipe operator when inserting with Ctrl+Shift+M”,
+  > * ✅ Check the box that says Use native pipe operator (|>) instead of %>%
+ > * Click Apply or OK
+ 
+ `%>%` vs `|>` (which pipe?)
+ 
+  You’ll see two pipes in R code:
+
+  * Base pipe `|>` (recommended): built into R (since 4.1), simple, always available.
+
+  * magrittr pipe `%>%` (from magrittr / tidyverse): very common in older tutorials.
+
+  Both behave the same in simple cases:
+  
+  ```
+  mtcars %>%                      # magrittr pipe
+  group_by(cyl) %>%
+  summarize(n = n())
+  
+  mtcars |>                       # base pipe
+  group_by(cyl) |>
+  summarize(n = n())
+
+  ```
+  
+  >[!NOTE]
+  > Recommendation: Learn `|>` for modern/base R; understand `%>%` because you’ll see it in lots of examples.
+  
+##### 3.3 Groups
+So far, you’ve learned how to manipulate rows and columns.
+
+Now, you’ll learn how to analyze data by groups — for example, finding the average delay per month or the longest flight per destination.
+
+The main functions are:
+
+The main functions are:
+
+  * `group_by()` → divides data into groups
+  
+  * `summarise()` → calculates summary values for each group
+  
+  * `slice_*()` → extracts specific rows within each group
+  
+  * `ungroup()` → removes grouping
+  
+  * `.by` → an easier alternative for temporary grouping
+
+
+  ###### 3.5.1 group_by()
+  
+  Use `group_by()` to split your dataset into smaller groups before applying another function.
+  
+  ```
+    flights |> 
+    group_by(month)
+
+  ```
+  >[!NOTE]
+  > * The data doesn’t change — it just becomes grouped.
+  > * You’ll see something like this in the output:
+  
+  ```
+    # Groups: month [12]
+
+  ```
+  >[!IMPORTANT]
+  > That means R will now treat each month as a separate group when doing calculations.
+  
+  ###### 3.5.2 `summarise()`
+  
+  `summarise()` calculates summary values (like mean, count, etc.) for each group.
+
+  Example — find the average departure delay per month:
+  
+  ```
+    flights |> 
+    group_by(month) |> 
+    summarize(avg_delay = mean(dep_delay, na.rm = TRUE))
+
+  ```
+  
+  Output (simplified):
+  
+  ```
+    # A tibble: 12 × 2
+     month avg_delay
+     <int>     <dbl>
+  1      1      10.0
+  2      2      10.8
+  ...
+
+  ```
+  >[!NOTE]
+  > `na.rm = TRUE` tells R to ignore missing values (NA).
+  
+  You can also get the number of flights per month:
+  
+  ```
+    flights |> 
+    group_by(month) |> 
+    summarise(
+      avg_delay = mean(dep_delay, na.rm = TRUE),
+      n = n()   # counts rows in each group
+    )
+
+  ```
+  
+  ###### 3.5.3 The`slice_*()` Family
+  
+  These functions help you extract specific rows within each group:
+  
+    | Function              | Description                       |
+  | --------------------- | --------------------------------- |
+  | `slice_head(n = 1)`   | First row in each group           |
+  | `slice_tail(n = 1)`   | Last row in each group            |
+  | `slice_min(x, n = 1)` | Row(s) with smallest value of `x` |
+  | `slice_max(x, n = 1)` | Row(s) with largest value of `x`  |
+  | `slice_sample(n = 1)` | Random row(s) from each group     |
+  
+  Example — find the most delayed flight for each destination:
+  
+  ```
+    flights |> 
+    group_by(dest) |> 
+    slice_max(arr_delay, n = 1) |> 
+    relocate(dest)
+  ```
+  >[!IMPORTANT]
+  > ⚠️ Sometimes you’ll see more than one row per group if multiple flights have the same delay.
+  > Add `with_ties = FALSE` to keep only one.
+  
+  ###### 3.5.4 Grouping by Multiple Variables
+  
+  You can group by more than one variable, like `year`, `month`, and `day`:
+  
+  ```
+    daily <- flights |> group_by(year, month, day)
+  ```
+  
+  Then summarize:
+  
+  ```
+    daily |> 
+    summarise(
+      n = n(),
+      .groups = "drop_last"  # keeps grouping by year and month only
+    )
+  ```
+  >[!NOTE]
+  > Other `.groups` options:
+  > * "drop" → remove all grouping
+  > * "keep" → keep all original groups
+  
+  ###### 3.5.5 `ungroup()`
+  
+  Removes grouping completely:
+  
+  ```
+    daily |> ungroup()
+  ```
+  Now every operation works on the whole dataset again, not per group.
+  
+  ```
+    daily |> 
+    ungroup() |> 
+    summarise(
+      avg_delay = mean(dep_delay, na.rm = TRUE),
+      flights = n()
+    )
+
+  ```
+  Output:
+  
+  ```
+    # A tibble: 1 × 2
+    avg_delay flights
+        <dbl>   <int>
+  1      12.6  336776
+
+  ```
+  
+  ###### 3.5.6 .by (New in dplyr 1.1.0)
+  
+  Instead of using group_by(), you can group directly inside a function with .by.
+  
+  Example:
+  
+  ```
+    flights |> 
+    summarise(
+      delay = mean(dep_delay, na.rm = TRUE),
+      n = n(),
+      .by = month
+    )
+
+  ```
+  
+  Or with multiple variables:
+  
+  ```
+    flights |> 
+    summarise(
+      delay = mean(dep_delay, na.rm = TRUE),
+      n = n(),
+      .by = c(origin, dest)
+    )
+
+  
+  ```
+  ✅ It’s simpler because you don’t need to remember to ungroup() afterward.
+  
+  >[!TIP] Summary
+  
+    | Function      | Purpose                                     |
+  | ------------- | ------------------------------------------- |
+  | `group_by()`  | Create groups for analysis                  |
+  | `summarise()` | Calculate summary stats per group           |
+  | `slice_*()`   | Extract specific rows per group             |
+  | `ungroup()`   | Remove grouping                             |
+  | `.by`         | Group temporarily within a single operation |
+
+  
+  
+  
+  
+  
+  
+
+
+  
+  
+  
+  
   
   
   

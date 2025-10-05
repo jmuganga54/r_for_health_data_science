@@ -297,3 +297,65 @@ flights |> select(contains("TIME"))
 # (e.g., match only uppercase “TIME”), use the argument `ignore.case = FALSE`.
 
 flights |> select(contains("TIME", ignore.case = FALSE)) 
+
+# 6. Rename `air_time` to `air_time_min` to indicate units of measurement and move it to the beginning of the data frame.
+
+flights |> 
+  rename(air_time_min = air_time) |>     # Rename the column
+  relocate(air_time_min, .before = 1)    # Move it to the first column
+
+# You can also move the column by name instead of position:
+flights |> 
+  rename(air_time_min = air_time) |> 
+  relocate(air_time_min, .before = year)
+
+# 7. Why doesn’t the following work, and what does the error mean?
+
+# But since `arr_delay` was removed in the first step,  
+# R doesn’t know what it is — it’s not in your data anymore! 
+flights |> 
+  select(tailnum) |> 
+  arrange(arr_delay)
+#> Error in `arrange()`:
+#> ℹ In argument: `..1 = arr_delay`.
+#> Caused by error:
+#> ! object 'arr_delay' not found
+#> 
+
+
+# THE PIPE
+# The pipe `(|>)` lets you write data steps in the order you think:  
+#   take `data` then `filter` then `create a column` then `pick columns` then `sort.`
+
+flights |> 
+filter(dest == "IAH") |> # keep flights to IAH
+mutate(speed = distance / air_time * 60) |>  # mph = miles / (min/60)
+select(year:day, dep_time, carrier, flight, speed) |> 
+arrange(desc(speed))    # fastest first
+
+
+ 
+flights
+  
+
+# Groups
+# group_by()
+# Use `group_by()` to split your dataset into smaller groups before applying another function.
+
+flights |> 
+  group_by(month)
+
+# summarise()`
+
+flights |> 
+  group_by(month) |> 
+  summarise(avg_delay = mean(dep_delay, na.rm = TRUE))
+  
+
+# You can also get the number of flights per month:
+
+flights |> 
+  group_by(month) |> 
+  summarise(avg_delay = mean(dep_delay, na.rm = TRUE),
+            n = n())
+
