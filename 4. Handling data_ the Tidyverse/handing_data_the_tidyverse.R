@@ -275,9 +275,25 @@ flights[, grepl("^(dep|arr)_(time|delay)$", names(flights))]
 # Using subset() (base R helper):
 subset(flights, select =c(dep_time, dep_delay, arr_time, arr_delay))
 
+#3. What happens if you specify the name of the same variable multiple times in a select() call?
 
-# 2. What does the `any_of()` function do? Why might it be helpful in conjunction with this vector?
+#Notice that `dep_time` only appears once, even though we wrote it twice.
+flights |>
+  select(year, month, day, dep_time, dep_time)
+
+# 4. What does the `any_of()` function do? Why might it be helpful in conjunction with this vector?
 variables <- c("year", "month", "day", "dep_delay", "arr_delay")
 
 flights |> select(any_of(variables))
 
+# 5. Does the result of running the following code surprise you? How do the select helpers deal with upper and lower case by default? How can you change that default?
+
+# So even though we used uppercase "TIME",
+# it found all the lowercase columns that contain “time”.
+flights |> select(contains("TIME"))
+
+
+# If you want to match exactly how the column name is written
+# (e.g., match only uppercase “TIME”), use the argument `ignore.case = FALSE`.
+
+flights |> select(contains("TIME", ignore.case = FALSE)) 

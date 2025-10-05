@@ -944,7 +944,46 @@ it converts them into clean, consistent, and R-friendly names.
   > * Use `starts_with()` or `matches()` when patterns make the code shorter and safer.
   > * Use `all_of()` / `any_of()` when selecting from a dynamic list of names.
   
-2. What does the `any_of()` function do? Why might it be helpful in conjunction with this vector?
+3. What happens if you specify the name of the same variable multiple times in a select() call?
+
+  **Solution**
+  If you use `select()` and repeat the same column name multiple times,
+  
+  👉 `R` will only keep one copy of that column in the result.
+
+  In other words — duplicates are ignored automatically.
+  
+  Example
+  
+  Let’s try it with the flights dataset:
+  
+  ```
+  flights |> 
+  select(year, month, day, dep_time, dep_time)
+
+  ```
+  ✅ Output (simplified):
+  
+  ```
+    # A tibble: 336,776 × 4
+      year month   day dep_time
+     <int> <int> <int>    <int>
+   1  2013     1     1      517
+   2  2013     1     1      533
+   3  2013     1     1      542
+   4  2013     1     1      544
+   5  2013     1     1      554
+
+  ```
+  >[!NOTE]
+  > Notice that `dep_time` only appears once, even though we wrote it twice.
+  
+  💡 Why?
+  `select()` always returns a unique set of column names —   
+  so repeating a column doesn’t add extra copies or change the result.
+  
+  
+4. What does the `any_of()` function do? Why might it be helpful in conjunction with this vector?
 
 ```
 variables <- c("year", "month", "day", "dep_delay", "arr_delay")
@@ -997,6 +1036,69 @@ variables <- c("year", "month", "day", "dep_delay", "arr_delay")
   flights |> select(any_of(variables))
 
   ```
+
+5. Does the result of running the following code surprise you? How do the select helpers deal with upper and lower case by default? How can you change that default?
+
+```
+  flights |> select(contains("TIME"))
+
+```
+  **Solution**
+  
+  We’re using `select(contains("TIME"))` to find all columns that contain the word “TIME” in their names.
+  
+  ```
+  flights |> select(contains("TIME"))
+  ```
+  
+  **What happens?**
+  
+  By default, `contains()` in `dplyr` is not case-sensitive —  
+  meaning it ignores uppercase or lowercase differences.
+  
+  So, even though the dataset has columns like `dep_time`, `arr_time`, and `sched_dep_time` (all lowercase), 
+  
+  `contains("TIME")` will still match them ✅.
+  
+  ✅ Output (simplified)
+  
+  ```
+    # A tibble: 336,776 × 4
+     dep_time sched_dep_time arr_time sched_arr_time
+        <int>          <int>    <int>          <int>
+   1      517            515      830            819
+   2      533            529      850            830
+   3      542            540      923            850
+   4      544            545     1004           1022
+
+  ```
+  >[!NOTE]
+  > * So even though we used uppercase "TIME",
+  > * it found all the lowercase columns that contain “time”.
+  
+  **How to make it case-sensitive**
+  
+  If you want to match exactly how the column name is written
+  
+  (e.g., match only uppercase “TIME”), use the argument `ignore.case = FALSE`.
+  
+  ```
+   flights |> select(contains("TIME", ignore.case = FALSE))
+  ```
+  ✅ Output:
+  
+  ```
+  # A tibble: 336,776 × 0
+  # ℹ Use `print(n = ...)` to see more rows
+
+  ```
+  
+  >[!NOTE]
+  > By default, `select()` helper functions like `contains()`, `starts_with()`, and `ends_with()` ignore uppercase/lowercase differences.
+You can change that using `ignore.case = FALSE` if you want exact case matching.
+  
+  
+  
   
   
   
