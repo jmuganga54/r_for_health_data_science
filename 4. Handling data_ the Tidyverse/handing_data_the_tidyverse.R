@@ -177,5 +177,57 @@ flights |>
   select(year, month, day, carrier, flight, origin, dest, distance)
   
 
+## COLUMNS
+#`mutate()` adds new variables that are calculated from existing ones.
+flights |>
+  mutate(
+    gain = dep_delay - arr_delay, # time made up in air
+    speed = distance / air_time * 60 # flight speed in mph
+  )
+
+# You can control where new columns appear
+flights |>
+  mutate(gain = dep_delay - arr_delay, .before = 1) # add before first column
+
+# only keep the columns you used:
+flights |>
+  mutate(
+    gain = dep_delay - arr_delay,
+    hours = air_time / 60,
+    gain_per_hour = gain / hours,
+    .keep = "used"
+  )
+
+# When you run a command like the one above, R prints the result, but it doesn’t save it anywhere.
+# That means if you type `flights` again later, it will still be the old version — your new columns are gone.
+
+flights
+
+# To save your new data frame, you must assign it to an object using `<-`:
+flights_summary <- flights |>
+  mutate(
+    gain = dep_delay - arr_delay,
+    hours = air_time / 60,
+    gain_per_hour = gain / hours,
+    .keep = "used"
+  )
+
+view(flights_summary)
 
 
+# `select()` – Pick columns
+flights |> select(year, month, day) # pick specific columns
+flights |> select(year:day) # pick a range of columns
+flights |> select(!year:day) # drop a range of columns
+flights |> select(where(is.character)) # keep only character columns
+
+# You can also rename while selecting:
+flights |> select(tail_num = tailnum)
+
+flights
+
+# Check columns names
+colnames(flights)
+
+# `rename()` – Rename columns
+flights |> rename(tail_num = tailnum)

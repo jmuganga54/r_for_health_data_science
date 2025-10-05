@@ -760,7 +760,19 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
   ```
     flights |> select(tail_num = tailnum)
   ```
+  **Check columns names**
   
+  ```
+    colnames(flights)
+
+  ```
+  
+###### 3.3.2 `rename()` – Rename columns
+  ```
+    flights |> rename(tail_num = tailnum)
+  ```
+  >[!NOTE]
+  > * Same as `select()`, but it doesn’t drop any columns.
 
 ### 4.1 dplyr verbs: select, mutate, filter, arrange
 
