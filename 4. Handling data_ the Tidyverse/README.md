@@ -724,7 +724,7 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
   > * ✅ Useful when you just want to focus on your calculated results.
   
   >[!IMPORTANT]
-  > * ⚠️ Remember: unless you assign with <-, the new columns won’t be saved.
+  > * ⚠️ Remember: unless you assign with `<-`, the new columns won’t be saved.
   > * When you run a command like the one above, R prints the result, but it doesn’t save it anywhere.
   > * That means if you type `flights` again later, it will still be the old version — your new columns are gone.
   > * To save your new data frame, you must assign it to an object using `<-`:
@@ -741,9 +741,9 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
   ```
   Now, flights_summary keeps those new columns and you can use it later.
   
-  >[TIP]
-  > `.keep = "used"` → keeps only columns used or created.
-  > `<-` → saves your result to a new dataset (otherwise it disappears after printing).
+  >[!TIP]
+  > * `.keep = "used"` → keeps only columns used or created.
+  > * `<-` → saves your result to a new dataset (otherwise it disappears after printing).
   
   
 
