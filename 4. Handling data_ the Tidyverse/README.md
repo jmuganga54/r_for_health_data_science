@@ -1371,14 +1371,14 @@ The main functions are:
   
   These functions help you extract specific rows within each group:
   
-    | Function              | Description                       |
-  | --------------------- | --------------------------------- |
-  | `slice_head(n = 1)`   | First row in each group           |
-  | `slice_tail(n = 1)`   | Last row in each group            |
-  | `slice_min(x, n = 1)` | Row(s) with smallest value of `x` |
-  | `slice_max(x, n = 1)` | Row(s) with largest value of `x`  |
-  | `slice_sample(n = 1)` | Random row(s) from each group     |
-  
+  | Function              | Description                                           |
+| --------------------- | ----------------------------------------------------- |
+| `slice_head(n = 1)`   | Selects the **first row** in each group               |
+| `slice_tail(n = 1)`   | Selects the **last row** in each group                |
+| `slice_min(x, n = 1)` | Selects the row(s) with the **smallest** value of `x` |
+| `slice_max(x, n = 1)` | Selects the row(s) with the **largest** value of `x`  |
+| `slice_sample(n = 1)` | Selects **random row(s)** from each group             |
+
   Example — find the most delayed flight for each destination:
   
   ```
