@@ -1474,13 +1474,15 @@ The main functions are:
   >[!TIP] 
   > Summary
   
-    | Function      | Purpose                                     |
-  | ------------- | ------------------------------------------- |
-  | `group_by()`  | Create groups for analysis                  |
-  | `summarise()` | Calculate summary stats per group           |
-  | `slice_*()`   | Extract specific rows per group             |
-  | `ungroup()`   | Remove grouping                             |
-  | `.by`         | Group temporarily within a single operation |
+  | Function      | Purpose                                      |
+| ------------- | -------------------------------------------- |
+| `group_by()`  | Create groups for analysis                   |
+| `summarise()` | Calculate summary statistics per group       |
+| `slice_*()`   | Extract specific rows from each group        |
+| `ungroup()`   | Remove grouping after summarizing or slicing |
+| `.by`         | Temporarily group within a single operation  |
+
+
 
   
   
