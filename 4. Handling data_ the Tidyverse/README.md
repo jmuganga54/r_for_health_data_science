@@ -767,12 +767,33 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
 
   ```
   
+  **Helper Functions in `select()`**
+  
+  | Function              | What It Does                                   | Example                       | Result                         |
+| --------------------- | ---------------------------------------------- | ----------------------------- | ------------------------------ |
+| `starts_with("abc")`  | Selects columns that **start with** `"abc"`    | `select(starts_with("dep"))`  | Picks `dep_time`, `dep_delay`  |
+| `ends_with("xyz")`    | Selects columns that **end with** `"xyz"`      | `select(ends_with("time"))`   | Picks `dep_time`, `arr_time`   |
+| `contains("ijk")`     | Selects columns that **contain** `"ijk"`       | `select(contains("delay"))`   | Picks `dep_delay`, `arr_delay` |
+| `num_range("x", 1:3)` | Selects numbered columns like `x1`, `x2`, `x3` | `select(num_range("x", 1:3))` | Picks `x1`, `x2`, `x3`         |
+
+  
 ###### 3.3.2 `rename()` – Rename columns
   ```
     flights |> rename(tail_num = tailnum)
   ```
   >[!NOTE]
   > * Same as `select()`, but it doesn’t drop any columns.
+
+###### 3.3.4 `relocate()` – Move columns
+  **Reorder columns to make the dataset easier to read.**
+  ```
+    flights |> relocate(time_hour, air_time)   # move to the front
+  ```
+  **You can also move columns relative to others:**
+  ```
+    flights |> relocate(year:dep_time, .after = time_hour)   # move after time_hour
+    flights |> relocate(starts_with("arr"), .before = dep_time) # move before dep_time
+  ```
 
 ### 4.1 dplyr verbs: select, mutate, filter, arrange
 
