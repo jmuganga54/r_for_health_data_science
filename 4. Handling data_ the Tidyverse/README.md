@@ -1469,9 +1469,10 @@ The main functions are:
 
   
   ```
-  ✅ It’s simpler because you don’t need to remember to ungroup() afterward.
+  ✅ It’s simpler because you don’t need to remember to `ungroup()` afterward.
   
-  >[!TIP] Summary
+  >[!TIP] 
+  > Summary
   
     | Function      | Purpose                                     |
   | ------------- | ------------------------------------------- |
