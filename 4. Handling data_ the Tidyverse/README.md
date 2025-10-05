@@ -662,7 +662,7 @@ Output:
   
 ##### 3.3 Columns
 
-There are four main verbs in `dplyr` that work with columns (without changing rows):
+There are four main verbs in `dplyr` that work with columns (without changing rows):  
 
   * `mutate()` → create new columns.
   
@@ -671,6 +671,79 @@ There are four main verbs in `dplyr` that work with columns (without changing ro
   * `rename()` → rename columns.
   
   * `relocate()` → move columns around.
+  
+###### 3.3.1 mutate() – Create new columns
+
+  `mutate()` adds new variables that are calculated from existing ones.
+  
+  ```
+    flights |> 
+      mutate(
+        gain = dep_delay - arr_delay,        # time made up in air
+        speed = distance / air_time * 60     # flight speed in mph
+      )
+  
+  ```
+  >[!NOTE]
+  > Adds gain and speed as new columns.
+  
+  **You can control where new columns appear:**
+  ```
+    flights |> 
+    mutate(gain = dep_delay - arr_delay, .before = 1)   # add before first column
+
+  ```
+  
+  **Or only keep the columns you used:**
+  
+  >[!TIP]
+  > What .keep = "used" means
+  > * Normally, when you use `mutate()`, your new columns are added to the existing dataset — so you still see all the original columns.
+  > * But sometimes you only want to see the columns that were involved in the calculation (to keep things clean).
+  > * That’s what `.keep = "used"` does — it tells R:
+  > * “Only keep the columns I used or created in this mutate step.”
+  
+  ```
+    flights |> 
+    mutate(
+      gain = dep_delay - arr_delay,
+      hours = air_time / 60,
+      gain_per_hour = gain / hours,
+      .keep = "used"
+    )
+
+  ```
+  This code will return a tibble with only these columns:
+  
+  ```
+    dep_delay, arr_delay, air_time, gain, hours, gain_per_hour
+
+  ```
+  >[!NOTE]
+  > * Instead of showing all 19 original columns from flights.
+  > * ✅ Useful when you just want to focus on your calculated results.
+  
+  >[!IMPORTANT]
+  > * ⚠️ Remember: unless you assign with <-, the new columns won’t be saved.
+  > * When you run a command like the one above, R prints the result, but it doesn’t save it anywhere.
+  > * That means if you type `flights` again later, it will still be the old version — your new columns are gone.
+  > * To save your new data frame, you must assign it to an object using `<-`:
+  
+  ```
+    flights_summary <- flights |> 
+    mutate(
+      gain = dep_delay - arr_delay,
+      hours = air_time / 60,
+      gain_per_hour = gain / hours,
+      .keep = "used"
+  )
+
+  ```
+  Now, flights_summary keeps those new columns and you can use it later.
+  
+  >[TIP]
+  > `.keep = "used"` → keeps only columns used or created.
+  > `<-` → saves your result to a new dataset (otherwise it disappears after printing).
   
   
 
