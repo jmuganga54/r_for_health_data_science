@@ -944,6 +944,63 @@ it converts them into clean, consistent, and R-friendly names.
   > * Use `starts_with()` or `matches()` when patterns make the code shorter and safer.
   > * Use `all_of()` / `any_of()` when selecting from a dynamic list of names.
   
+2. What does the `any_of()` function do? Why might it be helpful in conjunction with this vector?
+
+```
+variables <- c("year", "month", "day", "dep_delay", "arr_delay")
+```
+  **Solution**
+  
+  What `any_of()` does
+  
+  `any_of()` is used inside `select()` (or similar functions) to safely select columns based on a list (vector) of names.
+  
+  If some names in that list don’t actually exist in the dataset,
+  👉 `any_of()` just ignores them, instead of giving an error.
+  
+  Example
+  
+  You want to select those columns from the flights data:
+  
+  ```
+  flights |> select(any_of(variables))
+
+  ```
+  ✅ Output (first few rows):
+  
+  ```
+    # A tibble: 336,776 × 5
+      year month   day dep_delay arr_delay
+     <int> <int> <int>     <dbl>     <dbl>
+   1  2013     1     1         2        11
+   2  2013     1     1         4        20
+   3  2013     1     1         2        33
+   4  2013     1     1        -1       -18
+   5  2013     1     1        -6       -25
+
+  ```
+  **Why it’s useful**
+  
+  If one of the names in your vector doesn’t exist — for example:
+  
+  ```
+    variables <- c("year", "month", "day", "dep_delay", "arr_delay", "not_exist")
+
+  ```
+  then:
+  
+    * Using `all_of()` will cause an error ❌
+    * Using `any_of()` will ignore the missing name and still work ✅
+  
+  ```
+  # This works fine, ignoring "not_exist"
+  flights |> select(any_of(variables))
+
+  ```
+  
+  
+  
+  
   
   
   

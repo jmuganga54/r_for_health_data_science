@@ -246,3 +246,38 @@ view(flights |> relocate(starts_with("arr"), .before = dep_time)) # move before 
 flights |>
   select(dep_time, sched_dep_time, dep_delay) |>
   head(10)
+
+#2. Brainstorm as many ways as possible to select `dep_time`, `dep_delay`, `arr_time`, and `arr_delay` from flights.
+
+
+# Easiest (name them directly)
+flights |> select(dep_time, dep_delay, arr_time, arr_delay)
+
+#Using a vector of names (handy if you reuse it)
+cols <- c("dep_time", "dep_delay", "arr_time", "arr_delay")
+flights |> select(all_of(cols))    # strict: errors if a name is missing
+flights |> select(any_of(cols))    # forgiving: ignores missing names
+
+# Pattern helpers (tidyselect)
+#By prefix (safe & concise):
+flights |> select(starts_with("dep") | starts_with("arr"))
+
+# By exact regex pattern (most precise):
+flights |> select(matches("^(dep|arr)_(time|delay)$"))
+
+# Base R equivalents (no dplyr)
+#Direct column name vector:
+flights[,c("dep_time", "dep_delay", "arr_time", "arr_delay")]
+
+# With a regex on names:
+flights[, grepl("^(dep|arr)_(time|delay)$", names(flights))]
+
+# Using subset() (base R helper):
+subset(flights, select =c(dep_time, dep_delay, arr_time, arr_delay))
+
+
+# 2. What does the `any_of()` function do? Why might it be helpful in conjunction with this vector?
+variables <- c("year", "month", "day", "dep_delay", "arr_delay")
+
+flights |> select(any_of(variables))
+
