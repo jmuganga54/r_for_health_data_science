@@ -2079,6 +2079,194 @@ We’ll group the data by hour and then calculate the average departure delay fo
 
   * `arrange(y)` actually changes the row order to make the data appear sorted by `y`.
   
+  c. Write down what you think the output will look like, then check if you were correct, and describe what the pipeline does.
+  
+  ```
+    df |>
+    group_by(y) |>
+    summarize(mean_x = mean(x))
+  ```
+  
+  **Solution**
+  
+  👉 What happens:
+  * `group_by(y)` divides the dataset into groups based on the column `y`.
+
+  * `summarize(mean_x = mean(x))` then calculates the average of x within each group.
+  
+  Output
+  
+  ```
+        y     mean_x
+      <chr>  <dbl>
+    1 a       2.67
+    2 b       3.5 
+  ```
+  >[!NOTE]
+  > Explanation:
+  > * The group `y = "a"` has `x` values `1, 3, 4`. Their average is `(1 + 3 + 4) / 3 = 2.67.`
+  > * The group `y = "b"` has `x` values `2, 5`. Their average is `(2 + 5) / 2 = 3.5.`
+  
+ 
+  > In short:
+  > The pipeline groups the data by y and then summarizes each group with the mean of x.
+It reduces the dataset from 5 rows to 2 rows, one per group.
+
+  d. Write down what you think the output will look like, then check if you were correct, and describe what the pipeline does. Then, comment on what the message says.
+  
+  ```
+    df |>
+    group_by(y, z) |>
+    summarize(mean_x = mean(x))
+  ```
+  **Solution**
+  
+  👉 What happens:
+  
+   * `group_by(y, z)` groups the data by both `y` and `z`, meaning it looks at unique combinations of these two columns.  
+   * `summarize(mean_x = mean(x))` then calculates the average of `x` for each combination.
+   
+   ```
+       # A tibble: 3 × 3
+      y     z     mean_x
+      <chr> <chr>  <dbl>
+    1 a     K          1
+    2 a     L          3.5
+    3 b     K          3.5
+   ```
+   
+   >[!NOTE]
+   > Explanation:
+   > For `y = "a"` and `z = "K"`, `x = 1`, so `mean = 1`
+   > For `y = "a"` and `z = "L"`, `x = 3, 4`, so `mean = (3 + 4)/2 = 3.5`
+   > For `y = "b`" and `z = "K"`, `x = 2, 5`, so `mean = (2 + 5)/2 = 3.5`
+  
+  ⚠️ About the message:
+  You’ll see something like this:
+  
+  ```
+    `summarise()` has grouped output by 'y'. You can override using the `.groups` argument.
+  ```
+  This means after summarizing, R keeps the first grouping variable `(y)` and drops the second `(z)`.
+  If you don’t want any grouping left, you can remove it automatically by adding:
+  
+  ```
+    summarize(mean_x = mean(x), .groups = "drop")
+  ```
+  > In short:
+  > This code groups data by two variables `(y and z)` and gives the average of `x` for each group combination.    
+  > The message just reminds you that one level of grouping remains unless you drop it.
+  
+  e. Write down what you think the output will look like, then check if you were correct, and describe what the pipeline does. How is the output different from the one in part (d)?
+  
+  ```
+    df |>
+    group_by(y, z) |>
+    summarize(mean_x = mean(x), .groups = "drop")
+  
+  ```
+  
+  **Solution**
+  👉 What happens:
+
+  * `group_by(y, z)` creates groups based on both `y` and `z` (unique pairs).
+  * `summarize(mean_x = mean(x))` calculates the average of `x` for each group.
+  * The extra argument `.groups = "drop"` tells R to remove all grouping after summarizing.
+  
+  Output
+  
+  ```
+      # A tibble: 3 × 3
+      y     z     mean_x
+      <chr> <chr>  <dbl>
+    1 a     K          1
+    2 a     L          3.5
+    3 b     K          3.5
+  ```
+  
+  >[!NOTE]
+  > Explanation:
+  > * The result looks exactly like part (d), but there’s a key difference:
+    In part (d), the result was still `grouped by y` (you could check with `group_vars()`),
+    but here, `.groups = "drop"` removes all grouping — the output is now a regular tibble, not grouped.
+    
+    >[!NOTE]
+    > 💡 In short:
+    > Both parts give the same numbers, but:
+    >  * `(d)` → output is still grouped by `y`
+    >  * `(e)` → output is completely ungrouped (clean table, no message shown)
+    
+  f. Write down what you think the outputs will look like, then check if you were correct, and describe what each pipeline does. How are the outputs of the two pipelines different?
+  
+  ```
+    df |>
+    group_by(y, z) |>
+    summarize(mean_x = mean(x))
+  
+  df |>
+    group_by(y, z) |>
+    mutate(mean_x = mean(x))
+  ```
+  
+  **Solution**
+  
+  Let’s look at the two pipelines carefully 👇
+  
+  **Pipeline 1 — Using `summarize()`**
+  ```
+    df |>
+    group_by(y, z) |>
+    summarize(mean_x = mean(x))
+  ```
+  Output:
+  
+  ```
+    # A tibble: 3 × 3
+    y     z     mean_x
+    <chr> <chr>  <dbl>
+  1 a     K          1
+  2 a     L          3.5
+  3 b     K          3.5
+  ```
+  
+  >[!NOTE]
+  > Explanation:
+  > * `group_by(y, z)` forms groups based on each unique pair of `y` and `z`.
+  > * `summarize()` collapses each group into a single row by computing the mean of `x`.
+  > * The result is a smaller dataset `(3 rows total — one for each group).` 
+  
+  **Pipeline 2 — Using mutate()**
+  
+  ```
+    df |>
+    group_by(y, z) |>
+    mutate(mean_x = mean(x))
+  ```
+  
+  Output:
+  
+  ```
+      # A tibble: 5 × 4
+    # Groups:   y, z [3]
+          x y     z     mean_x
+      <int> <chr> <chr>  <dbl>
+    1     1 a     K          1
+    2     2 b     K          3.5
+    3     3 a     L          3.5
+    4     4 a     L          3.5
+    5     5 b     K          3.5
+  ```
+  
+  >[!NOTE]
+  > Explanation:
+  > * `mutate()` keeps all the original rows.
+  > * It adds a new column `mean_x`, repeating the group’s mean value on each row that belongs to that group.
+  > * No rows are removed — only a new column is added.
+  
+  
+  
+  
+  
   
 
 

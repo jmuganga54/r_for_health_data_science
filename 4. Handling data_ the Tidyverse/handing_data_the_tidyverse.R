@@ -604,3 +604,25 @@ df |>
 
 df |> arrange(y)
 
+
+# c. Write down what you think the output will look like, then check if you were correct, and describe what the pipeline does.
+df |>
+  group_by(y) |>
+  summarize(mean_x = mean(x))
+
+# d. Write down what you think the output will look like, then check if you were correct, and describe what the pipeline does. Then, comment on what the message says.
+
+df |>
+  group_by(y, z) |>
+  summarize(mean_x = mean(x))
+
+# f. Write down what you think the outputs will look like, then check if you were correct, and describe what each pipeline does. How are the outputs of the two pipelines different?
+  
+df |>
+  group_by(y, z) |>
+  summarize(mean_x = mean(x))
+
+df |>
+  group_by(y, z) |>
+  mutate(mean_x = mean(x))
+
