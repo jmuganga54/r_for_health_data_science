@@ -1367,6 +1367,13 @@ The main functions are:
 
   ```
   
+  >[!TIP]
+  > After using `summarise()`, your dataset shrinks —
+  > you lose the original columns unless you explicitly keep them.
+  > Think of summarise() as:
+  > * “Take all these rows, calculate something new, and return only the results.”
+  > * 
+  
   ###### 3.5.3 The`slice_*()` Family
   
   These functions help you extract specific rows within each group:
@@ -1391,6 +1398,88 @@ The main functions are:
   > ⚠️ Sometimes you’ll see more than one row per group if multiple flights have the same delay.
   > Add `with_ties = FALSE` to keep only one.
   
+  >[!TIP]
+  > `n = 1` means:
+  > * Select one row per group.
+  
+  **Example 1 — Basic dataset**
+  
+  Let’s create a small dataset:
+  
+  ```
+
+  df <- tibble(
+    group = c("A", "A", "A", "B", "B", "C", "C", "C"),
+    value = c(10, 5, 8, 3, 9, 2, 7, 6)
+  )
+
+  ```
+  **Example 2 — Using slice_head(n = 1)**
+  
+  ```
+    df |>
+    group_by(group) |>
+    slice_head(n = 1)
+  ```
+  ✅ Meaning:
+  “From each group (A, B, C), take the first row only.”
+  
+  🧾 Output:
+  
+  ```
+    # A tibble: 3 × 2
+  # Groups:   group [3]
+    group value
+    <chr> <dbl>
+  1 A        10
+  2 B         3
+  3 C         2
+
+  ```
+  
+  **Example 3 — Using n = 2**
+  
+  ```
+    df |>
+    group_by(group) |>
+    slice_head(n = 2)
+  ```
+  ✅ Meaning:
+  “From each group, take the first two rows.”
+  
+  🧾 Output:
+  ```
+   # A tibble: 6 × 2
+  # Groups:   group [3]
+    group value
+    <chr> <dbl>
+  1 A        10
+  2 A         5
+  3 B         3
+  4 B         9
+  5 C         2
+  6 C         7
+
+  ```
+  
+  >[!TIP]
+  > Extra Tip
+  > * Instead of `n =`, you can also use `prop =` to take a proportion of each group.
+  
+  Example:
+  
+  ```
+    df |> 
+    group_by(group) |> 
+    slice_sample(prop = 0.5)
+
+  ```
+  ✅ Meaning:
+  
+  “Take 50% of rows from each group (randomly).”
+  
+  
+  
   ###### 3.5.4 Grouping by Multiple Variables
   
   You can group by more than one variable, like `year`, `month`, and `day`:
@@ -1412,6 +1501,14 @@ The main functions are:
   > Other `.groups` options:
   > * "drop" → remove all grouping
   > * "keep" → keep all original groups
+  
+  >[!TIP]
+  > You can confirm if a dataset is grouped with:
+  
+  ```
+    group_vars(data)
+
+  ```
   
   ###### 3.5.5 `ungroup()`
   
@@ -1441,6 +1538,13 @@ The main functions are:
 
   ```
   
+  > [!IMPORTANT]
+  > What’s actually happening
+  > 1. `ungroup()` removes all grouping from the data —
+  >  so now R treats the entire dataset as one big group.
+  > 2. summarise() always reduces the data —
+  >. it creates one row per group.
+  
   ###### 3.5.6 .by (New in dplyr 1.1.0)
   
   Instead of using group_by(), you can group directly inside a function with .by.
@@ -1456,6 +1560,11 @@ The main functions are:
     )
 
   ```
+  
+  >[!TIP]
+  > In short:
+  > * `.by` groups only during summarise,
+  > * and once that summarise finishes, the result is no longer grouped.
   
   Or with multiple variables:
   

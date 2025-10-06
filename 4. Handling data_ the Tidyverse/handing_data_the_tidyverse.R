@@ -333,29 +333,100 @@ mutate(speed = distance / air_time * 60) |>  # mph = miles / (min/60)
 select(year:day, dep_time, carrier, flight, speed) |> 
 arrange(desc(speed))    # fastest first
 
-
- 
 flights
   
 
 # Groups
-# group_by()
-# Use `group_by()` to split your dataset into smaller groups before applying another function.
 
-flights |> 
+# Use group_by() to split your dataset into smaller groups before applying another function.
+
+flights |>
   group_by(month)
 
-# summarise()`
+# summarise() calculates summary values (like mean, count, etc.) for each group.
 
-flights |> 
-  group_by(month) |> 
+flights |>
+  group_by(month) |>
   summarise(avg_delay = mean(dep_delay, na.rm = TRUE))
-  
 
 # You can also get the number of flights per month:
 
-flights |> 
-  group_by(month) |> 
-  summarise(avg_delay = mean(dep_delay, na.rm = TRUE),
-            n = n())
+flights |>
+  group_by(month) |>
+  summarise(
+    avg_delay = mean(dep_delay, na.rm = TRUE),
+    n = n() # counts rows in each group
+  )
 
+#Theslice_*() Family
+# These functions help you extract specific rows within each group:
+
+view(flights |>
+  group_by(dest) |>
+  slice_max(arr_delay, n = 1, with_ties = FALSE) |>
+  relocate(dest)
+)
+
+view(flights |>
+       group_by(dest) |>
+       slice_min(arr_delay, n = 1) |>
+       relocate(dest)
+)
+
+view(flights |>
+       group_by(dest) |>
+       slice_head(n = 1) |>
+       relocate(dest)
+)
+
+view(flights |>
+       group_by(dest) |>
+       slice_tail(n = 1) |>
+       relocate(dest)
+)
+
+view(flights |>
+       group_by(dest) |>
+       slice_sample(n = 1) |>
+       relocate(dest)
+)
+
+# Grouping by Multiple Variables
+daily <- flights |> group_by(year, month, day)
+group_vars(daily)
+# Thsummarise
+
+daily |>
+  summarise(
+    n = n(),
+    .groups = "drop_last" # keeps grouping by year and month only
+)  
+
+daily |>
+  summarise(
+    n = n(),
+    .groups = "drop" #remove all grouping
+  )  
+
+group_vars(daily)
+
+# Removes grouping completely:
+
+daily |>
+  ungroup() |>
+  summarise(
+    avg_delay = mean(dep_delay, na.rm = TRUE),
+    flights = n()
+  ) 
+
+# .by (New in dplyr 1.1.0)
+# Instead of using group_by(), you can group directly inside a function with .by.
+
+group_vars(flights |>
+  summarise(
+    delay = mean(dep_delay, na.rm = TRUE),
+    n = n(),
+    .by = month
+  ))
+  
+  
