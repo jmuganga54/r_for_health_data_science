@@ -1831,6 +1831,7 @@ We’ll group the data by hour and then calculate the average departure delay fo
   ![Plot](./plots/avg_dep_delay_per_hour.png)
   
   ✅ Final Answer
+  
   ```
     flights |>
     group_by(hour) |>
@@ -1848,6 +1849,243 @@ We’ll group the data by hour and then calculate the average departure delay fo
     ) +
     theme_minimal()
   ```
+  
+4. What happens if you supply a negative n to `slice_min()` and friends?
+
+  **Solution**
+  
+  💡 Concept
+
+  The `slice_*()` family of functions (like `slice_min()` and `slice_max()`) are used to pick   rows based on their order or value.
+
+  Normally, you use a `positive number` to select that many rows.
+  For example:
+  
+  ```
+    slice_min(flights,dep_delay, n=3)
+  
+    flights |>
+    slice_min(dep_delay, n = 3) |>
+    select(dest, year, month, day, dep_time, dep_delay, carrier, flight) |>
+    arrange(desc(dep_delay))
+  ```
+  Output
+  
+  ```
+     dest   year month   day dep_time dep_delay carrier flight
+    <chr> <int> <int> <int>    <int>     <dbl> <chr>    <int>
+  1 IAD    2013    11    10     1408       -32 EV        5713
+  2 MSY    2013     2     3     2022       -33 DL        1715
+  3 DEN    2013    12     7     2040       -43 B6          97
+  
+  ```
+  
+  🚫 What if n is `negative`?
+  > A negative `n` in `slice_*()` means “remove that many rows instead of keeping them.”
+  > It’s like saying “everything except the top/bottom N rows.”
+  
+  >[!TIP]
+  > In simple words
+  > * `n = 3` → Keep the 3 smallest values
+  > * `n = -3` → Drop the 3 smallest value
+  
+5. Explain what `count()` does in terms of the dplyr verbs you just learned. What does the `sort` argument to `count()` do?
+
+  **Solution*
+  
+  💡 What `count()` does
+  The function `count()` is a shortcut in `dplyr`.
+  
+  It’s basically the same as doing:
+  
+  ```
+  group_by() + summarise(n = n())
+
+  ```
+  
+  > That means it groups your data by one or more variables and then counts how many rows fall into each group.
+  
+  🧪 Example
+  
+  Let’s say you want to know how many flights departed each month:
+  ```
+  flights |> 
+    count(month)
+  ```
+  ✅ This is the same as:
+  
+  ```
+  flights |> 
+  group_by(month) |> 
+  summarise(n = n())
+
+  ```
+  
+  > Both will give you a table like this:
+  
+  ```
+       month     n
+     <int> <int>
+   1     1 27004
+   2     2 24951
+   3     3 28834
+   4     4 28330
+   5     5 28796
+   6     6 28243
+   7     7 29425
+   8     8 29327
+   9     9 27574
+  10    10 28889
+  11    11 27268
+  12    12 28135
+  ```
+  
+  🧩 Using multiple variables
+  
+  You can count combinations of more than one variable — for example, flights per month and carrier:
+  
+  ```
+  flights |> 
+  count(month, carrier)
+  ```
+  > This groups first by `month` and then by `carrier`, showing how many flights each airline had in each month.
+  
+  ```
+       month carrier     n
+     <int> <chr>   <int>
+   1     1 9E       1573
+   2     1 AA       2794
+   3     1 AS         62
+   4     1 B6       4427
+   5     1 DL       3690
+   6     1 EV       4171
+   7     1 F9         59
+   8     1 FL        328
+   9     1 HA         31
+  10     1 MQ       2271
+  
+  ```
+  
+  ⚙️ What does `sort = TRUE` do?
+  
+  By default, `count()` just lists the results in the same order as they appear.
+  
+  If you add `sort = TRUE`, it arranges the results in descending order — showing the largest counts first.
+  
+  ```
+  flights |> 
+  count(carrier, sort = TRUE)
+  
+  ```
+  ✅ Output:
+  
+  ```
+      carrier     n
+    <chr>   <int>
+  1 UA      58665
+  2 B6      54635
+  3 EV      54173
+  4 DL      48110
+  5 AA      32729
+  6 MQ      26397
+  ```
+  
+  > This helps you quickly see which group has the most observations.
+  
+  >[!TIP]
+  > Summary
+  > * `count()` = `group_by()` + `summarise(n = n()`)
+  > * `sort = TRUE` = automatically sorts counts from highest to lowest.
+  
+
+6. Suppose we have the following tiny data frame:
+
+  ```
+    df <- tibble(
+      x = 1:5,
+      y = c("a", "b", "a", "a", "b"),
+      z = c("K", "K", "L", "L", "K")
+    )
+  ```
+  * a. Write down what you think the output will look like, then check if you were correct, and describe what `group_by()` does.
+  
+  ```
+    df |>
+    group_by(y)
+  ```
+  
+  **Solution**
+  
+  👉 What happens:
+  
+  The data does not change visually, but R now groups the dataset by the values in column `y`.
+  
+  It means all rows with the same `y` value (like "a" or "b") are now in the same group.
+  
+  You’ll see this in the output:
+  
+  ```
+      # Groups:   y [2]
+          x y     z    
+      <int> <chr> <chr>
+    1     1 a     K    
+    2     2 b     K    
+    3     3 a     L    
+    4     4 a     L    
+    5     5 b     K
+  ```
+  📝 In simple terms: 
+  
+  `group_by(y)` tells R — “treat all rows with the same y as one group”.
+  
+  This is useful when you want to summarize or analyze data per group later using     functions like `summarize()`.
+  
+  b. Write down what you think the output will look like, then check if you were correct, and describe what `arrange()` does. Also, comment on how it’s different from the `group_by()` in part (a).
+  
+  ```
+  df |> arrange(y)
+
+  ```
+  
+  **Solution**
+  
+  👉 What happens:
+  
+  `arrange()` reorders the rows of the data frame based on the values in column y (in `alphabetical` or `ascending` order by default).
+  
+  Here’s what the output looks like:
+  
+  ```
+      # A tibble: 5 × 3
+          x y     z
+      <int> <chr> <chr>
+    1     1 a     K
+    2     3 a     L
+    3     4 a     L
+    4     2 b     K
+    5     5 b     K
+
+  ```
+  
+  📝 Explanation:
+
+  * `arrange(y)` sorts the rows so that all `"a"` rows come before `"b"`.
+
+  * The dataset is now ordered but not grouped.
+
+ 💡 Difference from group_by():
+
+  * `group_by(y)` only marks the data as grouped — it doesn’t change the order of rows.
+
+  * `arrange(y)` actually changes the row order to make the data appear sorted by `y`.
+  
+  
+
+
+
+
+
+  
   
   
   

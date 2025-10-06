@@ -527,4 +527,80 @@ avg_delay_by_hour <- flights |>
       y = "Average Departure Delay (minutes)"
     ) +
     theme_minimal()
+  
+# 4. What happens if you supply a negative n to `slice_min()` and friends?
+  
+  # The `slice_*()` family of functions (like `slice_min()` and `slice_max()`) are used to pick   rows based on their order or value.
+  
+slice_min(flights,dep_delay, n=3)
+
+#slice_min
+flights |>
+  slice_min(dep_delay, n = 3) |>
+  select(dest, year, month, day, dep_time, dep_delay, carrier, flight)
+
+#slice_min
+flights |>
+  slice_min(dep_delay, n = -3) |>
+  select(dest, year, month, day, dep_time, dep_delay, carrier, flight)
+
+#slice_max
+flights |>
+  slice_max(dep_delay, n = 3) |>
+  select(dest, year, month, day, dep_time, dep_delay, carrier, flight)
+
+
+# slice_max, negative
+flights |>
+  slice_max(dep_delay, n = -3) |>
+  select(dest, year, month, day, dep_time, dep_delay, carrier, flight) 
+
+# 5. Explain what `count()` does in terms of the dplyr verbs you just learned. What does the `sort` argument to `count()` do?  
+  
+flights |>
+  group_by(month) |>
+  summarise(n=n())
+
+flights |>
+  count(month)
+
+flights |>
+  summarise(n=n())
+
+flights |>
+  count()
+
+flights |>
+  count(month, carrier)
+
+# What does `sort = TRU`E do?
+# By default, `count()` just lists the results in the same order as they appear.
+# 
+# If you add `sort = TRUE`, it arranges the results in descending order — showing the largest counts first.
+
+flights |>
+  count(carrier)
+
+flights |>
+  count(carrier, sort = TRUE) |>
+  head()
+
+# 6. Suppose we have the following tiny data frame:
+
+# a. Write down what you think the output will look like, then check if you were correct, and describe what `group_by()` does.
+
+df <- tibble(
+  x = 1:5,
+  y = c("a", "b", "a", "a", "b"),
+  z = c("K", "K", "L", "L", "K")
+)
+df
+
+df |>
+  group_by(y)
+
+
+# b. Write down what you think the output will look like, then check if you were correct, and describe what arrange() does. Also, comment on how it’s different from the group_by() in part (a).
+
+df |> arrange(y)
 
