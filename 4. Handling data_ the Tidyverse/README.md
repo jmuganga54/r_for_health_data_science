@@ -1606,8 +1606,6 @@ The main functions are:
   We’ll start simple — calculate the average departure delay for each carrier.
   
   ```
-    library(dplyr)
-  
   flights |>
     group_by(carrier) |> 
     summarise(
@@ -1684,6 +1682,79 @@ The main functions are:
   So, to answer the “why” part:
   > ❌ You cannot completely disentangle whether delays are caused by bad carriers or bad airports just from this dataset.
   > ✅ You would need more information — like weather data, airport congestion, and flight routes — to tell who’s truly responsible.
+
+2. Find the flights that are most delayed upon departure from each destination.  
+
+  **Solution**
+  
+  Question
+  > Find the flights that are most delayed upon departure from each destination.
+  
+  That means:
+  For each destination (`dest`), we want to look at all the flights going there, and then pick the one flight with the largest `dep_delay` (departure delay).
+  
+  ✅ Step 1: Group flights by destination
+  We use `group_by(dest)` to tell R that we want to analyze each destination separately.
+  
+  ```
+  flights |>
+    group_by(dest)
+
+  ```
+  This doesn’t change the data yet — it just tells R:
+  🗂 “Whenever you summarise or slice next, do it for each destination.”
+  
+  ✅ Step 2: Select the most delayed flight per group
+  
+  We use slice_max() to pick the flight(s) with the largest departure delay (dep_delay) within each group.
+  
+  ```
+  flights |>
+    group_by(dest) |>
+    slice_max(dep_delay, n = 1) 
+
+  ```
+  🧾 Output (shortened example)
+  
+  ```
+    dest   year month   day dep_time dep_delay carrier flight
+    <chr> <int> <int> <int>    <int>     <dbl> <chr>    <int>
+  1 ABQ    2013    12    14     2223       142 B6          65
+  2 ACK    2013     7    23     1139       219 B6        1491
+  3 ALB    2013     1    25      123       323 EV        4309
+  4 ANC    2013     8    17     1740        75 UA         887
+  
+  ```
+  🟡 Each row shows the most delayed flight for that destination.
+  
+  ✅ Step 3: Clean up the output
+  
+  You can move the destination column to the front for easier viewing using relocate():
+  
+  ```
+      dest   year month   day dep_time dep_delay carrier flight
+    <chr> <int> <int> <int>    <int>     <dbl> <chr>    <int>
+  1 ABQ    2013    12    14     2223       142 B6          65
+  2 ACK    2013     7    23     1139       219 B6        1491
+  3 ALB    2013     1    25      123       323 EV        4309
+  4 ANC    2013     8    17     1740        75 UA         887
+  
+  ```
+  
+  ✅ Step 4 (optional): Handle ties
+
+  Sometimes, more than one flight may have the same biggest delay at a destination.
+  By default, `slice_max()` keeps all tied rows.
+  
+  If you only want one row per destination, add:
+  
+  ```
+  flights |>
+  group_by(dest) |>
+  slice_max(dep_delay, n = 1, with_ties = FALSE)
+
+  ```
+  
   
   
   

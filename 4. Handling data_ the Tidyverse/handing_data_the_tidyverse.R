@@ -450,3 +450,36 @@ flights |>
   ) |>
   arrange(desc(avg_delay))
 
+# 2. Find the flights that are most delayed upon departure from each destination.
+
+glimpse(flights)
+
+flights |>
+  group_by(flight, dest) |>
+  summarise(
+    avg_delay = mean(dep_delay, na.rm = TRUE)
+  ) |>
+  arrange(desc(avg_delay))
+
+# 2. Find the flights that are most delayed upon departure from each destination.
+
+# For each destination (`dest`), we want to look at all the flights going there, and then pick the one flight with the largest `dep_delay` (departure delay).
+
+flights |>
+  group_by(dest) |>
+  slice_max(dep_delay, n = 1) |>
+  select(dest, year, month, day, dep_time, dep_delay, carrier, flight) |>
+  head(4)
+
+
+# Learning
+
+flights |>
+  group_by(dest) |>
+  slice_max(dep_delay, n = 1, with_ties = FALSE) |>
+  select(dest, year, month, day, dep_time, dep_delay, carrier, flight) |>
+  relocate(dest) |>
+  head(4)
+
+
+
