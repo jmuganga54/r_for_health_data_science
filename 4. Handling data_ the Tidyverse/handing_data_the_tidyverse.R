@@ -429,4 +429,24 @@ group_vars(flights |>
     .by = month
   ))
   
-  
+# Exercises
+
+# 1. Which carrier has the worst average delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights |> group_by(carrier, dest) |> summarize(n()))
+
+# We’ll start simple — calculate the average departure delay for each carrier.
+
+flights |>
+  group_by(carrier) |>
+  summarise(avg_delay = mean(dep_delay, na.rm = TRUE)) |>
+  arrange(desc(avg_delay))
+
+# To explore that, we can check average delays by both carrier and destination.
+
+flights |>
+  group_by(carrier, dest) |>
+  summarise(
+    avg_delay = mean(dep_delay, na.rm = TRUE),
+    flights = n()
+  ) |>
+  arrange(desc(avg_delay))
+

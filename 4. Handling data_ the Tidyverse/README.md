@@ -1372,7 +1372,7 @@ The main functions are:
   > you lose the original columns unless you explicitly keep them.
   > Think of summarise() as:
   > * “Take all these rows, calculate something new, and return only the results.”
-  > * 
+
   
   ###### 3.5.3 The`slice_*()` Family
   
@@ -1591,6 +1591,103 @@ The main functions are:
 | `ungroup()`   | Remove grouping after summarizing or slicing |
 | `.by`         | Temporarily group within a single operation  |
 
+###### 3.5.7 Exercises
+
+1. Which carrier has the worst average delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights |> group_by(carrier, dest) |> summarize(n()))
+  
+  **Solution**
+  
+  Question Recap
+  > Which carrier has the worst average delays?
+  > Challenge: can you tell if it’s because the carrier is bad or because it flies to problematic airports?
+  
+  ✅ Step 1: Find the average delay per carrier
+  
+  We’ll start simple — calculate the average departure delay for each carrier.
+  
+  ```
+    library(dplyr)
+  
+  flights |>
+    group_by(carrier) |> 
+    summarise(
+      avg_dep_delay = mean(dep_delay, na.rm = TRUE)
+    ) |>
+    arrange(desc(avg_dep_delay)) # sort from worst to best
+
+  ```
+  🧾 Example Output
+  ```
+    | carrier | avg_dep_delay |
+  | ------- | ------------- |
+  | F9      | 20.2          |
+  | EV      | 19.9          |
+  | YV      | 18.4          |
+  | OO      | 16.6          |
+  | MQ      | 15.6          |
+  | ...     | ...           |
+
+  ```
+  🟡 Interpretation:
+  The higher the number, the worse the carrier’s average delay.  
+  In this example, F9 (Frontier Airlines) has the worst average delay.
+  
+  ✅ Step 2: Think deeper — is the carrier really the problem?
+  
+  You might wonder:
+  
+  > “Maybe some airlines have bad delays not because they’re bad — but because they fly to airports that often cause delays.”
+  
+  That’s an excellent observation 👏
+  
+  To explore that, we can check average delays by both carrier and destination.
+  
+  ```
+  flights |>
+  group_by(carrier, dest) |>
+  summarise(
+    avg_delay = mean(dep_delay, na.rm = TRUE),
+    flights = n()
+  ) |>
+  arrange(desc(avg_delay))
+
+  ```
+  
+  🧾 Example Output
+  
+  ```
+       carrier dest  avg_delay flights
+     <chr>   <chr>     <dbl>   <int>
+   1 UA      STL        77.5       2
+   2 OO      ORD        67         1
+   3 OO      DTW        61         2
+   4 UA      RDU        60         1
+   5 EV      PBI        48.7       6
+   6 EV      TYS        41.8     323
+   7 EV      CAE        36.7     113
+   8 EV      TUL        34.9     315
+   9 9E      BGR        34         1
+  10 WN      MSY        33.4     298
+
+  ```
+  
+  🧩 Step 3: Interpretation
+
+  Now you can see:
+  
+  * Some destinations (like STL or ORD) may cause more delays overall,
+  regardless of which carrier flies there.
+  
+  * Some carriers (like F9 or EV) might still perform worse even across multiple airports —
+  showing it could be a carrier issue.
+  
+  So, to answer the “why” part:
+  > ❌ You cannot completely disentangle whether delays are caused by bad carriers or bad airports just from this dataset.
+  > ✅ You would need more information — like weather data, airport congestion, and flight routes — to tell who’s truly responsible.
+  
+  
+  
+  
 
 
   
