@@ -482,4 +482,49 @@ flights |>
   head(4)
 
 
+# 3. How do delays vary over the course of the day? Illustrate your answer with a plot.
+
+
+#  ✅ Step 1: Summarize the average delay per hour
+
+avg_delay_by_hour <- flights |>
+  group_by(hour) |>
+  summarise(
+    avg_dep_delay = mean(dep_delay, na.rm = TRUE)
+  )|>
+  filter(!is.nan(avg_dep_delay), !is.na(avg_dep_delay)) 
+  
+  
+  avg_delay_by_hour 
+  
+  
+# ✅ Step 2: Create a simple plot
+  
+  ggplot(avg_delay_by_hour, aes(x = hour, y = avg_dep_delay)) +
+    geom_line(color = "steelblue", linewidth = 1.2) +
+    geom_point(color = "red", size = 2) +
+    labs(
+      title = "Average Departure Delay by Hour of the Day",
+      x = "Hour of Day (24-hour clock)",
+      y = "Average Departure Delay (minutes)"
+    ) +
+    theme_minimal()
+  
+# ✅ Final Answer
+  
+  flights |>
+    group_by(hour) |>
+    summarise(
+      avg_dep_delay = mean(dep_delay, na.rm = TRUE)
+    )|>
+    filter(!is.nan(avg_dep_delay), !is.na(avg_dep_delay)) |>
+    ggplot(aes(x = hour, y = avg_dep_delay)) +
+    geom_line(color = "steelblue", linewidth = 1.2) +
+    geom_point(color = "red", size = 2) +
+    labs(
+      title = "Average Departure Delay by Hour of the Day",
+      x = "Hour of Day (24-hour clock)",
+      y = "Average Departure Delay (minutes)"
+    ) +
+    theme_minimal()
 

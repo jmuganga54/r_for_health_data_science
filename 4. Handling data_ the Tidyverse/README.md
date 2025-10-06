@@ -1754,6 +1754,100 @@ The main functions are:
   slice_max(dep_delay, n = 1, with_ties = FALSE)
 
   ```
+3. How do delays vary over the course of the day? Illustrate your answer with a plot.
+
+  **Solution**
+  
+  Question  
+  > How do delays vary over the course of the day? Illustrate your answer with a plot.
+  
+  This means we want to see whether flights departing early in the morning, midday, or late at night tend to have more or fewer delays.
+  
+  ✅ Step 1: Summarize the average delay per hour
+  
+  In the flights dataset, we already have a variable called hour, which shows the scheduled departure time (for example 5 AM = 5, 11 PM = 23).
+We’ll group the data by hour and then calculate the average departure delay for each hour.
+
+  ```
+  avg_delay_by_hour <- flights |>
+    group_by(hour) |>
+    summarise(
+      avg_dep_delay = mean(dep_delay, na.rm = TRUE)
+    ) |>
+    filter(!is.nan(avg_dep_delay), !is.na(avg_dep_delay)) 
+    
+    avg_delay_by_hour
+  ```
+  
+  🧾 Example output (simplified):
+  
+  ```
+        hour avg_dep_delay
+     <dbl>         <dbl>
+   1     5         0.688
+   2     6         1.64 
+   3     7         1.91 
+   4     8         4.13 
+   5     9         4.58 
+   6    10         6.50 
+   7    11         7.19 
+   8    12         8.61 
+   9    13        11.4  
+  10    14        13.8  
+  ```
+  
+  👉 You can already see a trend — flights tend to get more delayed later in the day!
+  
+  ✅ Step 2: Create a simple plot
+  
+  We’ll use a line plot to show how the delay changes as the day progresses.
+  
+  ```
+    ggplot(avg_delay_by_hour, aes(x = hour, y = avg_dep_delay)) +
+    geom_line(color = "steelblue", linewidth = 1.2) +
+    geom_point(color = "red", size = 2) +
+    labs(
+      title = "Average Departure Delay by Hour of the Day",
+      x = "Hour of Day (24-hour clock)",
+      y = "Average Departure Delay (minutes)"
+    ) +
+    theme_minimal()
+  
+  ```
+  
+  
+  🧠 Interpretation
+
+  When you run the code, you’ll likely see something like this:
+  
+  📈 Pattern:
+  
+  * Flights early in the morning (around 5–7 AM) are mostly on time.
+  
+  * As the day goes on, delays increase, peaking in the late afternoon and evening.
+  
+  * This happens because delays accumulate throughout the day — each late flight affects the next one.
+  
+  ![Plot](/plots/avg_dep_delay_per_hour.png)
+  
+  ✅ Final Answer
+  ```
+    flights |>
+    group_by(hour) |>
+    summarise(
+      avg_dep_delay = mean(dep_delay, na.rm = TRUE)
+    )|>
+    filter(!is.nan(avg_dep_delay), !is.na(avg_dep_delay)) |>
+    ggplot(aes(x = hour, y = avg_dep_delay)) +
+    geom_line(color = "steelblue", linewidth = 1.2) +
+    geom_point(color = "red", size = 2) +
+    labs(
+      title = "Average Departure Delay by Hour of the Day",
+      x = "Hour of Day (24-hour clock)",
+      y = "Average Departure Delay (minutes)"
+    ) +
+    theme_minimal()
+  ```
   
   
   
