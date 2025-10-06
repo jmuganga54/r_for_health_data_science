@@ -1828,7 +1828,7 @@ We’ll group the data by hour and then calculate the average departure delay fo
   
   * This happens because delays accumulate throughout the day — each late flight affects the next one.
   
-  ![Plot](/plots/avg_dep_delay_per_hour.png)
+  ![Plot](./plots/avg_dep_delay_per_hour.png)
   
   ✅ Final Answer
   ```
