@@ -2601,6 +2601,7 @@ Output: Flowers listed from largest to smallest petal area.
 6          6.1         2.3      14.03
 ```
 > Summary Table 
+
 | Function    | Purpose                        | Example                                           |
 | ----------- | ------------------------------ | ------------------------------------------------- |
 | `select()`  | Pick columns                   | `select(Sepal.Length, Sepal.Width)`               |
