@@ -2450,8 +2450,8 @@ We explored three main groups of functions:
     > * Be careful not to draw conclusions from very small samples.
   
 
->[!TIP]
-> Quick Tip
+>[!TIP]  
+> Quick Tip  
 > If our dataset has many columns, we can view it neatly in RStudio using:
 
 ```
