@@ -2,6 +2,7 @@
 
 install.packages("tidyverse")
 install.packages("nycflights13")
+install.packages("Lahman")
 
 #Loading Packages
 library(nycflights13)
@@ -625,4 +626,36 @@ df |>
 df |>
   group_by(y, z) |>
   mutate(mean_x = mean(x))
+
+##### 3.6 Case study — Aggregates & sample size
+library(Lahman)
+
+
+
+batters <- Lahman::Batting |>
+  group_by(playerID) |>
+  summarize(
+    performance = sum(H,  na.rm = TRUE) / sum(AB, na.rm = TRUE),  # success rate
+    n          = sum(AB, na.rm = TRUE)                            # sample size
+  )
+
+head(batters)
+
+batters |>
+  filter(n > 100) |>
+  ggplot(aes(x = n, y = performance)) +
+  geom_point(alpha = 0.1) +     # many points → use transparency
+  geom_smooth(se = FALSE)       # trend line
+
+## Don’t rank by average alone (pitfall!)
+
+batters |>
+  arrange(desc(performance)) |>
+  head()
+
+# Better: require a minimum n before ranking
+batters |>
+  filter(n >= 200) |>
+  arrange(desc(performance)) |>
+  head()
 
