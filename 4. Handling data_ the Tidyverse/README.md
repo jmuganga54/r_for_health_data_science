@@ -2264,8 +2264,151 @@ It reduces the dataset from 5 rows to 2 rows, one per group.
   > * No rows are removed — only a new column is added.
   
   
+##### 3.6 Case study — Aggregates & sample size
+
+When you compute summaries (like an average), always include a count (`n()`). Why? Because a great-looking average from only a few observations can be pure luck. More data (bigger `n`) → more trustworthy averages.
+
+Example with baseball data (hits ÷ attempts)
+
+  * Hits (`H`) = successful outcomes
   
+  * At-bats (`AB`) = attempts
   
+  * Batting average (`performance`) = `sum(H) / sum(AB)`
+  
+  * Sample size (`n`) = `sum(AB)`
+  
+  ```
+    install.packages("Lahman")
+    
+   
+    library(Lahman)
+  
+    
+    batters <- Lahman::Batting |>
+    group_by(playerID) |>
+    summarize(
+      performance = sum(H,  na.rm = TRUE) / sum(AB, na.rm = TRUE),  # success rate
+      n          = sum(AB, na.rm = TRUE)                            # sample size
+    )
+    
+    head(batters)
+
+  
+  ```
+  This code answers the question:
+  > “For each player in the dataset, how good are they at hitting the ball, and how many times did they try?”
+  
+  >[!TIP]
+  > 1️⃣ Lahman::Batting
+  > * This is a dataset from the Lahman package.
+  > * It contains baseball statistics for many players across multiple seasons.
+  > * `Lahman:: means` “use the Batting dataset from the `Lahman package`” (even if you didn’t load the package with `library())`.
+  
+  >[!TIP]
+  > Definition
+  > * `sum()` adds up all the numbers in a vector (or column).
+  
+  Example
+  ```
+    numbers <- c(2, 4, 6, 8)
+    sum(numbers)
+  ```
+  
+  Output:
+  
+  ```
+    [1] 20
+
+  ```
+  
+  **What you’ll see in a plot**
+
+  If you plot performance vs. n:
+  
+   * Small n → averages jump around a lot (high variation).
+      * ➡️ With so few attempts, one lucky or unlucky hit changes the     average a lot.
+      * So the dots for small n are spread out everywhere — from 0.0 to 1.0.
+      * This is called `high variation — results jump around`.
+  
+   * Large n → averages are more stable (low variation).
+        * When a player has many attempts (like `1000 or 10,000`), their average doesn’t change much with one or two extra hits.
+        * ➡️ The difference is tiny (0.002).
+So as n increases, the dots on the right side of the plot form a tight cluster — less jumping around.
+        * This is called `low variation — results are consistent`.
+  
+   * Often a positive trend: better players get more chances (bigger n).
+        * You’ll often notice that as n increases, performance tends to rise a bit.
+          > Why?
+           > * Because teams give better players more chances.
+           > * If a player keeps hitting well, coaches let them play more — so higher n often means better skill.
+           > * So you see a gentle upward curve in the plot.
+   
+   ```
+    batters |>
+    filter(n > 100) |>
+    ggplot(aes(x = n, y = performance)) +
+    geom_point(alpha = 0.1) +     # many points → use transparency
+    geom_smooth(se = FALSE)       # trend line
+   ```
+   
+   ![Baseball Player Performance](./plots/baseball_performance.png)
+   
+   **Don’t rank by average alone (pitfall!)**
+
+  If you sort by the highest average only, you’ll get players with 1 or 2     attempts and perfect scores—misleading!
+  
+  ```
+    batters |>
+    arrange(desc(performance)) |>
+    head()
+  # tiny n at the top → not reliable
+
+  ```
+  
+  Output
+  
+  ```
+    # A tibble: 6 × 3
+    playerID  performance     n
+    <chr>           <dbl> <int>
+  1 abramge01           1     1
+  2 alberan01           1     1
+  3 banisje01           1     1
+  4 bartocl01           1     1
+  5 bassdo01            1     1
+  6 birasst01           1     2
+  ```
+  **Better: require a minimum n before ranking**
+  ```
+  batters |>
+    filter(n >= 200) |>
+    arrange(desc(performance)) |>
+    head()
+
+  ```
+  
+  Output
+  
+  ```
+    # A tibble: 6 × 3
+    playerID  performance     n
+    <chr>           <dbl> <int>
+  1 cobbty01        0.366 11436
+  2 barnero01       0.360  2391
+  3 hornsro01       0.358  8173
+  4 jacksjo01       0.356  4981
+  5 meyerle01       0.356  1443
+  6 kingst01        0.353   272
+  ```
+  
+  > [!NOTE]
+  > Key takeaways
+  > * Always add n() (or your own count) when summarizing.
+  > * Small samples lie: a 100% success rate from 1–3 tries isn’t meaningful.
+  > * Visualize (performance vs. n) to see stability improve with more data.
+  > * Filter by minimum n before comparing or ranking averages.
+
   
   
 
