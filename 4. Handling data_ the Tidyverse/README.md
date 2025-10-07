@@ -2681,7 +2681,7 @@ Let’s continue with the `iris` dataset 🌸.
   >[!NOTE]
   > Key Takeaways
   
-    | Function      | Purpose                             | Example                                |
+  | Function      | Purpose                             | Example                                |
   | ------------- | ----------------------------------- | -------------------------------------- |
   | `group_by()`  | Divide data into groups             | `group_by(Species)`                    |
   | `summarise()` | Compute summary per group           | `summarise(mean = mean(Petal.Length))` |
