@@ -2459,38 +2459,162 @@ View(my_data)
 
 ```
 
-  
-  
-  
-  
-  
-  
-
-
-  
-  
-  
-  
-  
-  
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
 ### 4.1 dplyr verbs: select, mutate, filter, arrange
+
+The dplyr package (part of tidyverse) provides simple and readable functions — called verbs — to manipulate data.
+They help you pick columns, create new ones, filter rows, and arrange your dataset in a clear, step-by-step way.
+
+Let’s use the built-in iris dataset 🌸 as an example.
+Type this to see it:
+
+```
+iris
+```
+
+It contains flower measurements for 3 species of iris:
+  > * Sepal.Length
+  > * Sepal.Width
+  > * Petal.Length
+  > * Petal.Width
+  > * Species
+
+  1. `select()` — Choose specific columns
+  If you only want to see `Sepal.Length` and `Sepal.Width`:
+  
+  ```
+    iris |>
+    select(Sepal.Length, Sepal.Width)
+  ```
+  Output
+  
+  ```
+      Sepal.Length Sepal.Width
+  1          5.1         3.5
+  2          4.9         3.0
+  3          4.7         3.2
+  4          4.6         3.1
+  5          5.0         3.6
+  6          5.4         3.9
+  ...
+  ```
+  
+  2. `arrange()` — Sort rows
+  To arrange flowers by increasing `Sepal.Length` (smallest to largest):
+  
+  ```
+    iris |>
+    arrange(Sepal.Length)
+
+  ```
+  Output:
+  
+  ```
+      Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+  1          4.3         3.0          1.1         0.1  setosa
+  2          4.4         2.9          1.4         0.2  setosa
+  3          4.4         3.0          1.3         0.2  setosa
+  4          4.4         3.2          1.3         0.2  setosa
+  5          4.5         2.3          1.3         0.3  setosa
+  6          4.6         3.1          1.5         0.2  setosa
+  ...
+  ```
+  To arrange in decreasing order, use `desc()`:
+  
+  ```
+    iris |>
+    arrange(desc(Sepal.Length))
+  ```
+  
+  Output:
+  
+  ```
+      Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+  1          7.9         3.8          6.4         2.0 virginica
+  2          7.7         3.8          6.7         2.2 virginica
+  3          7.7         2.6          6.9         2.3 virginica
+  4          7.7         2.8          6.7         2.0 virginica
+  5          7.7         3.0          6.1         2.3 virginica
+  6          7.6         3.0          6.6         2.1 virginica
+  ...
+  ```
+  
+  3. `filter()` — Keep only certain rows
+  To keep only flowers of species `setosa`:
+  
+  ```
+    iris |>
+    filter(Species == "setosa")
+  ```
+  Output
+  
+  ```
+       Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+    1          5.1         3.5          1.4         0.2  setosa
+    2          4.9         3.0          1.4         0.2  setosa
+    3          4.7         3.2          1.3         0.2  setosa
+    4          4.6         3.1          1.5         0.2  setosa
+    5          5.0         3.6          1.4         0.2  setosa
+    6          5.4         3.9          1.7         0.4  setosa
+  ```
+  
+  4. `mutate()` — Create a new column
+  
+  You can make new variables based on existing ones.
+  For example, create a new column called `Petal.Area` = `Petal.Length × Petal.Width`:
+  
+  ```
+    iris |>
+    mutate(Petal.Area = Petal.Length * Petal.Width)
+  ```
+  Now your dataset includes a new column, `Petal.Area`.
+  
+  Output:
+  
+  ```
+        Sepal.Length Sepal.Width Petal.Length Petal.Width Species Peta.Area
+    1          5.1         3.5          1.4         0.2  setosa      0.28
+    2          4.9         3.0          1.4         0.2  setosa      0.28
+    3          4.7         3.2          1.3         0.2  setosa      0.26
+    4          4.6         3.1          1.5         0.2  setosa      0.30
+    5          5.0         3.6          1.4         0.2  setosa      0.28
+    6          5.4         3.9          1.7         0.4  setosa      0.68
+  ```
+**Combine multiple `verbs` in one pipeline**
+You can combine all steps together using the pipe (|>):
+
+```
+iris |>
+  select(Petal.Length, Petal.Width) |>           # pick two columns
+  mutate(Petal.Area = Petal.Length * Petal.Width) |>  # create new column
+  arrange(desc(Petal.Area))                      # sort by largest area
+
+```
+Output: Flowers listed from largest to smallest petal area.
+```
+  Petal.Length Petal.Width Petal.Area
+1          6.9         2.3      15.87
+2          6.1         2.5      15.25
+3          6.0         2.5      15.00
+4          6.7         2.2      14.74
+5          5.7         2.5      14.25
+6          6.1         2.3      14.03
+```
+> Summary Table 
+| Function    | Purpose                        | Example                                           |
+| ----------- | ------------------------------ | ------------------------------------------------- |
+| `select()`  | Pick columns                   | `select(Sepal.Length, Sepal.Width)`               |
+| `filter()`  | Pick rows based on a condition | `filter(Species == "setosa")`                     |
+| `arrange()` | Sort rows                      | `arrange(desc(Sepal.Length))`                     |
+| `mutate()`  | Create new columns             | `mutate(Petal.Area = Petal.Length * Petal.Width)` |
+
+  
+  
 
 ### 4.2 More dplyr verbs: group_by and summarise
 ### 4.3 Further Reading
 
 ## Summary
+
+
+

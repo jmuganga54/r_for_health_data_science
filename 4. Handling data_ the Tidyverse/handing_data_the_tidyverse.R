@@ -659,3 +659,56 @@ batters |>
   arrange(desc(performance)) |>
   head()
 
+
+# see labels
+
+colnames(flights)
+names(flights)
+str(flights)
+glimpse(flights)
+sapply(flights, attr, "label")
+
+# ### 4.1 dplyr verbs: select, mutate, filter, arrange
+# 1. `select()` — Choose specific columns
+# If you only want to see `Sepal.Length` and `Sepal.Width`:
+
+iris |>
+  select(Sepal.Length, Sepal.Width) |>
+  head()
+
+# 2. `arrange()` — Sort rows
+# To arrange flowers by increasing `Sepal.Length` (smallest to largest):
+
+iris |>
+  arrange(Sepal.Length) |>
+  head()
+
+# To arrange in decreasing order, use desc():
+iris |>
+  arrange(desc(Sepal.Length)) |>
+  head()
+
+
+# 3. `filter()` — Keep only certain rows
+# To keep only flowers of species setosa:
+
+iris |>
+  filter(Species == "setosa") |>
+  head()
+
+
+# 4. `mutate()` — Create a new column
+# You can make new variables based on existing ones.
+# For example, create a new column called `Petal.Area` = `Petal.Length × Petal.Width`:
+
+iris |>
+  mutate(Peta.Area = Petal.Length * Petal.Width) |>
+  head()
+
+# Combine multiple `verbs` in one pipeline**
+# You can combine all steps together using the pipe (|>):
+iris |>
+  select(Petal.Length, Petal.Width) |>           # pick two columns
+  mutate(Petal.Area = Petal.Length * Petal.Width) |>  # create new column
+  arrange(desc(Petal.Area))      |># sort by largest area
+  head()
