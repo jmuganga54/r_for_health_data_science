@@ -2613,9 +2613,85 @@ Output: Flowers listed from largest to smallest petal area.
   
 
 ### 4.2 More dplyr verbs: group_by and summarise
+The `dplyr` package also includes two very useful verbs for summarizing data:
+  > * `group_by()` – divides the dataset into groups (like by `species`).
+  > * `summarise()` – calculates summary statistics (like averages) for each group.
+  
+Let’s continue with the `iris` dataset 🌸.
+
+  1. Group by Species and Calculate the Mean Petal Length
+  If we want to know the average Petal.Length for each Species, we can do:
+
+  ```
+    iris |>
+    group_by(Species) |>                      # group flowers by species
+    summarise(mean_petal_length = mean(Petal.Length))
+
+  ```
+  > Explanation:  
+    > * `group_by(Species)` splits the data into three groups: `setosa, versicolor, and virginica`.  
+    > * `summarise()` then calculates the average petal length for each group.
+    
+  Output example:
+  ```
+    # A tibble: 3 × 2
+    Species    mean_petal_length
+    <fct>                  <dbl>
+  1 setosa                  1.46
+  2 versicolor              4.26
+  3 virginica               5.55
+  ```
+  2. Standardize Petal Length within Each Species
+  Now, suppose we want to `“standardize”` the `Petal.Length` within each species —
+  that means we:
+
+    > * subtract the species’ `mean`,
+    > * and divide by the species’ standard deviation (so all values are on a common scale).
+  
+  We use `mutate()` (not `summarise()`) because we still want all 150 rows in the output.
+  
+  ```
+    iris |>
+    group_by(Species) |>  # group by species
+    mutate(
+      Petal.Length_std = (Petal.Length - mean(Petal.Length)) / sd(Petal.Length)
+    )
+  ```
+  
+  > Explanation:
+   > * `mean(Petal.Length)` and `sd(Petal.Length)` are computed within each species group.
+   > * The new column `Petal.Length_std` contains the standardized values.
+   > * We used `mutate()` instead of `summarise()` because we’re adding a new column without reducing rows.
+   
+  Output example:
+  
+  ```
+      # A tibble: 6 × 6
+    # Groups:   Species [1]
+      Sepal.Length Sepal.Width Petal.Length Petal.Width Species Petal.Length_std
+             <dbl>       <dbl>        <dbl>       <dbl> <fct>              <dbl>
+    1          5.1         3.5          1.4         0.2 setosa            -0.357
+    2          4.9         3            1.4         0.2 setosa            -0.357
+    3          4.7         3.2          1.3         0.2 setosa            -0.933
+    4          4.6         3.1          1.5         0.2 setosa             0.219
+    5          5           3.6          1.4         0.2 setosa            -0.357
+    6          5.4         3.9          1.7         0.4 setosa             1.37
+    ...
+  ```
+  >[!NOTE]
+  > Key Takeaways
+  
+    | Function      | Purpose                             | Example                                |
+  | ------------- | ----------------------------------- | -------------------------------------- |
+  | `group_by()`  | Divide data into groups             | `group_by(Species)`                    |
+  | `summarise()` | Compute summary per group           | `summarise(mean = mean(Petal.Length))` |
+  | `mutate()`    | Create new columns (keeps all rows) | `mutate(std = (x - mean(x)) / sd(x))`  |
+
+
 ### 4.3 Further Reading
-
-## Summary
-
+  > * For more practice, take [Chapter 3 of the R Bootcamp](https://r-bootcamp.netlify.app/chapter3).
+  > * Take the [Adventures in R dplyr course](https://www.adventures-in-r.com/coursework/tidyverse_dplyr)
+  > * Read [Chapter 12 of R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/managing-data-frames-with-the-dplyr-package.html) for yet more on dplyr.
+  > * Follow the [Data Wrangling](https://ajstewartlang.github.io/03_data_wrangling/knitted_workshop/03_data_wrangling.html) and [Summarising Data](https://ajstewartlang.github.io/04_summarising_your_data/knitted_workshop/04_summarising_your_data.html) workshops from Andrew Stewart’s course.
 
 

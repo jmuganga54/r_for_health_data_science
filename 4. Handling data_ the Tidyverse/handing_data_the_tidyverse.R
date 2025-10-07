@@ -712,3 +712,21 @@ iris |>
   mutate(Petal.Area = Petal.Length * Petal.Width) |>  # create new column
   arrange(desc(Petal.Area))      |># sort by largest area
   head()
+
+### 4.2 More dplyr verbs: group_by and summarise
+# 1. Group by Species and Calculate the Mean Petal Length
+# If we want to know the average Petal.Length for each Species, we can do:
+
+iris |>
+  group_by(Species) |>                      # group flowers by species
+  summarise(mean_petal_length = mean(Petal.Length))
+
+# 2. Standardize Petal Length within Each Species
+# Now, suppose we want to `“standardize”` the `Petal.Length` within each species —
+# that means we:
+
+iris |>
+  group_by(Species) |>  # group by species
+  mutate(
+    Petal.Length_std = (Petal.Length - mean(Petal.Length)) / sd(Petal.Length)
+  ) |> head()
