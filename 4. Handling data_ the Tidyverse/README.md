@@ -7,14 +7,32 @@ In this session, we will discuss:
 
 ## keywords & Notes
 
-This chapter introduces the `Tidyverse`, focusing on the `dplyr package`. While there are many ways to code in R, `Tidyverse` is taught here because it is intuitive for beginners. You should first study [Chapter 4 of Wickham & Grolemund’s book](https://r4ds.hadley.nz/data-transform.html) and then complete the `check-in exercises`. The notes use the pipe operator `%>%`, but you may also use the newer `|>` operator (explained in Chapter 4.4).
+This chapter introduces the `Tidyverse`, focusing on the `dplyr package`. While there are many ways to code in R, `Tidyverse` is taught here because it is intuitive for beginners. You should first study [Chapter 3 of Wickham & Grolemund’s book](https://r4ds.hadley.nz/data-transform.html) and then complete the `check-in exercises`. The notes use the pipe operator `%>%`, but you may also use the newer `|>` operator (explained in Chapter 4.4).
 
 >[!IMPORTANT]
 >Learn Tidyverse with dplyr, practice with the exercises, and choose the pipe style (%>% or |>) you prefer.
 
-> The content below is adapted from Chapter 4 of Wickham & Grolemund’s book.”
+> The content below is adapted from Chapter 3 of Wickham & Grolemund’s book.”
 
-#### 3  Data transformation
+## Chapter 3: Data Transformation with dplyr
+
+The content below is adapted from **Chapter 3** of *R for Data Science* by **Wickham & Grolemund**.  
+In this chapter, we explore **data transformation** using the `dplyr` package — a core part of the **tidyverse**.  
+This chapter focuses on how to clean, organize, and summarize data efficiently for analysis.
+
+---
+
+### 📘 Topics Covered
+
+* [**3.1 Introduction**](#31-introduction) – Overview of data transformation and the tidyverse philosophy  
+* [**3.2 Rows**](#32-rows) – Filtering, arranging, and selecting specific observations  
+* [**3.3 Columns**](#33-columns) – Creating, renaming, and selecting variables  
+* [**3.4 The Pipe (`|>`)**](#34-the-pipe-) – Combining multiple operations into clear, readable workflows  
+* [**3.5 Groups**](#35-groups) – Summarizing and analyzing grouped data  
+* [**3.6 Case Study: Aggregates and Sample Size**](#36-case-study-aggregates-and-sample-size) – Understanding data variation and reliability  
+* [**3.7 Summary**](#37-summary) – Key takeaways and next steps  
+
+---
 
 ##### 3.1 Introduction
 
@@ -2410,11 +2428,40 @@ So as n increases, the dots on the right side of the plot form a tight cluster �
   > * Filter by minimum n before comparing or ranking averages.
 
   
+  > You can find a good explanation of this problem and how to overcome it at
+  > [Understanding empirical Bayes estimation (using baseball statistics)](http://varianceexplained.org/r/empirical_bayes_baseball/)
+
+##### 3.7 Summary
+In this chapter, we learned how to use dplyr to work with data frames — the main way data is stored and managed in R.
+
+We explored three main groups of functions:
+
+| Category    | Key Functions                                    | What They Do                                                                           |
+| ----------- | ------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| **Rows**    | `filter()`, `arrange()`, `distinct()`            | Help us control *which rows* we keep or how we *order* them.                           |
+| **Columns** | `select()`, `mutate()`, `rename()`, `relocate()` | Help us decide *which columns* to keep, rename, move, or create new ones.              |
+| **Groups**  | `group_by()`, `summarise()`                      | Allow us to analyze data *by group* (for example, by month, by carrier, or by player). |
+
+>We also learned how to:
+  > *Use the pipe (`|>`) to connect several steps in a clear, readable sequence.
   
+  > * Combine `dplyr` with `ggplot2` to visualize our results easily.
+  
+  > * Add a `count (n())` when summarizing, so we know how much data supports our results.
+  
+  > * Handle missing values (`na.rm = TRUE`) to avoid incorrect `averages` or summaries.
+  
+  > * Be careful not to draw conclusions from very small samples.
 
 
+>[TIP]
+>Quick Tip
+> If our dataset has many columns, we can view it neatly in RStudio using:
 
+```
+View(my_data)
 
+```
 
   
   
