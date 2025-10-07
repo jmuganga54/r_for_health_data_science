@@ -14,7 +14,7 @@ This chapter introduces the `Tidyverse`, focusing on the `dplyr package`. While 
 
 > The content below is adapted from Chapter 3 of Wickham & Grolemund’s book.”
 
-## Chapter 3: Data Transformation with dplyr
+#### Chapter 3: Data Transformation with dplyr
 
 The content below is adapted from **Chapter 3** of *R for Data Science* by **Wickham & Grolemund**.  
 In this chapter, we explore **data transformation** using the `dplyr` package — a core part of the **tidyverse**.  
@@ -1212,7 +1212,7 @@ You can change that using `ignore.case = FALSE` if you want exact case matching.
   > * So, the order of functions matters when chaining with the pipe |>.
   
 
-##### 3.4 The pipe 
+##### 3.4 The Pipe (`|>`)
   
   Chain small steps with the `pipe`
   
@@ -1306,7 +1306,7 @@ You can change that using `ignore.case = FALSE` if you want exact case matching.
   >[!NOTE]
   > Recommendation: Learn `|>` for modern/base R; understand `%>%` because you’ll see it in lots of examples.
   
-##### 3.3 Groups
+##### 3.5 Groups
 So far, you’ve learned how to manipulate rows and columns.
 
 Now, you’ll learn how to analyze data by groups — for example, finding the average delay per month or the longest flight per destination.
@@ -2282,7 +2282,7 @@ It reduces the dataset from 5 rows to 2 rows, one per group.
   > * No rows are removed — only a new column is added.
   
   
-##### 3.6 Case study — Aggregates & sample size
+##### 3.6 Case Study: Aggregates and Sample Size
 
 When you compute summaries (like an average), always include a count (`n()`). Why? Because a great-looking average from only a few observations can be pure luck. More data (bigger `n`) → more trustworthy averages.
 
