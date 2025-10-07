@@ -2443,15 +2443,15 @@ We explored three main groups of functions:
 | **Groups**  | `group_by()`, `summarise()`                      | Allow us to analyze data *by group* (for example, by month, by carrier, or by player). |
 
 >We also learned how to:
-  > * Use the pipe (`|>`) to connect several steps in a clear, readable sequence.
-  > * Combine `dplyr` with `ggplot2` to visualize our results easily.
-  > * Add a `count (n())` when summarizing, so we know how much data supports our results.
-  > * Handle missing values (`na.rm = TRUE`) to avoid incorrect `averages` or summaries.
-  > * Be careful not to draw conclusions from very small samples.
+    > * Use the pipe (`|>`) to connect several steps in a clear, readable sequence.
+    > * Combine `dplyr` with `ggplot2` to visualize our results easily.
+    > * Add a `count (n())` when summarizing, so we know how much data supports our results.
+    > * Handle missing values (`na.rm = TRUE`) to avoid incorrect `averages` or summaries.
+    > * Be careful not to draw conclusions from very small samples.
+  
 
-
->[TIP]
->Quick Tip
+>[!TIP]
+> Quick Tip
 > If our dataset has many columns, we can view it neatly in RStudio using:
 
 ```
