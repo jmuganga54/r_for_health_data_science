@@ -2428,8 +2428,8 @@ So as n increases, the dots on the right side of the plot form a tight cluster â
   > * Filter by minimum n before comparing or ranking averages.
 
   
-  > You can find a good explanation of this problem and how to overcome it at
-  > [Understanding empirical Bayes estimation (using baseball statistics)](http://varianceexplained.org/r/empirical_bayes_baseball/)
+> You can find a good explanation of this problem and how to overcome it at  
+> [Understanding empirical Bayes estimation (using baseball statistics)](http://varianceexplained.org/r/empirical_bayes_baseball/)
 
 ##### 3.7 Summary
 In this chapter, we learned how to use dplyr to work with data frames â€” the main way data is stored and managed in R.
