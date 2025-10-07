@@ -1,12 +1,12 @@
 ## Topic
-In this session, we will discuss:  
 
-In this session, we will discuss:  
+In this session, we will discuss:
 
-* 5 Getting data in and out of R
-* 5.1 Working directory
-* 5.2 Base R solutions to importing data
-* 5.4 Further reading
+* [5 Getting Data In and Out of R](#5-getting-data-in-and-out-of-r)  
+* [5.1 Working Directory](#51-working-directory)  
+* [5.2 Base R Solutions to Importing Data**](#52-base-r-solutions-to-importing-data)  
+* [5.3 Exporting Data](#53-exporting-data)  
+* [5.4 Further Reading](#54-further-reading)
 
 
 ## keywords & Notes
