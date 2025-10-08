@@ -380,9 +380,9 @@ for (i in seq_len(nrow(x))) {       # Loop through rows
 
 
 In simple terms:
-> Nested loops are like reading a table —
-> The outer loop moves row by row,
-> and the inner loop moves column by column inside each row.
+> Nested loops are like reading a table —  
+> * The outer loop moves row by row,  
+> * and the inner loop moves column by column inside each row.  
 
 
 
