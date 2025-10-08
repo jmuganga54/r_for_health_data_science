@@ -103,7 +103,7 @@ if (x > 3) {
 ```
 > If `x` was less than or equal to 3, nothing would happen.
 
-![Basic if statement flow chart](./images/if_statement.jpg)
+![Basic if statement flow chart]("./images/if_statement.jpg")
 
 🪜 `if` with `else`
 
