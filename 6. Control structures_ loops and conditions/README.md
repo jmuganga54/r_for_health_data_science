@@ -2,10 +2,10 @@
 
 In this session, we will discuss:
 
-* 6. Control structures: loops and conditions
-* 6.1 if, else and for
-* 6.2 Vectorised code
-* 6.3 Further Reading
+  * 6 Control structures: loops and conditions
+  * 6.1 if, else and for
+  * 6.2 Vectorised code
+  * 6.3 Further Reading
 
 
 ## keywords & Notes
@@ -127,7 +127,7 @@ if (x > 3) {
 [1] "x is not greater than 3"
 
 ```
-![If - else statement flow chart](./images/if_statement.jpg)](./images/if_else.jpg)
+![If - else statement flow chart](./images/if_statement.jpg)
 
 
 🪜 Multiple Conditions (`else if`)
@@ -153,7 +153,7 @@ if (x > 8) {
 
 ```
 
-![If - else if statement flow chart](./images/if_statement.jpg)](./images/if_else_if.jpg)
+![If - else if statement flow chart](./images/if_else_if.png)
 
 🧮 Example: Using random numbers
 
