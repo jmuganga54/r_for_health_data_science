@@ -198,5 +198,191 @@ if (x < 8) {
 > [!TIP]
 > Use `if`, `else if`, and `else` to make your code smart and responsive to data conditions.
 
+##### 13.2 for Loops
+
+[Watch a video of this section](https://www.youtube.com/watch?v=FbT1dGXCCxU)
+
+A `for loop` is used in R when you want to repeat a task multiple times — like printing numbers, processing data, or performing calculations.
+
+It’s one of the most common ways to automate repetitive work in R.
+
+
+🧠 **Basic idea**
+
+A `for loop` takes a variable (called `the iterator`) and gives it one value at a time from a `sequence or vector` — then runs the code inside `{}` for each value.
+
+![for loop flow chart](./images/for_loop.png)
+
+```
+for (i in 1:10) {
+  print(i)
+}
+
+```
+🟢 Output:
+
+```
+[1] 1
+[1] 2
+[1] 3
+[1] 4
+[1] 5
+[1] 6
+[1] 7
+[1] 8
+[1] 9
+[1] 10
+
+```
+
+> Here:
+> * `i` is the iterator (it changes each time)
+> * `1:10` means the numbers 1 to 10
+> * The loop repeats `10` times, printing each number
+
+💬 Example: Looping through a character vector
+
+Let’s say we have a list of letters:
+
+```
+x <- c("a", "b", "c", "d")
+
+for (i in 1:4) {
+  print(x[i])
+}
+
+```
+
+🟢 Output:
+
+```
+[1] "a"
+[1] "b"
+[1] "c"
+[1] "d"
+
+```
+> This prints each element of the vector `x`.
+
+🧩 **Using `seq_along()` (a safer method)**
+
+If you don’t know how long your vector is, use `seq_along()` — it automatically adjusts to the vector’s length.
+
+```
+x <- c("a", "b", "c", "d")
+
+for (i in seq_along(x)) {
+  print(x[i])
+}
+
+```
+
+> Same result, but more flexible — it works even if `x` has `100` elements.
+
+🔤 **Looping directly over elements**
+
+You don’t always need an index number `(i)`.
+
+You can loop directly over the elements:
+
+```
+for (letter in x) {
+  print(letter)
+}
+
+
+```
+
+🟢 Output:
+
+```
+[1] "a"
+[1] "b"
+[1] "c"
+[1] "d"
+
+```
+
+🪶 **One-line loops**
+If your loop only has one line of code, you can write it without `{}` — but it’s good practice to always include them:
+
+```
+for (i in 1:4) print(x[i])
+
+for(element in x) print(element)
+```
+
+>[!TIP]
+> Tip for beginners:
+> * Think of for loops as “do this for each item”.
+> * They help you save time and avoid repeating the same code many times.
+
+##### 13.3 Nested for loops
+
+A `nested for loop` means putting one `for loop` inside another.
+
+This helps when working with data that has `rows` and `columns` — like a `matrix` or `table` — or with multi-level (hierarchical) data such as lists within lists.
+
+🧠 *Example: Looping through a Matrix*
+
+Let’s start with a simple matrix — a grid of numbers with rows and columns.
+
+```
+# Create a 2x3 matrix (2 rows, 3 columns)
+x <- matrix(1:6, 2, 3)
+
+print(x)
+
+
+```
+🟢 Output:
+
+```
+     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6
+
+```
+Now we’ll use nested for loops to print each value inside the matrix.
+
+```
+for (i in seq_len(nrow(x))) {       # Loop through rows
+  for (j in seq_len(ncol(x))) {     # Loop through columns
+    print(x[i, j])                  # Print each element
+  }   
+}
+
+```
+
+🟢 Output:
+
+```
+[1] 1
+[1] 3
+[1] 5
+[1] 2
+[1] 4
+[1] 6
+
+```
+
+> Here’s what happens step by step:
+> 1. The outer loop (`i`) moves across the rows.
+> 2. For each row, the inner loop (`j`) goes through all columns.
+> 3. `x[i, j]` selects the element in row `i` and column `j`.
+> So the code prints every value in the matrix, one by one.
+
+>[!CAUTION]
+> While nested loops are powerful, too many levels (more than 2–3) make code hard to read and maintain.
+> If your code needs many nested loops, it’s often better to:
+> * Break it into smaller functions, or
+> * Use vectorized functions (which perform operations on whole vectors or matrices at once — much faster and cleaner).
+
+
+In simple terms:
+> Nested loops are like reading a table —
+> The outer loop moves row by row,
+> and the inner loop moves column by column inside each row.
+
 
 
