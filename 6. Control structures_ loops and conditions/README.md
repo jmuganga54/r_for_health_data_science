@@ -127,7 +127,7 @@ if (x > 3) {
 [1] "x is not greater than 3"
 
 ```
-![If - else statement flow chart](./images/if_statement.jpg)
+![If - else statement flow chart](./images/if_statements.jpg)
 
 
 🪜 Multiple Conditions (`else if`)
@@ -153,7 +153,7 @@ if (x > 8) {
 
 ```
 
-![If - else if statement flow chart](./images/if_else_if.png)
+![If - else if statement flow chart](./images/if-else_if_.png)
 
 🧮 Example: Using random numbers
 
