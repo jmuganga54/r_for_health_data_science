@@ -103,7 +103,7 @@ if (x > 3) {
 ```
 > If `x` was less than or equal to 3, nothing would happen.
 
-![Basic if statement flow chart]("./images/if_statement.jpg")
+![Basic if statement flow chart]("./images/if_statements.jpg")
 
 🪜 `if` with `else`
 
@@ -394,6 +394,8 @@ Once the condition becomes `false`, the loop `stops`.
 
 Think of it as saying:
 > “While this is true, keep doing this task.”
+
+![While Loop](./images/while_loop.jpg)
 
 **🧠 Example 1: Counting from 0 to 9**
 
