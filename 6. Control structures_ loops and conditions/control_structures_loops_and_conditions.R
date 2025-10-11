@@ -99,5 +99,101 @@ for( i in seq_len(nrow(x))){ #loops through row
   } 
 }
 
+##### 13.4 while Loops
+
+count <- 0
+
+while(count <= 10){
+  print(count)
+  count <- count + 1
+}
+
+# Example 2: A random walk (with multiple conditions)
+# rm(list = ls())
+
+z <- 5
+set.seed(1)  # Ensures the same random results every time
+
+while(z>= 3 && z<=10){ # Keep looping while z is between 3 and 10
+  coin <- rbinom(1, 1, 0.5) # Flip a coin: 0 = tails, 1 = heads
+  
+  if(coin == 1){
+    z = z + 1 # Move one step up if heads
+  }else{
+    z = z - 1 # Move one step down if tails
+  }
+}
+
+print(z)
 
 
+##### 13.5 repeat Loops
+
+count <- 0
+
+repeat{
+  print(count)
+  count <- count + 1
+  
+  if(count > 5){
+    print(count)
+    break
+  }
+}
+
+# Example 2: Searching for a “close enough” answer
+
+x0 <- 1
+tol <- 1e-8
+
+repeat{
+  x1 <- computeEstimate()
+  
+  if(abs(x1 - x0) < 0){
+    break
+  }else{
+    x0 <- x1
+  }
+}
+
+# It’s safer to set a maximum number of iterations using a `for` loop or by adding a limit:
+
+x <- 1
+tol <- 1e-8
+max_iter <- 1000
+
+iter <- 0
+
+repeat{
+  x1 <- x / 2 # example calculation
+  iter <- iter + 1
+  
+  if(abs(x1 - x) || iter >= max_iter){
+    break # stop if close enough or max reached
+  }
+  x <- x1
+}
+
+print("Loop ended safely")
+
+##### 13.6 next, break
+
+for(i in 1:10){
+  
+  if(i <= 3){
+    next
+  }
+  print(i)
+}
+
+
+# The break Statement — Stop the Loop Completely
+
+for (i in 1:10) {
+  print(i)
+  
+  if (i >= 5) {
+    break  # Stop the loop once i reaches 5
+  }
+}
+  

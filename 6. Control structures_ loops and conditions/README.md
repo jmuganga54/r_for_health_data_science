@@ -28,14 +28,14 @@ You’ll explore two important programming ideas:
 📘 To get started, read Chapter [13.1 and 13.2 from R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/control-structures.html).
 They give a beginner-friendly introduction to how loops and conditions work in R.
 
-* 13 Control Structures
-* 13.1 if-else
-* 13.2 for Loops
-* 13.3 Nested for loops
-* 13.4 while Loops
-* 13.5 repeat Loops
-* 13.6 next, break
-* 13.7 Summary
+* [**13 Control Structures**](#13-control-structures)
+* [**13.1 if-else**](#131-if-else)
+* [**13.2 for Loops**](#132-for-loops)
+* [**13.3 Nested for loops**](#133-nested-for-loops)
+* [**13.4 while Loops**](#134-while-loops)
+* [**13.5 repeat Loops**](#135-repeat-loops)
+* [**13.6 next, break**](#136-next-break)
+* [**13.7 Summary**](#137-summary)
 
 #### 13 Control Structures
 [Watch a video of this section](https://www.youtube.com/watch?v=BPNLjUDZ8_o)
@@ -384,5 +384,309 @@ In simple terms:
 > * The outer loop moves row by row,  
 > * and the inner loop moves column by column inside each row.  
 
+##### 13.4 while Loops
+
+[Watch a video of this section](https://www.youtube.com/watch?v=VqrS1Wghq1c)
+
+A `while loop` in R repeats a block of code as long as a condition is true.
+
+Once the condition becomes `false`, the loop `stops`.
+
+Think of it as saying:
+> “While this is true, keep doing this task.”
+
+**🧠 Example 1: Counting from 0 to 9**
+
+```
+count <- 0   # Start at 0
+
+while (count < 10) {   # Keep looping while count is less than 10
+  print(count)         # Print the current value
+  count <- count + 1   # Add 1 to count each time
+}
+
+
+```
+**🟢 Output:**
+
+```
+[1] 0
+[1] 1
+[1] 2
+[1] 3
+[1] 4
+[1] 5
+[1] 6
+[1] 7
+[1] 8
+[1] 9
+
+```
+
+Explanation: 
+> * The loop starts with `count = 0`.
+> * It checks if `count < 10`.
+> * If `TRUE`, it runs the code inside `{}`.
+> * After each loop, `count increases by 1`.
+> * Once count reaches `10`, the condition becomes `FALSE`, and the `loop stops`.
+
+>[!CAUTION]
+> ⚠️ Be careful:
+> If you forget to change `count` inside the loop (e.g., no `count <- count + 1`), the condition will always stay true, and your program will run forever (`an infinite loop`).
+
+**🧩 Example 2: A random walk (with multiple conditions)**  
+
+Here’s a slightly more advanced example:
+
+```
+z <- 5
+set.seed(1)  # Ensures the same random results every time
+
+while (z >= 3 && z <= 10) {  # Keep looping while z is between 3 and 10
+  coin <- rbinom(1, 1, 0.5)  # Flip a coin: 0 = tails, 1 = heads
+  
+  if (coin == 1) {
+    z <- z + 1  # Move one step up if heads
+  } else {
+    z <- z - 1  # Move one step down if tails
+  }
+}
+
+print(z)
+
+```
+
+**🟢 Output:**
+
+```
+[1] 2
+```
+
+📝 Explanation:
+> * The loop keeps running while z is between 3 and 10.
+> * Each time, a random “coin flip” decides whether z increases or decreases.
+> * The loop stops when z goes below 3 or above 10.
+
+>[!TIP]
+> * Condition check - Happens before every loop run
+> * Body of loop - Code inside `{}` runs only if the condition is `TRUE`
+> * `Infinite loop` - Happens when the condition never becomes FALSE
+> * Multiple conditions - Use `&&` (`“and”`) `or` 
+> * R checks conditions from left to right
+
+💬 In simple terms:
+> A while loop keeps doing something until it’s told to stop. 
+> You just need to make sure it eventually stops — otherwise R will keep looping forever!
+
+
+##### 13.5 repeat Loops
+
+[Watch a video of this section](https://www.youtube.com/watch?v=SajmdYr30SY)
+
+A `repeat loop` in R is used when you want something to run again and again —
+until a specific condition tells it to stop.
+
+Unlike `for` or `while` loops, which check conditions automatically,
+repeat loops will keep running forever unless you manually break them using the `break command`.
+
+**🧠 Example 1: Simple repeat loop**
+```
+count <- 0
+
+repeat {
+  print(count)
+  count <- count + 1
+  
+  if (count > 5) {  # stop the loop when count is greater than 5
+    break
+  }
+}
+
+
+```
+
+**🟢 Output:**
+```
+[1] 0
+[1] 1
+[1] 2
+[1] 3
+[1] 4
+[1] 5
+```
+
+📝 Explanation:
+> The loop starts and prints count each time.
+> It keeps going forever unless we tell it to stop.
+> The `if (count > 5)` condition uses break to exit the loop.
+
+
+**Example 2: Searching for a “close enough” answer**
+
+Sometimes, you don’t know how many times a process needs to run before it’s “good enough”.
+In such cases, a repeat loop is useful.
+
+Here’s a simple illustration using a made-up `computeEstimate()` function:
+
+```
+x0 <- 1
+tol <- 1e-8  # tolerance – how close is “close enough”
+
+repeat {
+  x1 <- computeEstimate()  # pretend this is a calculation
+  
+  if (abs(x1 - x0) < tol) {  # check if close enough
+    break                    # stop loop
+  } else {
+    x0 <- x1                 # update the estimate and continue
+  }
+}
+
+```
+
+>[!NOTE]
+> This example won’t run unless `computeEstimate()` is defined — it’s just to show the idea.
+
+>[!CAUTION]
+> ⚠️ Be Careful
+> * `repeat` loops are dangerous if not controlled properly — because they can run forever (infinite loop).  
+> * It’s safer to set a maximum number of iterations using a `for` loop or by adding a limit:
+
+```
+x <- 1
+tol <- 1e-8
+max_iter <- 1000
+iter <- 0
+
+repeat {
+  x1 <- x / 2  # example calculation
+  iter <- iter + 1
+  
+  if (abs(x1 - x) < tol || iter >= max_iter) {
+    break  # stop if close enough or max reached
+  }
+  
+  x <- x1
+}
+
+print("Loop ended safely")
+
+
+```
+
+**Summary**
+> * `repeat` - Starts an infinite loop
+> * `break` - Stops the loop manually
+> * Danger - Without `break`, it runs forever
+> * Tip - Always include a stopping `rule` or `maximum iteration` count
+
+💬 In simple terms:
+> A `repeat loop` keeps repeating forever until you tell it to stop using `break`.
+It’s useful when you don’t know in advance how many times the loop should run —
+for example, when improving a guess until it’s “good enough.”
+
+
+##### 13.6 next, break
+
+When working with loops in `R`, sometimes you may want to skip certain steps or stop the loop early.
+That’s where the `next` and `break` statements come in.
+
+**🧩 1. The next Statement — Skip to the Next Iteration**
+
+The next command tells R:
+> “Skip the rest of this loop and move to the next round.”
+
+This is useful when you want to ignore certain cases but keep the loop running.
+
+```
+for (i in 1:10) {
+  if (i <= 3) {
+    next   # Skip the first 3 numbers
+  }
+  print(i)
+}
+
+```
+🟢 Output:
+
+```
+[1] 4
+[1] 5
+[1] 6
+[1] 7
+[1] 8
+[1] 9
+[1] 10
+
+```
+📝 Explanation:
+> When `i` is `1, 2, or 3` → the loop skips printing because of `next`.
+> When `i` becomes 4, it continues normally and prints the numbers `4–10`.
+> In short: next says “skip this one and move on.”
+
+**🧱2. The break Statement — Stop the Loop Completely**
+
+The `break` command tells R:
+
+> “Stop the loop right now — don’t continue further.”
+
+This is useful when you’ve found what you’re looking for or want to stop after a condition.
+
+```
+for (i in 1:10) {
+  print(i)
+  
+  if (i >= 5) {
+    break  # Stop the loop once i reaches 5
+  }
+}
+
+ 
+```
+Output:
+
+```
+[1] 1
+[1] 2
+[1] 3
+[1] 4
+[1] 5
+
+```
+📝 Explanation:
+> The loop prints numbers from 1 to 5.
+> When `i` becomes 5, the condition if (i >= 5) is true, and the loop stops immediately.
+> In short: break says “stop the loop now.”
+
+>💬 In simple terms:
+> * 🟨 `next` → “Skip this one and go to the next.”
+> * 🟥 `break` → “Stop everything and end the loop.”
+
+
+##### 13.7 Summary
+
+In this session, we learned how control structures help us make our R programs smarter by controlling the flow of our code — deciding what to do, when to do it, and how often to repeat it.
+
+**🧩 Main Concepts Recap**
+
+| Structure       | Purpose                                               | Example Idea                                           |
+| --------------- | ----------------------------------------------------- | ------------------------------------------------------ |
+| **`if / else`** | Make decisions — run code only if a condition is true | “If it rains, take an umbrella, else wear sunglasses.” |
+| **`for`**       | Repeat a task a fixed number of times                 | Print numbers 1 to 10                                  |
+| **`while`**     | Keep repeating **while** a condition is true          | Count until a value reaches 10                         |
+| **`repeat`**    | Run forever **until** manually stopped with `break`   | Keep improving a guess until it’s accurate enough      |
+| **`next`**      | Skip one loop cycle and continue                      | Skip first few numbers                                 |
+| **`break`**     | Stop the loop completely                              | End the loop when a condition is met                   |
+
+
+> [!TIP]
+> ⚠️ Important Tips
+> * Avoid `infinite loops` (loops that never stop). Always make sure your loop has a clear stopping condition.
+> * These structures are most useful when writing programs and functions, not for quick data analysis at the console.
+> * For daily data tasks, R provides easier alternatives like `apply()`, `lapply()`, `sapply()`, and `map()` from the tidyverse.
+
+
+💬 In simple words:
+> Control structures help us add logic and automation to our R scripts — telling the computer when to act, what to skip, or when to stop. They’re the foundation of all programming!
 
 
