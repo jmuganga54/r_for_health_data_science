@@ -694,23 +694,22 @@ In this session, we learned how control structures help us make our R programs s
 ### 6.1 if, else and for
 
 **What you are practising**
+  * `for` loop: repeat actions for a sequence of numbers.
+  * `if / else if / else`: make decisions.
+  * Modulo `%%`: gives the remainder after division.
+    * Example: `23` %% `5` is `3` (because `23 = 5×4 + 3`).
 
-* `for` loop: repeat actions for a sequence of numbers.
-* `if / else if / else`: make decisions.
-* Modulo `%%`: gives the remainder after division.
-  * Example: `23` %% `5` is `3` (because `23 = 5×4 + 3`).
-
-* Divisibility rule:
-  * `n` is divisible by `3` if `n %% 3` == 0
-  * `n` is divisible by `5` if `n %% 5` == 0
-  * Divisible by both `3` and `5` if `n %% 15` == 0 (same as `(n %% 3 == 0) && (n %% 5 == 0)`)
+  * Divisibility rule:
+    * `n` is divisible by `3` if `n %% 3` == 0
+    * `n` is divisible by `5` if `n %% 5` == 0
+    * Divisible by both `3` and `5` if `n %% 15` == 0 (same as `(n %% 3 == 0) && (n %% 5 == 0)`)
 
 Game rules (Fizz-Buzz)
-* Say numbers from 1 to 100.
-* If divisible by 3 → say `"fizz"`.
-* If divisible by 5 → say `"buzz"`.
-* If divisible by 3 and 5 → say `"fizz-buzz"`.
-* Otherwise, print the number.
+  * Say numbers from 1 to 100.
+  * If divisible by 3 → say `"fizz"`.
+  * If divisible by 5 → say `"buzz"`.
+  * If divisible by 3 and 5 → say `"fizz-buzz"`.
+  * Otherwise, print the number.
 
 Complete solution (clear and safe order)
 Check “both” first, then 3, then 5.
