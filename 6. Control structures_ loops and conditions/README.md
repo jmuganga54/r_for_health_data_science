@@ -2,10 +2,10 @@
 
 In this session, we will discuss:
 
-  * 6 Control structures: loops and conditions
-  * 6.1 if, else and for
-  * 6.2 Vectorised code
-  * 6.3 Further Reading
+  * [**6 Control Structures: Loops and Conditions**](#6-control-structures-loops-and-conditions)  
+  * [**6.1 if, else and for**](#61-if-else-and-for)  
+  * [**6.2 Vectorised Code**](#62-vectorised-code)  
+  * [**6.3 Further Reading**](#63-further-reading)  
 
 
 ## keywords & Notes
@@ -691,4 +691,140 @@ In this session, we learned how control structures help us make our R programs s
 💬 In simple words:
 > Control structures help us add logic and automation to our R scripts — telling the computer when to act, what to skip, or when to stop. They’re the foundation of all programming!
 
+### 6.1 if, else and for
+
+**What you are practising**
+
+* `for` loop: repeat actions for a sequence of numbers.
+* `if / else if / else`: make decisions.
+* Modulo `%%`: gives the remainder after division.
+  * Example: `23` %% `5` is `3` (because `23 = 5×4 + 3`).
+
+* Divisibility rule:
+  * `n` is divisible by `3` if `n %% 3` == 0
+  * `n` is divisible by `5` if `n %% 5` == 0
+  * Divisible by both `3` and `5` if `n %% 15` == 0 (same as `(n %% 3 == 0) && (n %% 5 == 0)`)
+
+Game rules (Fizz-Buzz)
+* Say numbers from 1 to 100.
+* If divisible by 3 → say `"fizz"`.
+* If divisible by 5 → say `"buzz"`.
+* If divisible by 3 and 5 → say `"fizz-buzz"`.
+* Otherwise, print the number.
+
+Complete solution (clear and safe order)
+Check “both” first, then 3, then 5.
+```
+for (number in 1:100) {
+  if ((number %% 3 == 0) && (number %% 5 == 0)) {
+    print("fizz-buzz")
+  } else if (number %% 3 == 0) {
+    print("fizz")
+  } else if (number %% 5 == 0) {
+    print("buzz")
+  } else {
+    print(number)
+  }
+}
+
+```
+
+Output:
+
+```
+1
+2
+"fizz"
+4
+"buzz"
+"fizz"
+7
+8
+"fizz"
+"buzz"
+11
+"fizz"
+13
+14
+"fizz-buzz"
+16
+17
+"fizz"
+19
+"buzz"
+```
+>[!IMPORTANT]
+>Common mistakes to avoid
+> Checking `3 or 5` before the “both” case.
+> If you do that, numbers like `15` will match the first condition and you will never print `"fizz-buzz"`.
+> Forgetting that` %%` is the modulo operator in R (not % or another symbol).
+
+That is all you need to implement `fizz-buzz` with for and if/else in R.
+
+For more help see [Chapter 27](https://r4ds.hadley.nz/iteration.html) of Wickham & Grolemund.
+
+### 6.2 Vectorised code
+In R, vectorised code means performing an operation on a whole group of values (a vector) at once —
+instead of doing it one by one in a loop.
+
+This makes your code faster, shorter, and easier to read.
+
+Let’s say we have a vector of numbers:
+
+🧩 Example: Loop vs. Vectorised Code
+
+```
+numbers <- 1:10
+
+```
+
+🐢 Using a Loop (one by one)
+
+```
+for (i in numbers) {
+  print(i * 2)
+}
+
+```
+
+Output:
+```
+[1] 2
+[1] 4
+[1] 6
+[1] 8
+[1] 10
+[1] 12
+[1] 14
+[1] 16
+[1] 18
+[1] 20
+```
+
+⚡ Using Vectorised Code (all at once)
+
+```
+numbers * 2
+
+```
+
+Output:
+
+```
+ [1]  2  4  6  8 10 12 14 16 18 20
+ 
+```
+Here, R automatically multiplies each value in the vector by 2 — no loop needed!
+
+>[!IMPORTANT]
+> Key Takeaway
+> * Vectorised code means R handles all values in a vector at once.
+> * It’s faster and cleaner than using loops.
+> * You can use logical conditions (like x %% 3 == 0) to modify specific elements efficiently.
+
+
+
+### 6.3 Further Reading
+
+* [Chapter 10](https://bookdown.org/rdpeng/rprogdatascience/vectorized-operations.html) of R Programming for Data Science on vectorisation.
 
