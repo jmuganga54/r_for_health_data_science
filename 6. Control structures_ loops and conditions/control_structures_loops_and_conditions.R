@@ -196,4 +196,37 @@ for (i in 1:10) {
     break  # Stop the loop once i reaches 5
   }
 }
+
+### 6.1 if, else and for
+
+list_numbers <- 1:100
+list_numbers
+
+for(number in list_numbers){
+  if((number %% 3 == 0) && (number %% 5 == 0)){
+    print("fizz buzz")
+  }else if(number %% 3 == 0){
+    print("fizz")
+  }else if(number %% 5 == 0){
+    print("buzz")
+  }else{
+    print(number)
+  }
+}
+
+### 6.2 Vectorised code
+
+numbers <- 1:10
+numbers 
+
+for(number in numbers){
+  print(number * 2)
+}
+
+
+# ⚡ Using Vectorised Code (all at once)
+numbers * 2 
+
+
+
   
