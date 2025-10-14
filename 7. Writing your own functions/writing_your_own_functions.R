@@ -68,4 +68,7 @@ df |>
     d = rescale01(d)
 )
 
+# 3) (Nice to know) Reduce duplication further with `across()`
+df |> mutate(across(a:d, rescale01))
+
 
