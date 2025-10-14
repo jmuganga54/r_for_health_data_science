@@ -220,82 +220,82 @@ If we replace the changing part with a placeholder (think “slot”):
 ```
 …it’s clear we only need one input: the vector to rescale.
 
-1) Build the function
-
-Function template:
-
-```
-name <- function(arguments) {
-  body
-}
-
-```
-
-Our rescaling function:
-
-```
-rescale01 <- function(x) {
-  (x - min(x, na.rm = TRUE)) /
-    (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
-}
-
-```
-Quick tests
-
-```
-rescale01(c(-10, 0, 10))
-#> [1] 0.0 0.5 1.0
-
-rescale01(c(1, 2, 3, NA, 5))
-#> [1] 0.00 0.25 0.50   NA 1.00
-
-```
-2) Use it in your data wrangling
-
-```
-library(dplyr)
-library(tibble)
-
-set.seed(1)
-df <- tibble(
-  a = rnorm(5),
-  b = rnorm(5),
-  c = rnorm(5),
-  d = rnorm(5)
-)
-
-df |>
-  mutate(
-    a = rescale01(a),
-    b = rescale01(b),
-    c = rescale01(c),
-    d = rescale01(d)
+  1) Build the function
+  
+  Function template:
+  
+  ```
+  name <- function(arguments) {
+    body
+  }
+  
+  ```
+  
+  Our rescaling function:
+  
+  ```
+  rescale01 <- function(x) {
+    (x - min(x, na.rm = TRUE)) /
+      (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+  }
+  
+  ```
+  Quick tests
+  
+  ```
+  rescale01(c(-10, 0, 10))
+  #> [1] 0.0 0.5 1.0
+  
+  rescale01(c(1, 2, 3, NA, 5))
+  #> [1] 0.00 0.25 0.50   NA 1.00
+  
+  ```
+  2) Use it in your data wrangling
+  
+  ```
+  library(dplyr)
+  library(tibble)
+  
+  set.seed(1)
+  df <- tibble(
+    a = rnorm(5),
+    b = rnorm(5),
+    c = rnorm(5),
+    d = rnorm(5)
   )
-#> # A tibble: 5 × 4
-#>       a      b     c     d
-#>   <dbl>  <dbl> <dbl> <dbl>
-#> 1 0.795  0.134 0.458 0.000
-#> 2 0.000  1.000 1.000 0.557
-#> 3 1.000  0.000 0.000 1.000
-#> 4 0.339  0.353 0.291 0.752
-#> 5 0.880  0.210 0.580 0.394
-
-```
-> Why this is better:
-> * No copy–paste mistakes (like using min(a, ...) when scaling b).
-> * One clear place to edit if you need to change the logic later.
-> * Cleaner, more readable code.
-
-3) (Nice to know) Reduce duplication further with `across()`
-
-```
-df |>
-  mutate(across(a:d, rescale01))
-
-```
-This applies `rescale01()` to all columns `a` through `d` in one shot.
-
-> (In [Chapter 26](https://r4ds.hadley.nz/iteration.html), you’ll learn how to use `across()` to reduce the duplication even further so all you need is `df |> mutate(across(a:d, rescale01))`).
+  
+  df |>
+    mutate(
+      a = rescale01(a),
+      b = rescale01(b),
+      c = rescale01(c),
+      d = rescale01(d)
+    )
+  #> # A tibble: 5 × 4
+  #>       a      b     c     d
+  #>   <dbl>  <dbl> <dbl> <dbl>
+  #> 1 0.795  0.134 0.458 0.000
+  #> 2 0.000  1.000 1.000 0.557
+  #> 3 1.000  0.000 0.000 1.000
+  #> 4 0.339  0.353 0.291 0.752
+  #> 5 0.880  0.210 0.580 0.394
+  
+  ```
+  > Why this is better:
+  > * No copy–paste mistakes (like using min(a, ...) when scaling b).
+  > * One clear place to edit if you need to change the logic later.
+  > * Cleaner, more readable code.
+  
+  3) (Nice to know) Reduce duplication further with `across()`
+  
+  ```
+  df |>
+    mutate(across(a:d, rescale01))
+  
+  ```
+  This applies `rescale01()` to all columns `a` through `d` in one shot.
+  
+  > (In [Chapter 26](https://r4ds.hadley.nz/iteration.html), you’ll learn how to use `across()` to reduce the duplication even further so all you need is `df |> mutate(across(a:d, rescale01))`).
 
 ##### 25.1 Introduction
 ##### 25.1 Introduction
