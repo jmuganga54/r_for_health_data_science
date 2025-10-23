@@ -296,6 +296,172 @@ If we replace the changing part with a placeholder (think “slot”):
   This applies `rescale01()` to all columns `a` through `d` in one shot.
   
   > (In [Chapter 26](https://r4ds.hadley.nz/iteration.html), you’ll learn how to use `across()` to reduce the duplication even further so all you need is `df |> mutate(across(a:d, rescale01))`).
+  
+  
+# 25.2.2 Improving Our Function (Beginner-Friendly Guide)
+
+This guide shows how to **improve a rescaling function** in R that maps numbers to the range **0–1**.  
+We’ll make it **faster**, **safer**, and **easier to maintain**, and we’ll look at how to handle edge cases like `NA` and `Inf`.
+
+---
+
+## Why improve the original function?
+
+The first version computed `min()` **twice** and `max()` **once** on the same vector. That’s unnecessary work.  
+We can replace those three calls with a single call to **`range()`**, which returns **both** the minimum and maximum.
+
+### Original version
+```r
+rescale01 <- function(x) {
+  (x - min(x, na.rm = TRUE)) /
+    (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+}
+```
+
+---
+
+## Make it efficient with `range()`
+
+`range(x, na.rm = TRUE)` returns a numeric vector of length 2:  
+- `rng[1]` → minimum value  
+- `rng[2]` → maximum value
+
+### Improved version
+```r
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+### Example
+```r
+rescale01(c(10, 20, 30, 40, 50))
+#> [1] 0.00 0.25 0.50 0.75 1.00
+```
+
+**Explanation:**  
+- `range(c(10, 20, 30, 40, 50))` is `[10, 50]`  
+- Subtract 10 (min), then divide by 40 (max - min)
+
+---
+
+## Handling `Inf` (infinite values)
+
+If your data includes `Inf`, the previous version can produce `NaN` outputs.
+
+### Example showing the problem
+```r
+x <- c(1:10, Inf)
+rescale01(x)
+#>  [1] 0 0 0 0 0 0 0 0 0 0 NaN
+```
+
+### Fix: ask `range()` to ignore infinite values
+
+Use `finite = TRUE` so `range()` computes min/max from **finite** values only.
+
+```r
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE, finite = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+### Test again
+```r
+x <- c(1:10, Inf)
+rescale01(x)
+#>  [1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444 0.5555556 0.6666667
+#>  [8] 0.7777778 0.8888889 1.0000000       Inf
+```
+
+**What happened?**  
+- The **finite values** (1–10) were rescaled to 0–1.  
+- `Inf` stayed `Inf` (we didn’t modify it), but it **no longer breaks** the calculation.
+
+---
+
+## Built-in functions explained
+
+| Function | What it does | Example | Output |
+|---|---|---|---|
+| `range(x, na.rm = TRUE)` | Returns **c(min, max)**, optionally ignoring `NA` | `range(c(2, 5, NA), na.rm = TRUE)` | `2 5` |
+| `min(x, na.rm = TRUE)` | Smallest value, optionally ignoring `NA` | `min(c(3, NA, 7), na.rm = TRUE)` | `3` |
+| `max(x, na.rm = TRUE)` | Largest value, optionally ignoring `NA` | `max(c(3, NA, 7), na.rm = TRUE)` | `7` |
+| `finite = TRUE` | Ignores `Inf`/`-Inf` when finding range | `range(c(1, Inf), finite = TRUE)` | `1 1` |
+
+> **Tip:** `na.rm = TRUE` tells functions to **remove NAs** before computing.  
+> **Tip:** `finite = TRUE` tells `range()` to ignore **infinite values** too.
+
+---
+
+## Edge cases to consider
+
+1. **All values are the same** (e.g., `x = c(5, 5, 5)`):  
+   - The denominator `(max - min)` becomes **0**, leading to `NaN`.  
+   - You may want to **special-case** this to return zeros.
+
+2. **All values are `NA`**:  
+   - `range()` returns `c(NA, NA)` → result is all `NA`.  
+   - That’s usually okay, but be aware.
+
+### Safer version handling constant vectors
+
+```r
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE, finite = TRUE)
+  if (any(!is.finite(rng))) return(x * NA_real_)  # all NA/Inf
+  if (rng[1] == rng[2]) return((x - rng[1]) * 0) # constant vector → all zeros
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+### Tests
+```r
+rescale01(c(5, 5, 5))
+#> [1] 0 0 0
+
+rescale01(c(NA, NA))
+#> [1] NA NA
+```
+
+---
+
+## Why functions make changes easier
+
+Because the rescaling logic lives in **one function**, any improvement (like handling `Inf`)  
+is done **once** and instantly benefits **everywhere** you use it. No more copy–paste fixes.
+
+---
+
+## Mini-exercise (with solution)
+
+**Exercise:** Rescale this vector and explain the result:
+```r
+y <- c(-5, 0, 5, 10, Inf, NA)
+rescale01(y)
+```
+
+**Solution (expected behavior):**
+- Finite numbers (`-5, 0, 5, 10`) are rescaled to 0–1  
+- `Inf` stays `Inf`  
+- `NA` stays `NA`  
+
+Example output (your exact values may vary slightly):
+```
+[1] 0.00 0.33 0.67 1.00   Inf   NA
+```
+
+---
+
+## TL;DR
+
+- Use `range()` to compute min & max **in one step**.  
+- Add `finite = TRUE` to avoid `Inf` causing `NaN`.  
+- Wrap logic in a **single function** so fixes are applied **everywhere** automatically.
+
+
 
 ##### 25.1 Introduction
 ##### 25.1 Introduction
