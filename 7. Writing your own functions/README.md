@@ -304,7 +304,7 @@ We’ll also learn how to handle special values like **Inf** (infinity) and **NA
 
 ---
 
-####### 🧠 Step 1: Recall the Original Function
+###### 🧠 Step 1: Recall the Original Function
 
 Here’s our first version:
 
@@ -315,7 +315,7 @@ rescale01 <- function(x) {
 }
 ```
 
-####### 🔍 Explanation
+###### 🔍 Explanation
 | Function | What it does | Example | Output |
 |-----------|---------------|----------|---------|
 | `min(x, na.rm = TRUE)` | Finds the smallest value while ignoring missing values (`NA`) | `min(c(1,2,NA), na.rm = TRUE)` | `1` |
@@ -323,7 +323,7 @@ rescale01 <- function(x) {
 
 This rescales your data so that the smallest number becomes **0** and the largest becomes **1**.
 
-####### ✅ Example
+###### ✅ Example
 ```r
 rescale01(c(10, 20, 30, 40, 50))
 ```
@@ -334,7 +334,7 @@ rescale01(c(10, 20, 30, 40, 50))
 
 ---
 
-####### ⚙️ Step 2: Make It More Efficient with `range()`
+###### ⚙️ Step 2: Make It More Efficient with `range()`
 
 The original function calls `min()` and `max()` multiple times.  
 We can simplify this using **`range()`**, which returns both values in one call.
@@ -346,12 +346,12 @@ rescale01 <- function(x) {
 }
 ```
 
-####### 🔍 Explanation
+###### 🔍 Explanation
 - `range(x, na.rm = TRUE)` → returns both the **minimum** and **maximum** values of `x`
 - `rng[1]` → minimum value
 - `rng[2]` → maximum value
 
-####### ✅ Example
+###### ✅ Example
 ```r
 rescale01(c(10, 20, 30, 40, 50))
 ```
@@ -364,7 +364,7 @@ Same result, but now **faster and cleaner**!
 
 ---
 
-####### ⚠️ Step 3: What Happens with Infinite Values?
+###### ⚠️ Step 3: What Happens with Infinite Values?
 
 Let’s test when `x` contains infinity (`Inf`):
 
@@ -382,7 +382,7 @@ This happens because R tried to do math with `Inf` which is undefined in this co
 
 ---
 
-####### ✅ Step 4: Fix It with `finite = TRUE`
+###### ✅ Step 4: Fix It with `finite = TRUE`
 
 We can tell R to **ignore infinite values** when calculating the range:
 
@@ -393,7 +393,7 @@ rescale01 <- function(x) {
 }
 ```
 
-####### ✅ Test Again
+###### ✅ Test Again
 ```r
 x <- c(1:10, Inf)
 rescale01(x)
@@ -408,7 +408,7 @@ rescale01(x)
 
 ---
 
-####### 🧠 Built-in Functions Explained
+###### 🧠 Built-in Functions Explained
 
 | Function | Description | Example | Output |
 |-----------|--------------|----------|---------|
@@ -420,7 +420,7 @@ rescale01(x)
 
 ---
 
-####### 💡 Step 5: Why This Improvement Matters
+###### 💡 Step 5: Why This Improvement Matters
 
 Because our logic is wrapped in one function:
 - We only need to make updates **once**.
@@ -431,7 +431,7 @@ This shows one big benefit of writing functions — a single update improves you
 
 ---
 
-####### ✅ Final Improved Function
+###### ✅ Final Improved Function
 
 ```r
 rescale01 <- function(x) {
@@ -482,27 +482,27 @@ df |> mutate(new_column = my_function(old_column))
 
 ---
 
-####### 🧠 1. Z-Score Function (Standardization)
+###### 🧠 1. Z-Score Function (Standardization)
 
 ### 🎯 Goal
 Rescale a vector so that:
 - Mean = 0  
 - Standard deviation = 1
 
-####### 🧑‍💻 Code
+###### 🧑‍💻 Code
 ```r
 z_score <- function(x) {
   (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
 }
 ```
 
-####### 🔍 Explanation
+###### 🔍 Explanation
 | Function | Description | Example | Output |
 |-----------|--------------|----------|---------|
 | `mean(x, na.rm = TRUE)` | Finds the average while ignoring `NA` | `mean(c(1,2,NA), na.rm = TRUE)` | `1.5` |
 | `sd(x, na.rm = TRUE)` | Finds the standard deviation | `sd(c(1,2,3))` | `1` |
 
-####### ✅ Example
+###### ✅ Example
 ```r
 z_score(c(10, 20, 30))
 ```
@@ -513,12 +513,12 @@ z_score(c(10, 20, 30))
 
 ---
 
-####### 🧠 2. Clamp Function (Limit Values Within a Range)
+###### 🧠 2. Clamp Function (Limit Values Within a Range)
 
-####### 🎯 Goal
+###### 🎯 Goal
 Ensure all numbers stay between a minimum and maximum value.
 
-### 🧑‍💻 Code
+###### 🧑‍💻 Code
 ```r
 clamp <- function(x, min, max) {
   case_when(
@@ -529,13 +529,13 @@ clamp <- function(x, min, max) {
 }
 ```
 
-####### 🔍 Explanation
+###### 🔍 Explanation
 | Function | Description | Example | Output |
 |-----------|--------------|----------|---------|
 | `case_when()` | Tests multiple conditions | `case_when(2 < 3 ~ "Yes", TRUE ~ "No")` | `"Yes"` |
 | `.default = x` | Keeps the value unchanged if no condition matches | | |
 
-####### ✅ Example
+###### ✅ Example
 ```r
 clamp(1:10, min = 3, max = 7)
 ```
@@ -546,12 +546,12 @@ clamp(1:10, min = 3, max = 7)
 
 ---
 
-####### 🧠 3. Make the First Letter Uppercase
+###### 🧠 3. Make the First Letter Uppercase
 
 ### 🎯 Goal
 Change the first letter of each word to uppercase.
 
-####### 🧑‍💻 Code
+###### 🧑‍💻 Code
 ```r
 library(stringr)
 
@@ -561,13 +561,13 @@ first_upper <- function(x) {
 }
 ```
 
-####### 🔍 Explanation
+###### 🔍 Explanation
 | Function | Description | Example | Output |
 |-----------|--------------|----------|---------|
 | `str_sub(x, start, end)` | Extracts part of a string | `str_sub("hello", 1, 1)` | `"h"` |
 | `str_to_upper()` | Converts to uppercase | `str_to_upper("h")` | `"H"` |
 
-####### ✅ Example
+###### ✅ Example
 ```r
 first_upper("hello")
 ```
@@ -578,12 +578,12 @@ first_upper("hello")
 
 ---
 
-####### 🧠 4. Clean Number Function
+###### 🧠 4. Clean Number Function
 
-####### 🎯 Goal
+###### 🎯 Goal
 Remove symbols (`%`, `$`, `,`) from text numbers and convert them into numeric values.
 
-### 🧑‍💻 Code
+######🧑‍💻 Code
 ```r
 clean_number <- function(x) {
   is_pct <- str_detect(x, "%")
@@ -596,7 +596,7 @@ clean_number <- function(x) {
 }
 ```
 
-####### 🔍 Explanation
+###### 🔍 Explanation
 | Function | Description | Example | Output |
 |-----------|--------------|----------|---------|
 | `str_detect(x, "%")` | Checks if text contains `%` | `str_detect("45%", "%")` | `TRUE` |
@@ -605,7 +605,7 @@ clean_number <- function(x) {
 | `as.numeric()` | Converts text to number | `as.numeric("123")` | `123` |
 | `if_else()` | Returns one value if condition is true, another if false | `if_else(TRUE, 1, 0)` | `1` |
 
-####### ✅ Examples
+###### ✅ Examples
 ```r
 clean_number("$12,300")
 #> [1] 12300
@@ -616,25 +616,24 @@ clean_number("45%")
 
 ---
 
-#######🧠 5. Fix Missing Values
+###### 🧠 5. Fix Missing Values
 
 ####### 🎯 Goal
 Replace fake missing codes (like 997, 998, 999) with actual `NA` values.
 
-####### 🧑‍💻 Code
+###### 🧑‍💻 Code
 ```r
 fix_na <- function(x) {
   if_else(x %in% c(997, 998, 999), NA, x)
 }
 ```
-
-####### 🔍 Explanation
+###### 🔍 Explanation
 | Function | Description | Example | Output |
 |-----------|--------------|----------|---------|
 | `%in%` | Checks if values exist in a list | `5 %in% c(1,5,10)` | `TRUE` |
 | `if_else()` | Replaces values based on condition | `if_else(TRUE, "Yes", "No")` | `"Yes"` |
 
-####### ✅ Example
+###### ✅ Example
 ```r
 fix_na(c(1, 997, 5, 999))
 ```
@@ -645,7 +644,7 @@ fix_na(c(1, 997, 5, 999))
 
 ---
 
-####### 🧩 Summary
+###### 🧩 Summary
 
 | Function | Purpose |
 |-----------|----------|
@@ -657,7 +656,7 @@ fix_na(c(1, 997, 5, 999))
 
 ---
 
-####### ✅ Key Takeaways
+###### ✅ Key Takeaways
 - Mutate functions work best inside `mutate()` and `filter()`.
 - They return vectors of the **same length** as input.
 - Writing your own small functions makes your analysis **cleaner, faster, and reusable**.
