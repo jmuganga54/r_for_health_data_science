@@ -297,20 +297,17 @@ If we replace the changing part with a placeholder (think “slot”):
   
   > (In [Chapter 26](https://r4ds.hadley.nz/iteration.html), you’ll learn how to use `across()` to reduce the duplication even further so all you need is `df |> mutate(across(a:d, rescale01))`).
   
-  
-# 25.2.2 Improving Our Function (Beginner-Friendly Guide)
+###### 25.2.2 Improving our function
 
-This guide shows how to **improve a rescaling function** in R that maps numbers to the range **0–1**.  
-We’ll make it **faster**, **safer**, and **easier to maintain**, and we’ll look at how to handle edge cases like `NA` and `Inf`.
+In this section, we’ll improve the **rescale01()** function to make it faster, cleaner, and more reliable.  
+We’ll also learn how to handle special values like **Inf** (infinity) and **NA** (missing values).
 
 ---
 
-## Why improve the original function?
+####### 🧠 Step 1: Recall the Original Function
 
-The first version computed `min()` **twice** and `max()` **once** on the same vector. That’s unnecessary work.  
-We can replace those three calls with a single call to **`range()`**, which returns **both** the minimum and maximum.
+Here’s our first version:
 
-### Original version
 ```r
 rescale01 <- function(x) {
   (x - min(x, na.rm = TRUE)) /
@@ -318,15 +315,30 @@ rescale01 <- function(x) {
 }
 ```
 
+####### 🔍 Explanation
+| Function | What it does | Example | Output |
+|-----------|---------------|----------|---------|
+| `min(x, na.rm = TRUE)` | Finds the smallest value while ignoring missing values (`NA`) | `min(c(1,2,NA), na.rm = TRUE)` | `1` |
+| `max(x, na.rm = TRUE)` | Finds the largest value while ignoring missing values | `max(c(1,2,NA), na.rm = TRUE)` | `2` |
+
+This rescales your data so that the smallest number becomes **0** and the largest becomes **1**.
+
+####### ✅ Example
+```r
+rescale01(c(10, 20, 30, 40, 50))
+```
+**Output:**
+```
+[1] 0.00 0.25 0.50 0.75 1.00
+```
+
 ---
 
-## Make it efficient with `range()`
+####### ⚙️ Step 2: Make It More Efficient with `range()`
 
-`range(x, na.rm = TRUE)` returns a numeric vector of length 2:  
-- `rng[1]` → minimum value  
-- `rng[2]` → maximum value
+The original function calls `min()` and `max()` multiple times.  
+We can simplify this using **`range()`**, which returns both values in one call.
 
-### Improved version
 ```r
 rescale01 <- function(x) {
   rng <- range(x, na.rm = TRUE)
@@ -334,132 +346,325 @@ rescale01 <- function(x) {
 }
 ```
 
-### Example
+####### 🔍 Explanation
+- `range(x, na.rm = TRUE)` → returns both the **minimum** and **maximum** values of `x`
+- `rng[1]` → minimum value
+- `rng[2]` → maximum value
+
+####### ✅ Example
+```r
+rescale01(c(10, 20, 30, 40, 50))
+```
+**Output:**
+```
+[1] 0.00 0.25 0.50 0.75 1.00
+```
+
+Same result, but now **faster and cleaner**!
+
+---
+
+####### ⚠️ Step 3: What Happens with Infinite Values?
+
+Let’s test when `x` contains infinity (`Inf`):
+
+```r
+x <- c(1:10, Inf)
+rescale01(x)
+```
+**Output:**
+```
+[1] 0 0 0 0 0 0 0 0 0 0 NaN
+```
+
+🧐 The infinite value produced **NaN** (Not a Number).  
+This happens because R tried to do math with `Inf` which is undefined in this context.
+
+---
+
+####### ✅ Step 4: Fix It with `finite = TRUE`
+
+We can tell R to **ignore infinite values** when calculating the range:
+
+```r
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE, finite = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+####### ✅ Test Again
+```r
+x <- c(1:10, Inf)
+rescale01(x)
+```
+**Output:**
+```
+[1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444 0.5555556 0.6666667
+[8] 0.7777778 0.8888889 1.0000000       Inf
+```
+
+🎉 The normal numbers are rescaled correctly, and `Inf` remains unchanged.
+
+---
+
+####### 🧠 Built-in Functions Explained
+
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `range(x, na.rm = TRUE)` | Returns both smallest and largest values | `range(c(2, 5, 8))` | `[1] 2 8` |
+| `na.rm = TRUE` | Removes missing values before calculation | `mean(c(1, NA, 3), na.rm = TRUE)` → `2` | |
+| `finite = TRUE` | Ignores `Inf` and `-Inf` | `range(c(1, 5, Inf), finite = TRUE)` → `[1] 1 5` |
+| `Inf` | Represents infinity | `1/0` → `Inf` | |
+| `NaN` | “Not a Number”, appears when result is undefined | `0/0` → `NaN` | |
+
+---
+
+####### 💡 Step 5: Why This Improvement Matters
+
+Because our logic is wrapped in one function:
+- We only need to make updates **once**.
+- The function becomes **faster**, **cleaner**, and **reusable**.
+- It can handle tricky data (with `Inf` or `NA`) safely.
+
+This shows one big benefit of writing functions — a single update improves your entire workflow!
+
+---
+
+####### ✅ Final Improved Function
+
+```r
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE, finite = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+### 🧪 Test Cases
 ```r
 rescale01(c(10, 20, 30, 40, 50))
 #> [1] 0.00 0.25 0.50 0.75 1.00
-```
 
-**Explanation:**  
-- `range(c(10, 20, 30, 40, 50))` is `[10, 50]`  
-- Subtract 10 (min), then divide by 40 (max - min)
+rescale01(c(1:10, Inf))
+#> [1] 0.00 0.11 0.22 0.33 0.44 0.56 0.67 0.78 0.89 1.00 Inf
+```
 
 ---
 
-## Handling `Inf` (infinite values)
+## 🧩 Summary
 
-If your data includes `Inf`, the previous version can produce `NaN` outputs.
+| Concept | Explanation |
+|----------|-------------|
+| **Goal** | Rescale numbers to a 0–1 range |
+| **Problem** | Repeated calculations and failure with `Inf` |
+| **Solution** | Use `range()` with `finite = TRUE` |
+| **Benefit** | Faster, cleaner, handles edge cases safely |
 
-### Example showing the problem
+---
+
+✅ **Key takeaway:** When improving a function, focus on efficiency, readability, and reliability.  
+With `range()` and `finite = TRUE`, we make `rescale01()` smarter and more stable.
+
+###### 25.2.3 Mutate functions
+
+
+## 🎯 What Are “Mutate Functions”?
+A **mutate function** is a function that:
+- Takes one or more **vectors** as input.  
+- Returns a **vector of the same length** as output.  
+
+These functions work perfectly with **`mutate()`** or **`filter()`** in **dplyr**, because each output value corresponds to one input value.
+
+Example:
 ```r
-x <- c(1:10, Inf)
-rescale01(x)
-#>  [1] 0 0 0 0 0 0 0 0 0 0 NaN
+df |> mutate(new_column = my_function(old_column))
 ```
 
-### Fix: ask `range()` to ignore infinite values
+---
 
-Use `finite = TRUE` so `range()` computes min/max from **finite** values only.
+####### 🧠 1. Z-Score Function (Standardization)
 
+### 🎯 Goal
+Rescale a vector so that:
+- Mean = 0  
+- Standard deviation = 1
+
+####### 🧑‍💻 Code
 ```r
-rescale01 <- function(x) {
-  rng <- range(x, na.rm = TRUE, finite = TRUE)
-  (x - rng[1]) / (rng[2] - rng[1])
+z_score <- function(x) {
+  (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
 }
 ```
 
-### Test again
+####### 🔍 Explanation
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `mean(x, na.rm = TRUE)` | Finds the average while ignoring `NA` | `mean(c(1,2,NA), na.rm = TRUE)` | `1.5` |
+| `sd(x, na.rm = TRUE)` | Finds the standard deviation | `sd(c(1,2,3))` | `1` |
+
+####### ✅ Example
 ```r
-x <- c(1:10, Inf)
-rescale01(x)
-#>  [1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444 0.5555556 0.6666667
-#>  [8] 0.7777778 0.8888889 1.0000000       Inf
+z_score(c(10, 20, 30))
+```
+**Output:**
+```
+[1] -1  0  1
 ```
 
-**What happened?**  
-- The **finite values** (1–10) were rescaled to 0–1.  
-- `Inf` stayed `Inf` (we didn’t modify it), but it **no longer breaks** the calculation.
-
 ---
 
-## Built-in functions explained
+####### 🧠 2. Clamp Function (Limit Values Within a Range)
 
-| Function | What it does | Example | Output |
-|---|---|---|---|
-| `range(x, na.rm = TRUE)` | Returns **c(min, max)**, optionally ignoring `NA` | `range(c(2, 5, NA), na.rm = TRUE)` | `2 5` |
-| `min(x, na.rm = TRUE)` | Smallest value, optionally ignoring `NA` | `min(c(3, NA, 7), na.rm = TRUE)` | `3` |
-| `max(x, na.rm = TRUE)` | Largest value, optionally ignoring `NA` | `max(c(3, NA, 7), na.rm = TRUE)` | `7` |
-| `finite = TRUE` | Ignores `Inf`/`-Inf` when finding range | `range(c(1, Inf), finite = TRUE)` | `1 1` |
+####### 🎯 Goal
+Ensure all numbers stay between a minimum and maximum value.
 
-> **Tip:** `na.rm = TRUE` tells functions to **remove NAs** before computing.  
-> **Tip:** `finite = TRUE` tells `range()` to ignore **infinite values** too.
-
----
-
-## Edge cases to consider
-
-1. **All values are the same** (e.g., `x = c(5, 5, 5)`):  
-   - The denominator `(max - min)` becomes **0**, leading to `NaN`.  
-   - You may want to **special-case** this to return zeros.
-
-2. **All values are `NA`**:  
-   - `range()` returns `c(NA, NA)` → result is all `NA`.  
-   - That’s usually okay, but be aware.
-
-### Safer version handling constant vectors
-
+### 🧑‍💻 Code
 ```r
-rescale01 <- function(x) {
-  rng <- range(x, na.rm = TRUE, finite = TRUE)
-  if (any(!is.finite(rng))) return(x * NA_real_)  # all NA/Inf
-  if (rng[1] == rng[2]) return((x - rng[1]) * 0) # constant vector → all zeros
-  (x - rng[1]) / (rng[2] - rng[1])
+clamp <- function(x, min, max) {
+  case_when(
+    x < min ~ min,
+    x > max ~ max,
+    .default = x
+  )
 }
 ```
 
-### Tests
+####### 🔍 Explanation
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `case_when()` | Tests multiple conditions | `case_when(2 < 3 ~ "Yes", TRUE ~ "No")` | `"Yes"` |
+| `.default = x` | Keeps the value unchanged if no condition matches | | |
+
+####### ✅ Example
 ```r
-rescale01(c(5, 5, 5))
-#> [1] 0 0 0
-
-rescale01(c(NA, NA))
-#> [1] NA NA
+clamp(1:10, min = 3, max = 7)
+```
+**Output:**
+```
+[1] 3 3 3 4 5 6 7 7 7 7
 ```
 
 ---
 
-## Why functions make changes easier
+####### 🧠 3. Make the First Letter Uppercase
 
-Because the rescaling logic lives in **one function**, any improvement (like handling `Inf`)  
-is done **once** and instantly benefits **everywhere** you use it. No more copy–paste fixes.
+### 🎯 Goal
+Change the first letter of each word to uppercase.
 
----
-
-## Mini-exercise (with solution)
-
-**Exercise:** Rescale this vector and explain the result:
+####### 🧑‍💻 Code
 ```r
-y <- c(-5, 0, 5, 10, Inf, NA)
-rescale01(y)
+library(stringr)
+
+first_upper <- function(x) {
+  str_sub(x, 1, 1) <- str_to_upper(str_sub(x, 1, 1))
+  x
+}
 ```
 
-**Solution (expected behavior):**
-- Finite numbers (`-5, 0, 5, 10`) are rescaled to 0–1  
-- `Inf` stays `Inf`  
-- `NA` stays `NA`  
+####### 🔍 Explanation
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `str_sub(x, start, end)` | Extracts part of a string | `str_sub("hello", 1, 1)` | `"h"` |
+| `str_to_upper()` | Converts to uppercase | `str_to_upper("h")` | `"H"` |
 
-Example output (your exact values may vary slightly):
+####### ✅ Example
+```r
+first_upper("hello")
 ```
-[1] 0.00 0.33 0.67 1.00   Inf   NA
+**Output:**
+```
+[1] "Hello"
 ```
 
 ---
 
-## TL;DR
+####### 🧠 4. Clean Number Function
 
-- Use `range()` to compute min & max **in one step**.  
-- Add `finite = TRUE` to avoid `Inf` causing `NaN`.  
-- Wrap logic in a **single function** so fixes are applied **everywhere** automatically.
+####### 🎯 Goal
+Remove symbols (`%`, `$`, `,`) from text numbers and convert them into numeric values.
+
+### 🧑‍💻 Code
+```r
+clean_number <- function(x) {
+  is_pct <- str_detect(x, "%")
+  num <- x |> 
+    str_remove_all("%") |> 
+    str_remove_all(",") |> 
+    str_remove_all(fixed("$")) |> 
+    as.numeric()
+  if_else(is_pct, num / 100, num)
+}
+```
+
+####### 🔍 Explanation
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `str_detect(x, "%")` | Checks if text contains `%` | `str_detect("45%", "%")` | `TRUE` |
+| `str_remove_all()` | Removes unwanted symbols | `str_remove_all("12,300", ",")` | `"12300"` |
+| `fixed("$")` | Treats `$` as a normal symbol | | |
+| `as.numeric()` | Converts text to number | `as.numeric("123")` | `123` |
+| `if_else()` | Returns one value if condition is true, another if false | `if_else(TRUE, 1, 0)` | `1` |
+
+####### ✅ Examples
+```r
+clean_number("$12,300")
+#> [1] 12300
+
+clean_number("45%")
+#> [1] 0.45
+```
+
+---
+
+#######🧠 5. Fix Missing Values
+
+####### 🎯 Goal
+Replace fake missing codes (like 997, 998, 999) with actual `NA` values.
+
+####### 🧑‍💻 Code
+```r
+fix_na <- function(x) {
+  if_else(x %in% c(997, 998, 999), NA, x)
+}
+```
+
+####### 🔍 Explanation
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `%in%` | Checks if values exist in a list | `5 %in% c(1,5,10)` | `TRUE` |
+| `if_else()` | Replaces values based on condition | `if_else(TRUE, "Yes", "No")` | `"Yes"` |
+
+####### ✅ Example
+```r
+fix_na(c(1, 997, 5, 999))
+```
+**Output:**
+```
+[1]  1 NA  5 NA
+```
+
+---
+
+####### 🧩 Summary
+
+| Function | Purpose |
+|-----------|----------|
+| `z_score()` | Standardizes data (mean = 0, SD = 1) |
+| `clamp()` | Limits values to a range |
+| `first_upper()` | Capitalizes first letter |
+| `clean_number()` | Cleans symbols from numbers |
+| `fix_na()` | Converts coded missing values to NA |
+
+---
+
+####### ✅ Key Takeaways
+- Mutate functions work best inside `mutate()` and `filter()`.
+- They return vectors of the **same length** as input.
+- Writing your own small functions makes your analysis **cleaner, faster, and reusable**.
+- You can use them for both **numeric** and **string** variables.
+
+---
+
 
 
 
