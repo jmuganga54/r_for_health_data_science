@@ -616,12 +616,12 @@ clean_number("45%")
 
 ---
 
-##### 🧠 5. Fix Missing Values
+###### 🧠 5. Fix Missing Values
 
 ###### 🎯 Goal
 Replace fake missing codes (like 997, 998, 999) with actual `NA` values.
 
-###### 🧑‍💻 Code
+####### 🧑‍💻 Code
 ```r
 fix_na <- function(x) {
   if_else(x %in% c(997, 998, 999), NA, x)
@@ -663,6 +663,179 @@ fix_na(c(1, 997, 5, 999))
 - You can use them for both **numeric** and **string** variables.
 
 ---
+
+##### 25.2.4 Summary functions
+
+
+###### 🎯 What Are Summary Functions?
+A **summary function** takes a **vector** as input and returns **a single value** as output.  
+They are perfect for use in `summarize()` because they reduce many values into one summary — like mean, count, or total.
+
+Example:
+```r
+summarize(df, avg = mean(x))
+```
+
+---
+
+###### 🧠 1. Combine Words Nicely — `commas()`
+
+###### 🎯 Goal
+Turn a list of words into a single sentence separated by commas and “and”.
+
+###### 🧑‍💻 Code
+```r
+commas <- function(x) {
+  str_flatten(x, collapse = ", ", last = " and ")
+}
+
+commas(c("cat", "dog", "pigeon"))
+```
+###### 🟢 Output
+```
+[1] "cat, dog and pigeon"
+```
+
+###### 🔍 Explanation
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `str_flatten(x, collapse, last)` | Combines vector elements into one string. | `str_flatten(c("A","B","C"), ", ", " and ")` | `"A, B and C"` |
+
+🧩 **In short:** Combines text neatly for easy reading.
+
+---
+
+###### 🧠 2. Coefficient of Variation — `cv()`
+
+###### 🎯 Goal
+Measure variability of data compared to its mean.
+
+Formula: `CV = SD / Mean`
+
+###### 🧑‍💻 Code
+```r
+cv <- function(x, na.rm = FALSE) {
+  sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
+}
+
+cv(runif(100, min = 0, max = 50))
+cv(runif(100, min = 0, max = 500))
+```
+
+### 🟢 Output
+```
+[1] 0.5196276
+[1] 0.5652554
+```
+
+###### 🔍 Explanation
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `sd(x)` | Standard deviation | `sd(c(1,2,3))` | `1` |
+| `mean(x)` | Average value | `mean(c(1,2,3))` | `2` |
+| `runif(n, min, max)` | Creates random numbers | `runif(3, 0, 10)` | `[1] 3.2 8.1 1.5` |
+
+🧩 **In short:** Tells you how “spread out” the data is.
+
+---
+
+###### 🧠 3. Count Missing Values — `n_missing()`
+
+###### 🎯 Goal
+Count how many `NA` values exist in a vector.
+
+###### 🧑‍💻 Code
+```r
+n_missing <- function(x) {
+  sum(is.na(x))
+}
+
+n_missing(c(2, NA, 4, NA, 8))
+```
+###### 🟢 Output
+```
+[1] 2
+```
+
+###### 🔍 Explanation
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `is.na(x)` | Detects missing values | `is.na(c(1, NA, 3))` | `[1] FALSE TRUE FALSE` |
+| `sum(x)` | Adds TRUEs as 1s | `sum(c(TRUE, FALSE, TRUE))` | `2` |
+
+🧩 **In short:** Quickly counts missing values.
+
+---
+
+###### 🧠 4. Mean Absolute Percentage Error — `mape()`
+
+###### 🎯 Goal
+Compare model predictions with actual values.  
+Formula: `MAPE = mean(abs((actual - predicted) / actual))`
+
+###### 🧑‍💻 Code
+```r
+mape <- function(actual, predicted) {
+  sum(abs((actual - predicted) / actual)) / length(actual)
+}
+
+actual <- c(100, 200, 300)
+predicted <- c(110, 190, 310)
+mape(actual, predicted)
+```
+
+###### 🟢 Output
+```
+[1] 0.0444
+```
+
+### 🔍 Explanation
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `abs(x)` | Absolute (positive) value | `abs(-3)` | `3` |
+| `length(x)` | Counts elements | `length(c(1,2,3))` | `3` |
+| `sum(x)` | Adds up numbers | `sum(c(1,2,3))` | `6` |
+
+🧩 **In short:** Measures how close predictions are to actual data (smaller = better).
+
+---
+
+###### 🧠 5. Check File and Folder Properties
+
+###### 🎯 Goal
+Check if something is a directory or if it’s readable.
+
+###### 🧑‍💻 Code
+```r
+is_directory <- function(x) {
+  file.info(x)$isdir
+}
+
+is_readable <- function(x) {
+  file.access(x, 4) == 0
+}
+```
+
+###### 🔍 Explanation
+| Function | Description | Example | Output |
+|-----------|--------------|----------|---------|
+| `file.info(x)` | Returns file info | `file.info("data")$isdir` | `TRUE` |
+| `file.access(x, 4)` | Checks read permission | `file.access("file.csv", 4)` | `0` (can read) or `-1` (cannot read) |
+
+🧩 **In short:** Helps check folders and file permissions before reading data.
+
+---
+
+###### 💡 RStudio Shortcuts for Functions
+
+| Shortcut | Action |
+|-----------|---------|
+| **F2** | Jump to the function definition |
+| **Ctrl + .** | Quickly find any function or file |
+
+---
+
+##### 25.2.5 Exercises
 
 
 
