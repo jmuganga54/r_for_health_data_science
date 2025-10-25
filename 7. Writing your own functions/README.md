@@ -580,7 +580,7 @@ first_upper("hello")
 
 ###### 🧠 4. Clean Number Function
 
-###### 🎯 Goal
+##### 🎯 Goal
 Remove symbols (`%`, `$`, `,`) from text numbers and convert them into numeric values.
 
 ######🧑‍💻 Code
@@ -616,9 +616,9 @@ clean_number("45%")
 
 ---
 
-###### 🧠 5. Fix Missing Values
+##### 🧠 5. Fix Missing Values
 
-####### 🎯 Goal
+###### 🎯 Goal
 Replace fake missing codes (like 997, 998, 999) with actual `NA` values.
 
 ###### 🧑‍💻 Code
