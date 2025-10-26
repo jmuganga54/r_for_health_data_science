@@ -1,829 +1,301 @@
-## Topic
+# Exploratory Data Analysis (EDA) with ggplot2 & dplyr
 
-In this session, we will discuss:
+A beginner-friendly guide to exploring your data using **R**, **ggplot2**, and **dplyr**. We’ll explain key ideas, show code you can run, and describe what to look for in the output.
 
-  * [**6 Control Structures: Loops and Conditions**](#6-control-structures-loops-and-conditions)  
-  * [**6.1 if, else and for**](#61-if-else-and-for)  
-  * [**6.2 Vectorised Code**](#62-vectorised-code)  
-  * [**6.3 Further Reading**](#63-further-reading)  
-
-
-## keywords & Notes
-
-### 6. Control structures: loops and conditions
-
-In this session, we learn how to make R think and repeat.
-
-You’ll explore two important programming ideas:
-
-  1. **Conditions** — making decisions in your code (for example, using `if` statements).
-
-  2. **Loops** — repeating tasks automatically (for example, using `for` or `while` loops).
-
->[!NOTE]
-> These tools help you control how your code runs, so you can tell R:
-> * 👉 “If this happens, do that,” or
-> * 👉 “Do this action several times.”
-
-📘 To get started, read Chapter [13.1 and 13.2 from R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/control-structures.html).
-They give a beginner-friendly introduction to how loops and conditions work in R.
-
-* [**13 Control Structures**](#13-control-structures)
-* [**13.1 if-else**](#131-if-else)
-* [**13.2 for Loops**](#132-for-loops)
-* [**13.3 Nested for loops**](#133-nested-for-loops)
-* [**13.4 while Loops**](#134-while-loops)
-* [**13.5 repeat Loops**](#135-repeat-loops)
-* [**13.6 next, break**](#136-next-break)
-* [**13.7 Summary**](#137-summary)
-
-#### 13 Control Structures
-[Watch a video of this section](https://www.youtube.com/watch?v=BPNLjUDZ8_o)
-
-Control structures in R let us control how and when code runs.
-
-Instead of executing everything in order, we can tell R to make decisions or repeat actions based on certain conditions.
-
-They bring logic into our code — allowing it to respond to inputs or data patterns.
-
-Common control structures include:
-
- * `if / else` – test a condition and decide what to do.
- * `for` – repeat something a fixed number of times.
- * `while` – keep repeating as long as a condition is true.
- * `repeat` – run continuously until you manually stop it with `break`.
- * `break` – stop a loop early.
- * `next` – skip the current loop step and move to the next one.
- * `return` - exit the function
-  
-  
-
->[!NOTE]
-> These are mostly used when writing `functions` or `longer scripts`, but it’s important to understand them early — they make your R programs dynamic and intelligent.
-
->[TIP]
-> To clear all variables from your R environment (that is, remove everything currently stored in memory), you can use this simple command:
-
-```
-rm(list = ls())
-
-```
-> 💡 Explanation:
-> * `ls()` → lists all the variable names currently in your environment
-> * `rm()` → removes them
-> * `list = ls()` → tells R to remove everything listed by ls()
-> * rm(list = ls()) -This does not delete files from your computer — it only clears the variables from R’s active memory.
-
-##### 13.1 if-else
-
-[Watch a video of this section](https://www.youtube.com/watch?v=ZaBtJPYYGwg)
-
-The `if–else` statement helps R make decisions — it checks a condition and decides what to do depending on whether that condition is `TRUE` or `FALSE`.
-
-🪜 Basic if statement
-
-If a condition is `true`, R runs the code inside the `{ }`.
-
-If it’s `false`, R simply `skips` it.
-
-```
-x <- 5
-
-if (x > 3) {
-  print("x is greater than 3")
-}
-
-```
-
-🟢 Output:
-
-```
-[1] "x is greater than 3"
-
-```
-> If `x` was less than or equal to 3, nothing would happen.
-
-![Basic if statement flow chart]("./images/if_statements.jpg")
-
-🪜 `if` with `else`
-
-If you want R to do something `else` when the condition is false, add an `else block`:
-
-```
-x <- 2
-
-if (x > 3) {
-  print("x is greater than 3")
-} else {
-  print("x is not greater than 3")
-}
-
-
-```
-
-🟢 Output:
-
-```
-[1] "x is not greater than 3"
-
-```
-![If - else statement flow chart](./images/if_statements.jpg)
-
-
-🪜 Multiple Conditions (`else if`)
-
-You can check more than one condition using `else if`:
-
-```
-x <- 5
-
-if (x > 8) {
-  print("x is big")
-} else if (x > 3) {
-  print("x is medium")
-} else {
-  print("x is small")
-}
-```
-
-🟢 Output:
-
-```
-[1] "x is medium"
-
-```
-
-![If - else if statement flow chart](./images/if-else_if_.png)
-
-🧮 Example: Using random numbers
-
-```
-# Generate a random number between 0 and 10
-x <- runif(1, 0, 10)
-
-if (x > 3) {
-  y <- 10
-} else {
-  y <- 0
-}
-
-print(c(x, y))
-
-```
-> Here,
-> * If `x > 3`, then y becomes 10
-> * Otherwise, `y` becomes `0`
-
-You can also write this in a shorter form:
-
-```
-y <- if (x > 3) 10 else 0
-
-```
-> Both ways are correct — choose whichever is easier for you to read.
-
->[TIP]
-> You can have multiple separate `if` statements if you want to check several unrelated conditions — they will all be tested individually:
-
-```
-if (x > 3) {
-  print("x is greater than 3")
-}
-
-if (x < 8) {
-  print("x is less than 8")
-}
-
-```
-> [!TIP]
-> Use `if`, `else if`, and `else` to make your code smart and responsive to data conditions.
-
-##### 13.2 for Loops
-
-[Watch a video of this section](https://www.youtube.com/watch?v=FbT1dGXCCxU)
-
-A `for loop` is used in R when you want to repeat a task multiple times — like printing numbers, processing data, or performing calculations.
-
-It’s one of the most common ways to automate repetitive work in R.
-
-
-🧠 **Basic idea**
-
-A `for loop` takes a variable (called `the iterator`) and gives it one value at a time from a `sequence or vector` — then runs the code inside `{}` for each value.
-
-![for loop flow chart](./images/for_loop.png)
-
-```
-for (i in 1:10) {
-  print(i)
-}
-
-```
-🟢 Output:
-
-```
-[1] 1
-[1] 2
-[1] 3
-[1] 4
-[1] 5
-[1] 6
-[1] 7
-[1] 8
-[1] 9
-[1] 10
-
-```
-
-> Here:
-> * `i` is the iterator (it changes each time)
-> * `1:10` means the numbers 1 to 10
-> * The loop repeats `10` times, printing each number
-
-💬 Example: Looping through a character vector
-
-Let’s say we have a list of letters:
-
-```
-x <- c("a", "b", "c", "d")
-
-for (i in 1:4) {
-  print(x[i])
-}
-
-```
-
-🟢 Output:
-
-```
-[1] "a"
-[1] "b"
-[1] "c"
-[1] "d"
-
-```
-> This prints each element of the vector `x`.
-
-🧩 **Using `seq_along()` (a safer method)**
-
-If you don’t know how long your vector is, use `seq_along()` — it automatically adjusts to the vector’s length.
-
-```
-x <- c("a", "b", "c", "d")
-
-for (i in seq_along(x)) {
-  print(x[i])
-}
-
-```
-
-> Same result, but more flexible — it works even if `x` has `100` elements.
-
-🔤 **Looping directly over elements**
-
-You don’t always need an index number `(i)`.
-
-You can loop directly over the elements:
-
-```
-for (letter in x) {
-  print(letter)
-}
-
-
-```
-
-🟢 Output:
-
-```
-[1] "a"
-[1] "b"
-[1] "c"
-[1] "d"
-
-```
-
-🪶 **One-line loops**
-If your loop only has one line of code, you can write it without `{}` — but it’s good practice to always include them:
-
-```
-for (i in 1:4) print(x[i])
-
-for(element in x) print(element)
+> Load the tidyverse (which includes ggplot2 and dplyr):
+```r
+library(tidyverse)
 ```
 
->[!TIP]
-> Tip for beginners:
-> * Think of for loops as “do this for each item”.
-> * They help you save time and avoid repeating the same code many times.
+---
 
-##### 13.3 Nested for loops
+## 10.1 Introduction
 
-A `nested for loop` means putting one `for loop` inside another.
+EDA is an **iterative cycle**:
+1. **Ask questions** about your data.
+2. **Visualize / transform / model** to look for answers.
+3. Use what you learn to **refine your questions**.
 
-This helps when working with data that has `rows` and `columns` — like a `matrix` or `table` — or with multi-level (hierarchical) data such as lists within lists.
+EDA is also about **checking data quality** (missing values, outliers, inconsistent entries) and getting quick, honest insights before formal modeling.
 
-🧠 *Example: Looping through a Matrix*
+---
 
-Let’s start with a simple matrix — a grid of numbers with rows and columns.
+## 10.2 Questions
 
-```
-# Create a 2x3 matrix (2 rows, 3 columns)
-x <- matrix(1:6, 2, 3)
-
-print(x)
-
-
-```
-🟢 Output:
-
-```
-     [,1] [,2] [,3]
-[1,]    1    3    5
-[2,]    2    4    6
+Two question types power most EDA:
 
-```
-Now we’ll use nested for loops to print each value inside the matrix.
+- **Variation** (within one variable): *“What does the distribution of `x` look like?”*
+- **Covariation** (between variables): *“How does `y` change with `x`?”*
 
-```
-for (i in seq_len(nrow(x))) {       # Loop through rows
-  for (j in seq_len(ncol(x))) {     # Loop through columns
-    print(x[i, j])                  # Print each element
-  }   
-}
+Ask many small questions; each answer suggests a new, better question.
 
-```
+---
 
-🟢 Output:
+## 10.3 Variation (one variable at a time)
 
-```
-[1] 1
-[1] 3
-[1] 5
-[1] 2
-[1] 4
-[1] 6
+Use histograms/densities for numeric variables; bar charts for categorical ones.
 
+### Example: distribution of diamond weight (`carat`)
+```r
+ggplot(diamonds, aes(carat)) +
+  geom_histogram(binwidth = 0.5)
 ```
-
-> Here’s what happens step by step:
-> 1. The outer loop (`i`) moves across the rows.
-> 2. For each row, the inner loop (`j`) goes through all columns.
-> 3. `x[i, j]` selects the element in row `i` and column `j`.
-> So the code prints every value in the matrix, one by one.
-
->[!CAUTION]
-> While nested loops are powerful, too many levels (more than 2–3) make code hard to read and maintain.
-> If your code needs many nested loops, it’s often better to:
-> * Break it into smaller functions, or
-> * Use vectorized functions (which perform operations on whole vectors or matrices at once — much faster and cleaner).
-
+**What you’ll see:** Right-skewed histogram (many small diamonds, fewer big ones).
 
-In simple terms:
-> Nested loops are like reading a table —  
-> * The outer loop moves row by row,  
-> * and the inner loop moves column by column inside each row.  
+Zoom into smaller stones for more detail:
+```r
+smaller <- diamonds |> filter(carat < 3)
 
-##### 13.4 while Loops
-
-[Watch a video of this section](https://www.youtube.com/watch?v=VqrS1Wghq1c)
-
-A `while loop` in R repeats a block of code as long as a condition is true.
-
-Once the condition becomes `false`, the loop `stops`.
-
-Think of it as saying:
-> “While this is true, keep doing this task.”
-
-![While Loop](./images/while_loop.jpg)
-
-**🧠 Example 1: Counting from 0 to 9**
-
+ggplot(smaller, aes(carat)) +
+  geom_histogram(binwidth = 0.01)
 ```
-count <- 0   # Start at 0
 
-while (count < 10) {   # Keep looping while count is less than 10
-  print(count)         # Print the current value
-  count <- count + 1   # Add 1 to count each time
-}
+### What to look for
+- **Typical values / peaks**: What’s common? What’s rare?
+- **Shape**: Symmetric? Skewed? Multiple peaks?
+- **Clusters**: Any apparent subgroups?
+- **Outliers**: Any strange/extreme values?
 
-
-```
-**🟢 Output:**
-
+### Finding unusual values
+Outliers can hide in tails—zoom the *y*-axis:
+```r
+ggplot(diamonds, aes(y)) +
+  geom_histogram(binwidth = 0.5) +
+  coord_cartesian(ylim = c(0, 50))
 ```
-[1] 0
-[1] 1
-[1] 2
-[1] 3
-[1] 4
-[1] 5
-[1] 6
-[1] 7
-[1] 8
-[1] 9
 
+Extract suspicious rows:
+```r
+unusual <- diamonds |>
+  filter(y < 3 | y > 20) |>
+  select(price, x, y, z) |>
+  arrange(y)
+unusual
 ```
 
-Explanation: 
-> * The loop starts with `count = 0`.
-> * It checks if `count < 10`.
-> * If `TRUE`, it runs the code inside `{}`.
-> * After each loop, `count increases by 1`.
-> * Once count reaches `10`, the condition becomes `FALSE`, and the `loop stops`.
+**Tip:** Recode impossible values (e.g., 0 mm) to `NA`, then check analyses with/without them.
 
->[!CAUTION]
-> ⚠️ Be careful:
-> If you forget to change `count` inside the loop (e.g., no `count <- count + 1`), the condition will always stay true, and your program will run forever (`an infinite loop`).
+### Exercises (with solutions)
 
-**🧩 Example 2: A random walk (with multiple conditions)**  
-
-Here’s a slightly more advanced example:
-
+**Q1.** Explore `x`, `y`, `z` distributions.
+```r
+ggplot(diamonds, aes(x)) + geom_histogram(binwidth = 0.5)
+ggplot(diamonds, aes(y)) + geom_histogram(binwidth = 0.5)
+ggplot(diamonds, aes(z)) + geom_histogram(binwidth = 0.5)
 ```
-z <- 5
-set.seed(1)  # Ensures the same random results every time
-
-while (z >= 3 && z <= 10) {  # Keep looping while z is between 3 and 10
-  coin <- rbinom(1, 1, 0.5)  # Flip a coin: 0 = tails, 1 = heads
-  
-  if (coin == 1) {
-    z <- z + 1  # Move one step up if heads
-  } else {
-    z <- z - 1  # Move one step down if tails
-  }
-}
-
-print(z)
 
+**Q2.** Explore `price` at multiple binwidths.
+```r
+ggplot(diamonds, aes(price)) + geom_histogram(binwidth = 100)
+ggplot(diamonds, aes(price)) + geom_histogram(binwidth = 500)
+ggplot(diamonds, aes(price)) + geom_histogram(binwidth = 1000)
 ```
 
-**🟢 Output:**
-
-```
-[1] 2
+**Q3.** Count 0.99 vs 1.00 carat.
+```r
+diamonds |> count(carat == 0.99)
+diamonds |> count(carat == 1.00)
 ```
+*Why different?* Market prefers round numbers → more 1.00 ct.
 
-📝 Explanation:
-> * The loop keeps running while z is between 3 and 10.
-> * Each time, a random “coin flip” decides whether z increases or decreases.
-> * The loop stops when z goes below 3 or above 10.
+**Q4.** `coord_cartesian()` vs `xlim()/ylim()`:
+- `coord_cartesian()` **zooms** view only (keeps data; bin counts stay correct).
+- `xlim()/ylim()` **drops** outside data (can change counts and bars).
 
->[!TIP]
-> * Condition check - Happens before every loop run
-> * Body of loop - Code inside `{}` runs only if the condition is `TRUE`
-> * `Infinite loop` - Happens when the condition never becomes FALSE
-> * Multiple conditions - Use `&&` (`“and”`) `or` 
-> * R checks conditions from left to right
+---
 
-💬 In simple terms:
-> A while loop keeps doing something until it’s told to stop. 
-> You just need to make sure it eventually stops — otherwise R will keep looping forever!
+## 10.4 Unusual values (handling)
 
+Two strategies:
+1) **Drop rows** (risky; you lose other good variables too).
+2) **Replace values with `NA`** (recommended for impossible values).
 
-##### 13.5 repeat Loops
+```r
+diamonds2 <- diamonds |>
+  mutate(y = if_else(y < 3 | y > 20, NA, y))
 
-[Watch a video of this section](https://www.youtube.com/watch?v=SajmdYr30SY)
-
-A `repeat loop` in R is used when you want something to run again and again —
-until a specific condition tells it to stop.
-
-Unlike `for` or `while` loops, which check conditions automatically,
-repeat loops will keep running forever unless you manually break them using the `break command`.
-
-**🧠 Example 1: Simple repeat loop**
-```
-count <- 0
-
-repeat {
-  print(count)
-  count <- count + 1
-  
-  if (count > 5) {  # stop the loop when count is greater than 5
-    break
-  }
-}
-
-
-```
-
-**🟢 Output:**
+ggplot(diamonds2, aes(x, y)) +
+  geom_point(na.rm = TRUE)
 ```
-[1] 0
-[1] 1
-[1] 2
-[1] 3
-[1] 4
-[1] 5
-```
-
-📝 Explanation:
-> The loop starts and prints count each time.
-> It keeps going forever unless we tell it to stop.
-> The `if (count > 5)` condition uses break to exit the loop.
-
-
-**Example 2: Searching for a “close enough” answer**
 
-Sometimes, you don’t know how many times a process needs to run before it’s “good enough”.
-In such cases, a repeat loop is useful.
+**Missingness can be informative.** In `nycflights13::flights`, `NA` in `dep_time` means *cancelled*. Compare scheduled times:
 
-Here’s a simple illustration using a made-up `computeEstimate()` function:
-
-```
-x0 <- 1
-tol <- 1e-8  # tolerance – how close is “close enough”
-
-repeat {
-  x1 <- computeEstimate()  # pretend this is a calculation
-  
-  if (abs(x1 - x0) < tol) {  # check if close enough
-    break                    # stop loop
-  } else {
-    x0 <- x1                 # update the estimate and continue
-  }
-}
-
+```r
+nycflights13::flights |>
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min  = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + sched_min/60
+  ) |>
+  ggplot(aes(sched_dep_time)) +
+  geom_freqpoly(aes(color = cancelled), binwidth = 0.25)
 ```
 
->[!NOTE]
-> This example won’t run unless `computeEstimate()` is defined — it’s just to show the idea.
+### Exercises (with solutions)
 
->[!CAUTION]
-> ⚠️ Be Careful
-> * `repeat` loops are dangerous if not controlled properly — because they can run forever (infinite loop).  
-> * It’s safer to set a maximum number of iterations using a `for` loop or by adding a limit:
+**Q1.** Missing values in hist vs bar chart?  
+- Histogram (numeric): `NA`s are **ignored**.  
+- Bar chart (categorical): can show `NA` as a separate bar (use `addNA()` or handle explicitly).
 
+**Q2.** `na.rm = TRUE` in `mean()`/`sum()` ignores missing values:
+```r
+mean(c(1, NA, 3), na.rm = TRUE)  # 2
+sum(c(1, NA, 3), na.rm = TRUE)   # 4
 ```
-x <- 1
-tol <- 1e-8
-max_iter <- 1000
-iter <- 0
-
-repeat {
-  x1 <- x / 2  # example calculation
-  iter <- iter + 1
-  
-  if (abs(x1 - x) < tol || iter >= max_iter) {
-    break  # stop if close enough or max reached
-  }
-  
-  x <- x1
-}
-
-print("Loop ended safely")
 
-
+**Q3.** Facet cancelled vs not (free y-scale):
+```r
+nycflights13::flights |>
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_dep_time = (sched_dep_time %/% 100) + (sched_dep_time %% 100)/60
+  ) |>
+  ggplot(aes(sched_dep_time)) +
+  geom_freqpoly(binwidth = 0.25) +
+  facet_wrap(~ cancelled, scales = "free_y")
 ```
-
-**Summary**
-> * `repeat` - Starts an infinite loop
-> * `break` - Stops the loop manually
-> * Danger - Without `break`, it runs forever
-> * Tip - Always include a stopping `rule` or `maximum iteration` count
-
-💬 In simple terms:
-> A `repeat loop` keeps repeating forever until you tell it to stop using `break`.
-It’s useful when you don’t know in advance how many times the loop should run —
-for example, when improving a guess until it’s “good enough.”
-
 
-##### 13.6 next, break
+---
 
-When working with loops in `R`, sometimes you may want to skip certain steps or stop the loop early.
-That’s where the `next` and `break` statements come in.
+## 10.5 Covariation (relationships)
 
-**🧩 1. The next Statement — Skip to the Next Iteration**
+### 10.5.1 One categorical + one numeric
 
-The next command tells R:
-> “Skip the rest of this loop and move to the next round.”
-
-This is useful when you want to ignore certain cases but keep the loop running.
-
+#### Frequency polygons (density)
+```r
+ggplot(diamonds, aes(price, y = after_stat(density))) +
+  geom_freqpoly(aes(color = cut), binwidth = 500, linewidth = 0.75)
 ```
-for (i in 1:10) {
-  if (i <= 3) {
-    next   # Skip the first 3 numbers
-  }
-  print(i)
-}
 
+#### Boxplots (simple, compact comparison)
+```r
+ggplot(diamonds, aes(cut, price)) +
+  geom_boxplot()
 ```
-🟢 Output:
 
+**Reorder categories for clarity (mpg example):**
+```r
+ggplot(mpg, aes(fct_reorder(class, hwy, median), hwy)) +
+  geom_boxplot()
 ```
-[1] 4
-[1] 5
-[1] 6
-[1] 7
-[1] 8
-[1] 9
-[1] 10
 
+**Flip axes (same plot):**
+```r
+ggplot(mpg, aes(hwy, fct_reorder(class, hwy, median))) +
+  geom_boxplot()
 ```
-📝 Explanation:
-> When `i` is `1, 2, or 3` → the loop skips printing because of `next`.
-> When `i` becomes 4, it continues normally and prints the numbers `4–10`.
-> In short: next says “skip this one and move on.”
-
-**🧱2. The break Statement — Stop the Loop Completely**
 
-The `break` command tells R:
+**Exercises (with ideas/solutions):**
+- Improve cancelled vs non-cancelled: use density, proportions, or faceting with `scales = "free_y"`.
+- Price is driven strongly by **carat**; cut relates to carat → confounding can make worse cuts look more expensive overall.
+- Try `lvplot::geom_lv()` for very large `n` (fewer “outlier” dots).
 
-> “Stop the loop right now — don’t continue further.”
+### 10.5.2 Two categorical variables
 
-This is useful when you’ve found what you’re looking for or want to stop after a condition.
-
-```
-for (i in 1:10) {
-  print(i)
-  
-  if (i >= 5) {
-    break  # Stop the loop once i reaches 5
-  }
-}
-
- 
+#### Bubble-count plot
+```r
+ggplot(diamonds, aes(cut, color)) + geom_count()
 ```
-Output:
 
+#### Heatmap (tile)
+```r
+diamonds |>
+  count(color, cut) |>
+  ggplot(aes(color, cut, fill = n)) +
+  geom_tile()
 ```
-[1] 1
-[1] 2
-[1] 3
-[1] 4
-[1] 5
 
+**Rescale within categories to compare proportions:**
+```r
+diamonds |>
+  count(color, cut) |>
+  group_by(color) |>
+  mutate(p = n / sum(n)) |>
+  ggplot(aes(color, cut, fill = p)) +
+  geom_tile()
 ```
-📝 Explanation:
-> The loop prints numbers from 1 to 5.
-> When `i` becomes 5, the condition if (i >= 5) is true, and the loop stops immediately.
-> In short: break says “stop the loop now.”
-
->💬 In simple terms:
-> * 🟨 `next` → “Skip this one and go to the next.”
-> * 🟥 `break` → “Stop everything and end the loop.”
-
 
-##### 13.7 Summary
+### 10.5.3 Two numeric variables
 
-In this session, we learned how control structures help us make our R programs smarter by controlling the flow of our code — deciding what to do, when to do it, and how often to repeat it.
+#### Scatterplot + transparency (overplotting fix)
+```r
+smaller <- diamonds |> filter(carat < 3)
 
-**🧩 Main Concepts Recap**
-
-| Structure       | Purpose                                               | Example Idea                                           |
-| --------------- | ----------------------------------------------------- | ------------------------------------------------------ |
-| **`if / else`** | Make decisions — run code only if a condition is true | “If it rains, take an umbrella, else wear sunglasses.” |
-| **`for`**       | Repeat a task a fixed number of times                 | Print numbers 1 to 10                                  |
-| **`while`**     | Keep repeating **while** a condition is true          | Count until a value reaches 10                         |
-| **`repeat`**    | Run forever **until** manually stopped with `break`   | Keep improving a guess until it’s accurate enough      |
-| **`next`**      | Skip one loop cycle and continue                      | Skip first few numbers                                 |
-| **`break`**     | Stop the loop completely                              | End the loop when a condition is met                   |
-
-
-> [!TIP]
-> ⚠️ Important Tips
-> * Avoid `infinite loops` (loops that never stop). Always make sure your loop has a clear stopping condition.
-> * These structures are most useful when writing programs and functions, not for quick data analysis at the console.
-> * For daily data tasks, R provides easier alternatives like `apply()`, `lapply()`, `sapply()`, and `map()` from the tidyverse.
-
-
-💬 In simple words:
-> Control structures help us add logic and automation to our R scripts — telling the computer when to act, what to skip, or when to stop. They’re the foundation of all programming!
-
-### 6.1 if, else and for
-
-**What you are practising**
-  * `for` loop: repeat actions for a sequence of numbers.
-  * `if / else if / else`: make decisions.
-  * Modulo `%%`: gives the remainder after division.
-    * Example: `23` %% `5` is `3` (because `23 = 5×4 + 3`).
-
-  * Divisibility rule:
-    * `n` is divisible by `3` if `n %% 3` == 0
-    * `n` is divisible by `5` if `n %% 5` == 0
-    * Divisible by both `3` and `5` if `n %% 15` == 0 (same as `(n %% 3 == 0) && (n %% 5 == 0)`)
-
-Game rules (Fizz-Buzz)
-  * Say numbers from 1 to 100.
-  * If divisible by 3 → say `"fizz"`.
-  * If divisible by 5 → say `"buzz"`.
-  * If divisible by 3 and 5 → say `"fizz-buzz"`.
-  * Otherwise, print the number.
-
-Complete solution (clear and safe order)
-Check “both” first, then 3, then 5.
+ggplot(smaller, aes(carat, price)) +
+  geom_point(alpha = 0.01)
 ```
-for (number in 1:100) {
-  if ((number %% 3 == 0) && (number %% 5 == 0)) {
-    print("fizz-buzz")
-  } else if (number %% 3 == 0) {
-    print("fizz")
-  } else if (number %% 5 == 0) {
-    print("buzz")
-  } else {
-    print(number)
-  }
-}
 
+#### 2D binning
+```r
+ggplot(smaller, aes(carat, price)) + geom_bin2d()
+# install.packages("hexbin")
+ggplot(smaller, aes(carat, price)) + geom_hex()
 ```
 
-Output:
-
-```
-1
-2
-"fizz"
-4
-"buzz"
-"fizz"
-7
-8
-"fizz"
-"buzz"
-11
-"fizz"
-13
-14
-"fizz-buzz"
-16
-17
-"fizz"
-19
-"buzz"
+#### Condition on x (bin carat, show boxplots)
+```r
+ggplot(smaller, aes(carat, price)) +
+  geom_boxplot(aes(group = cut_width(carat, 0.1)), varwidth = TRUE)
 ```
->[!IMPORTANT]
->Common mistakes to avoid
-> Checking `3 or 5` before the “both” case.
-> If you do that, numbers like `15` will match the first condition and you will never print `"fizz-buzz"`.
-> Forgetting that` %%` is the modulo operator in R (not % or another symbol).
-
-That is all you need to implement `fizz-buzz` with for and if/else in R.
-
-For more help see [Chapter 27](https://r4ds.hadley.nz/iteration.html) of Wickham & Grolemund.
 
-### 6.2 Vectorised code
-In R, vectorised code means performing an operation on a whole group of values (a vector) at once —
-instead of doing it one by one in a loop.
+**`cut_width()` vs `cut_number()`**: equal-width vs equal-count bins (trade-offs: comparability of bin sizes vs comparable sample sizes).
 
-This makes your code faster, shorter, and easier to read.
+---
 
-Let’s say we have a vector of numbers:
+## 10.6 Patterns and simple modeling
 
-🧩 Example: Loop vs. Vectorised Code
+If you see a pattern, ask:
+- Could it be random?
+- How strong?
+- Any confounders?
+- Does it change in subgroups?
 
-```
-numbers <- 1:10
-
-```
-
-🐢 Using a Loop (one by one)
-
-```
-for (i in numbers) {
-  print(i * 2)
-}
-
-```
+**Remove carat effect to re-check cut vs price**:
+```r
+library(tidymodels)
 
-Output:
-```
-[1] 2
-[1] 4
-[1] 6
-[1] 8
-[1] 10
-[1] 12
-[1] 14
-[1] 16
-[1] 18
-[1] 20
-```
+diamonds <- diamonds |>
+  mutate(
+    log_price = log(price),
+    log_carat = log(carat)
+  )
 
-⚡ Using Vectorised Code (all at once)
+fit <- linear_reg() |>
+  fit(log_price ~ log_carat, data = diamonds)
 
-```
-numbers * 2
+diamonds_aug <- augment(fit, new_data = diamonds) |>
+  mutate(.resid = exp(.resid))
 
+ggplot(diamonds_aug, aes(carat, .resid)) + geom_point(alpha = 0.05)
+ggplot(diamonds_aug, aes(cut, .resid)) + geom_boxplot()
 ```
-
-Output:
+**What you’ll see:** After adjusting for size, better cuts have higher adjusted prices (as expected).
 
-```
- [1]  2  4  6  8 10 12 14 16 18 20
- 
-```
-Here, R automatically multiplies each value in the vector by 2 — no loop needed!
+---
 
->[!IMPORTANT]
-> Key Takeaway
-> * Vectorised code means R handles all values in a vector at once.
-> * It’s faster and cleaner than using loops.
-> * You can use logical conditions (like x %% 3 == 0) to modify specific elements efficiently.
+## 10.7 Summary
 
+- We explored **variation** (one variable) and **covariation** (two variables).
+- We handled **outliers** and **missing data**.
+- We used **binning**, **faceting**, **reordering**, and **position adjustments**.
+- Simple **modeling** can clarify relationships by removing dominant effects.
 
+These are the building blocks for deeper analysis and clear communication.
 
-### 6.3 Further Reading
+---
 
-* [Chapter 10](https://bookdown.org/rdpeng/rprogdatascience/vectorized-operations.html) of R Programming for Data Science on vectorisation.
+## Function cheat-notes (used above)
 
+- `ggplot()`, `aes()`: start a plot; map variables to aesthetics (x, y, color, fill, etc.).  
+- `geom_*()`: draw things (points, bars, tiles, hexes, boxplots, etc.).  
+- `after_stat()`: reference values computed by a stat (e.g., `density`).  
+- `coord_cartesian()`: zoom view (keeps data). `xlim()/ylim()`: drop data outside limits.  
+- `facet_*()`: split into subplots by category.  
+- `fct_reorder()`: reorder factor levels by a summary (e.g., median).  
+- `cut_width()/cut_number()`: bin numeric → categorical (equal width vs equal count).  
+- `if_else()`, `is.na()`: recode and test missingness.  
+- `group_by()/summarise()/mutate()`: group-level summaries and column transforms.  
+- `count()`: shortcut for group counts (`n`).  
+- `%/%`, `%%`: integer division and remainder (e.g., split 1340 → 13 and 40).  
+- `na.rm = TRUE`: ignore missing values in summaries (`mean`, `sum`, etc.).
