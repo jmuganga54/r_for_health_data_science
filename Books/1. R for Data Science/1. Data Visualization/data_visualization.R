@@ -1,4 +1,5 @@
 library(tidyverse)
+library(ggthemes)
 
 library(palmerpenguins)
 # palmerpenguins package, which includes the penguins dataset containing body measurements for penguins on three islands in the Palmer Archipelago, and the ggthemes package, which offers a colorblind safe color palette.
@@ -83,15 +84,223 @@ ggplot(
   geom_point() + 
   geom_smooth(method = "lm")
 
+# When aesthetic mappings are defined in ggplot(), at the global level, they’re passed down to each of the subsequent geom layers of the plot. However, each geom function in ggplot2 can also take a mapping argument, which allows for aesthetic mappings at the local level that are added to those inherited from the global level. Since we want points to be colored based on species but don’t want the lines to be separated out for them, we should specify color = species for geom_point() only.
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y =body_mass_g)) +
+  geom_point(mapping = aes(color = species)) +
+  geom_smooth(method = "lm")
+)
+
+
+# Voila! We have something that looks very much like our ultimate goal, though it’s not yet perfect. We still need to use different shapes for each species of penguins and improve labels.
+# 
+# It’s generally not a good idea to represent information using only colors on a plot, as people perceive colors differently due to color blindness or other color vision differences. Therefore, in addition to color, we can also map species to the shape aesthetic.
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y =body_mass_g)) +
+  geom_point(mapping = aes(color = species, shape = species)) +
+  geom_smooth(method = "lm")
+)
+
+# Note that the legend is automatically updated to reflect the different shapes of the points as well.
+# 
+# And finally, we can improve the labels of our plot using the labs() function in a new layer. Some of the arguments to labs() might be self explanatory: title adds a title and subtitle adds a subtitle to the plot. Other arguments match the aesthetic mappings, x is the x-axis label, y is the y-axis label, and color and shape define the label for the legend. In addition, we can improve the color palette to be colorblind safe with the scale_color_colorblind() function from the ggthemes package.  
+  
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y =body_mass_g)) +
+  geom_point(mapping = aes(color = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle =  "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", y = "Body mass (g)",
+    color = "Species", shape = "Species"
+    
+  ) +
+  scale_color_colorblind()
+
+# 1.2.5 Exercises
+# 1. How many rows are in penguins? How many columns?
+dim(penguins)
+nrow(penguins)
+#344
+
+# 2. What does the bill_depth_mm variable in the penguins data frame describe? Read the help for ?penguins to find out.
+?penguins
+#a number denoting bill depth (millimeters)
+
+# 3. Make a scatterplot of bill_depth_mm vs. bill_length_mm. That is, make a scatterplot with bill_depth_mm on the y-axis and bill_length_mm on the x-axis. Describe the relationship between these two variables.
+ggplot(
+  data = penguins,
+  mapping = aes(x = bill_length_mm, y =bill_depth_mm,)) +
+  geom_point(mapping = aes(color = species, shape = species )) + 
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Bill length Vs Bill depth",
+    subtitle =  "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Bill length (mm)", y = "Bill depth (mm)",
+    color = "Species", shape = "Species"
+    
+  ) + 
+  scale_color_colorblind()
+
+#The scatterplot shows a negative relationship between bill length and bill depth. Penguins with longer bills tend to have shallower bill depths. The three species form distinct clusters: Adelie have shorter and deeper bills, Chinstrap have moderate lengths and depths, and Gentoo have long but shallow bills.
+
+
+# 4. What happens if you make a scatterplot of species vs. bill_depth_mm? What might be a better choice of geom?
+  
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = species, y =bill_depth_mm,)) +
+  geom_point(mapping = aes(color = species, shape = species )) + 
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Bill Depth Vs Species",
+    subtitle =  "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Species", y = "Bill depth (mm)",
+    color = "Species", shape = "Species"
+    
+  ) + 
+  scale_color_colorblind()
+
+#Answer
+# If you make a scatterplot of species (a categorical variable) vs. bill_depth_mm (a numeric variable), the plot will not be very useful. All the points for each species will stack vertically on top of each other, creating three vertical stripes. This happens because a scatterplot is designed for two numeric variables, not a numeric and a categorical variable.
+
+# A better choice of geom for showing how a numeric variable varies across categories would be:
+# geom_boxplot() → shows median, quartiles, and spread
+# geom_violin() → shows the full distribution shape
+# geom_jitter() → spreads points to avoid overlap
+# geom_col() or geom_bar(stat = "summary") → if you only want the mean
+
+
+# geom_boxplot() → shows median, quartiles, and spread
+ggplot(
+  data = penguins,
+  mapping = aes(x = species, y =bill_depth_mm,)) +
+  geom_boxplot(mapping = aes(color = species, shape = species )) + 
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Bill Depth Vs Species",
+    subtitle =  "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Species", y = "Bill depth (mm)",
+    color = "Species", shape = "Species"
+    
+  ) 
+  
+# Answer
+# The boxplot shows clear differences in bill depth across species. Chinstrap penguins have the deepest bills, followed by Adelie penguins. Gentoo penguins have the shallowest bills, with very little overlap with the other two species. This indicates that bill depth varies strongly by species.”
+#   scale_color_colorblind()
+
+
+# 5. Why does the following give an error and how would you fix it?
+
+ggplot(data = penguins) + 
+  geom_point()
+
+# ggplot is like telling someone “draw a graph using this dataset.”
+# They will ask: “Okay… but what do you want on the x and y axes?”
+# 
+# Until you tell ggplot which columns to use, it cannot draw the points.
+
+
+# 6. What does the na.rm argument do in geom_point()? What is the default value of the argument? Create a scatterplot where you successfully use this argument set to TRUE
+
+#Answer 
+# In geom_point(), the na.rm argument controls how missing values are handled when creating a scatterplot. By default, na.rm is set to FALSE, meaning that observations with missing x or y values are removed and a warning message is shown. When na.rm = TRUE, rows with missing values are still removed, but no warning is displayed. This option is useful when missing values are expected and do not need to be reported during plotting.
+
+# Example
+ggplot(
+  data = penguins,
+  mapping = aes(x = species, y =bill_depth_mm,)) +
+  geom_boxplot(na.rm = TRUE, mapping = aes(color = species, shape = species )) + 
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Bill Depth Vs Species",
+    subtitle =  "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Species", y = "Bill depth (mm)",
+    color = "Species", shape = "Species"
+    
+  ) 
+
+# 7. Add the following caption to the plot you made in the previous exercise: “Data come from the palmerpenguins package.” Hint: Take a look at the documentation for labs().
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = species, y =bill_depth_mm,)) +
+  geom_boxplot(na.rm = TRUE, mapping = aes(color = species, shape = species )) + 
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Bill Depth Vs Species",
+    subtitle =  "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Species", y = "Bill depth (mm)",
+    color = "Species", shape = "Species"
+    
+  ) 
+
+# 8. Recreate the following visualization. What aesthetic should bill_depth_mm be mapped to? And should it be mapped at the global level or at the geom level?
+
+# Answer
+# To match that plot, bill_depth_mm should be mapped to the colour aesthetic (it is a continuous colour scale with a legend).
+# 
+# And it should be mapped at the geom level (geom_point()), not globally. If you map it globally in ggplot(aes(...)), the smooth line will also inherit the colour mapping, which is not what your figure shows (your smooth is a single blue line with a grey confidence band).
+
+ggplot(data = penguins, 
+       mapping = aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(mapping = aes(colour = bill_depth_mm)) +
+  geom_smooth(se = TRUE) 
+
+
+# 9 Run this code in your head and predict what the output will look like. Then, run the code in R and check your predictions.
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = island)
+) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+
+
+# 10 : Will these two graphs look different? Why/why not?
+#1
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point() +
+  geom_smooth()
+
+# 2
+
+ggplot() +
+  geom_point(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  ) +
+  geom_smooth(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  )
+
+# Answer 
+# Why?
+# Because in both cases, the same data (penguins) and the same aesthetic mappings (x = flipper_length_mm, y = body_mass_g) are applied to both geoms.
+# 
+# The only difference is where the data and mappings are specified:
+#   
+#   In the first plot, data and mappings are set globally in ggplot(), so all layers inherit them.
+# 
+# In the second plot, data and mappings are set separately for each geom, but they are identical for geom_point() and geom_smooth().
+# 
+# Since geom_point() and geom_smooth() receive the same inputs in both cases, ggplot2 produces the same visual output.
+# 
+# In short:
+#   Global vs geom-level mapping changes the structure of the code, not the appearance of the plot, as long as the mappings are identical.
 
 
   
-  
-
-
-
-
-
-
-
-
