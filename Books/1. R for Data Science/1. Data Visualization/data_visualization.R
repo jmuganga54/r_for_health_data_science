@@ -302,5 +302,114 @@ ggplot() +
 # In short:
 #   Global vs geom-level mapping changes the structure of the code, not the appearance of the plot, as long as the mappings are identical.
 
+# 1.3 ggplot2 calls
+ggplot(data = penguins,
+       mapping = aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point()
+  
 
+ggplot(penguins, aex(x = flipper_lenth_mm, y = body_mass_g))+
+  geom_point()
+
+
+# |>
+
+penguins |>
+  ggplot(aes(x = flipper_length_mm, y = body_mass_g))+
+  geom_point()
+
+
+# 1.4 Visualizing distributions
+
+
+# 1.4.1 A categorical variable
+# A variable is categorical if it can only take one of a small set of values. To examine the distribution of a categorical variable, you can use a bar chart. The height of the bars displays how many observations occurred with each x value.
+
+ggplot(penguins, aes(x = species))+
+  geom_bar()+
+  labs(
+    title = "Distribution of species",
+    subtitle = "Distribution of Adelie, Chinistrap, and Gentoo",
+    x = "Species", y = "Count"
+  )
+
+
+# In bar plots of categorical variables with non-ordered levels, like the penguin species above, it’s often preferable to reorder the bars based on their frequencies. Doing so requires transforming the variable to a factor (how R handles categorical data) and then reordering the levels of that factor.
+
+ggplot(penguins, aes(x = fct_infreq(species)))+
+  geom_bar()
+
+
+# 1.4.2 A numerical variable
+# A variable is numerical (or quantitative) if it can take on a wide range of numerical values, and it is sensible to add, subtract, or take averages with those values. Numerical variables can be continuous or discrete.
+# 
+# One commonly used visualization for distributions of continuous variables is a histogram.
+
+ggplot(penguins, aes(x = body_mass_g)) + 
+  geom_histogram(binwidth = 200)
+
+ggplot(penguins, aes(x = body_mass_g)) + 
+  geom_histogram(binwidth = 20)
+
+ggplot(penguins, aes(x = body_mass_g)) + 
+  geom_histogram(binwidth = 2000)
+
+
+# An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution. We won’t go into how geom_density()
+
+ggplot(penguins, aes(x = body_mass_g)) + 
+  geom_density()
+
+
+# 1.4.3 Exercises
+str(penguins)
+
+# 1. Make a bar plot of species of penguins, where you assign species to the y aesthetic. How is this plot different?
+
+penguins |>
+  ggplot(aes( y = fct_infreq(species))) +
+  geom_bar()
+
+
+# When species is mapped to the y aesthetic in a bar plot, the result is a horizontal bar chart rather than the usual vertical one. The counts of penguins are shown along the x axis, while the species categories appear on the y axis. The information displayed is the same, but the orientation is different, which can make the plot easier to read when category names are long.
+
+# 2. How are the following two plots different? Which aesthetic, color or fill, is more useful for changing the color of bars?
+
+ggplot(penguins, aes(x = species)) +
+  geom_bar(color = "red")
+
+ggplot(penguins, aes(x = species)) +
+  geom_bar(fill = "red")
+
+
+# The two plots differ in what part of the bars is coloured. In the first plot, color = "red" changes only the outline (border) of the bars, while the inside of the bars remains the default colour. In the second plot, fill = "red" changes the interior of the bars, making the entire bar red. For bar charts, fill is more useful than color because it controls the main area of the bars and is what viewers usually perceive as the bar’s colour.
+
+
+# 3. What does the bins argument in geom_histogram() do?
+
+
+# In geom_histogram(), the bins argument controls how many bars (bins) the data are grouped into. Increasing the number of bins creates narrower bars and more detail, while decreasing the number of bins creates wider bars and a smoother, more general pattern. The choice of bins affects how the distribution of the data appears, but it does not change the underlying data itself.
+
+
+# 4. Make a histogram of the carat variable in the diamonds dataset that is available when you load the tidyverse package. Experiment with different binwidths. What binwidth reveals the most interesting patterns?
+view(diamonds
+     )
+
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 20)
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 2)
+
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 0.5)
+
+
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 0.01)
+
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 0.1)
+
+
+# When experimenting with different binwidths, a binwidth around 0.01 reveals the most interesting patterns. It clearly shows distinct spikes at popular carat values (such as 0.5, 1.0, and 1.5 carats), which are hidden when the binwidth is too large. Larger binwidths smooth out these details, while very small binwidths can make the plot too noisy.
   
