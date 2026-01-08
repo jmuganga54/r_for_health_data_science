@@ -412,4 +412,98 @@ ggplot(diamonds, aes(x = carat)) +
 
 
 # When experimenting with different binwidths, a binwidth around 0.01 reveals the most interesting patterns. It clearly shows distinct spikes at popular carat values (such as 0.5, 1.0, and 1.5 carats), which are hidden when the binwidth is too large. Larger binwidths smooth out these details, while very small binwidths can make the plot too noisy.
+
+
+
+# 1.5.1 A numerical and a categorical variable
+# To visualize the relationship between a numerical and a categorical variable we can use side-by-side box plots. A boxplot is a type of visual shorthand for measures of position (percentiles) that describe a distribution. It is also useful for identifying potential outliers.
+
+
+# A box that indicates the range of the middle half of the data, a distance known as the interquartile range (IQR), stretching from the 25th percentile of the distribution to the 75th percentile. In the middle of the box is a line that displays the median, i.e. 50th percentile, of the distribution. These three lines give you a sense of the spread of the distribution and whether or not the distribution is symmetric about the median or skewed to one side.
+# 
+# Visual points that display observations that fall more than 1.5 times the IQR from either edge of the box. These outlying points are unusual so are plotted individually.
+# 
+# A line (or whisker) that extends from each end of the box and goes to the farthest non-outlier point in the distribution.
+
+
+# Let’s take a look at the distribution of body mass by species using geom_boxplot():
+
+
+ggplot(penguins, aes(x = species, y = body_mass_g)) + 
+  geom_boxplot()
+
+
+# Alternatively, we can make density plots with geom_density().
+
+ggplot(penguins, aes( x = body_mass_g, color = species)) + 
+  geom_density(linewidth = 0.75)
+
+
+# We’ve also customized the thickness of the lines using the linewidth argument in order to make them stand out a bit more against the background.
+# 
+# Additionally, we can map species to both color and fill aesthetics and use the alpha aesthetic to add transparency to the filled density curves. This aesthetic takes values between 0 (completely transparent) and 1 (completely opaque). In the following plot it’s set to 0.5.
+
+
+ggplot(penguins, aes(x = body_mass_g, color = species, fill = species)) +
+  geom_density(alpha = 0.5)
+
+
+ggplot(penguins, aes( x = body_mass_g, color = species, fill= species)) + 
+  geom_density(linewidth = 0.75, alpha = 0.5)
+
+
+# 1.5.2 Two categorical variables
+
+
+# We can use stacked bar plots to visualize the relationship between two categorical variables. For example, the following two stacked bar plots both display the relationship between island and species, or specifically, visualizing the distribution of species within each island.
+# 
+# The first plot shows the frequencies of each species of penguins on each island. The plot of frequencies shows that there are equal numbers of Adelies on each island. But we don’t have a good sense of the percentage balance within each island.
+
+ggplot(penguins, aes(x = island, fill = species)) + 
+  geom_bar()
+
+
+# The second plot, a relative frequency plot created by setting position = "fill" in the geom, is more useful for comparing species distributions across islands since it’s not affected by the unequal numbers of penguins across the islands. Using this plot we can see that Gentoo penguins all live on Biscoe island and make up roughly 75% of the penguins on that island, Chinstrap all live on Dream island and make up roughly 50% of the penguins on that island, and Adelie live on all three islands and make up all of the penguins on Torgersen.
+
+ggplot(penguins, aes(x = island, fill = species)) + 
+  geom_bar(position = "fill")
+
+
+# In creating these bar charts, we map the variable that will be separated into bars to the x aesthetic, and the variable that will change the colors inside the bars to the fill aesthetic. Unfortunately, ggplot2 labels the y-axis "count" by default, but this is something we can override by adding a labs() layer where we specify the y-axis label as "proportion".
+
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar(position = "fill") + 
+  labs(y = "proportion")
+
+
+# 1.5.3 Two numerical variables
+
+# So far you’ve learned about scatterplots (created with geom_point()) and smooth curves (created with geom_smooth()) for visualizing the relationship between two numerical variables. A scatterplot is probably the most commonly used plot for visualizing the relationship between two numerical variables.
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point() 
+  
+
+# 1.5.4 Three or more variables
+
+# As we saw in Section 1.2.4, we can incorporate more variables into a plot by mapping them to additional aesthetics. For example, in the following scatterplot the colors of points represent species and the shapes of points represent islands.
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point(aes(color = species, shape = island))
+
+
+# However adding too many aesthetic mappings to a plot makes it cluttered and difficult to make sense of. Another way, which is particularly useful for categorical variables, is to split your plot into facets, subplots that each display one subset of the data.
+# 
+# To facet your plot by a single variable, use facet_wrap(). The first argument of facet_wrap() is a formula3, which you create with ~ followed by a variable name. The variable that you pass to facet_wrap() should be categorical.
+
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point(aes(color = species, shape = island)) + 
+  facet_wrap(~island)
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point(aes(color = species)) + 
+  geom_smooth(method = "lm") +
+  facet_wrap(~species)
+
   
