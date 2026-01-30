@@ -506,4 +506,197 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
   geom_smooth(method = "lm") +
   facet_wrap(~species)
 
+
+# 1.5.5 Exercises
+
+# 1. The mpg data frame that is bundled with the ggplot2 package contains 234 observations collected by the US Environmental Protection Agency on 38 car models. Which variables in mpg are categorical? Which variables are numerical? (Hint: Type ?mpg to read the documentation for the dataset.) How can you see this information when you run mpg?
+
+?mpg
+str(mpg)
+
+# Answer
+# Categorical variables
+# 
+# These describe categories or groups:
+#   
+#   manufacturer
+# 
+# model
+# 
+# trans (type of transmission)
+# 
+# drv (drive type)
+# 
+# fl (fuel type)
+# 
+# class (vehicle class)
+# 
+# year (treated as categorical in context, even though it is numeric)
+# 
+# Numerical variables
+# 
+# These are measured quantities:
+#   
+#   displ (engine displacement)
+# 
+# cyl (number of cylinders)
+# 
+# cty (city miles per gallon)
+# 
+# hwy (highway miles per gallon)
+
+
+# 2. Make a scatterplot of hwy vs. displ using the mpg data frame. Next, map a third, numerical variable to color, then size, then both color and size, then shape. How do these aesthetics behave differently for categorical vs. numerical variables?
+
+# Scatterplot of hwy vs displ
+ggplot(mpg, aes(x = hwy, y = displ)) + 
+  geom_point()
+
+# Map a numerical variable (cty) to different aesthetics
+ggplot(mpg, aes(hwy, displ, colour = cty)) + 
+  geom_point()
+
+# Size
+ggplot(mpg, aes(hwy, displ, size = cty)) + 
+  geom_point()
+
+# Both color and size
+ggplot(mpg, aes(hwy, displ, size = cty, colour = cty)) + 
+  geom_point()
+
+# Shape
+ggplot(mpg, aes(hwy, displ, shape = manufacturer)) + 
+  geom_point()
+
+
+# How do these aesthetics behave differently?
+#   
+#   Color and size work well with numerical variables because they can show gradients and continuous changes. For example, higher cty values smoothly change colour or increase point size.
+# 
+# Shape does not work well for numerical variables. ggplot2 treats shape as a categorical aesthetic, so a numerical variable is forced into discrete groups, often producing warnings or unclear plots.
+# 
+# For categorical variables, shape and color are useful because each category gets a distinct symbol or colour.
+# 
+# For numerical variables, color and size are more informative, while shape is best avoided.
+# 
+# Key takeaway
+# 
+# Use color and size for numerical variables, and shape (and discrete color) for categorical variables.
+
+# 3. In the scatterplot of hwy vs. displ, what happens if you map a third variable to linewidth?
+
+ggplot(mpg, aes(hwy, displ))+
+  geom_point()
+
+
+# If you map a third variable to linewidth in a scatterplot of hwy vs displ, nothing useful happens.
+# 
+# This is because linewidth controls the thickness of lines, not points. Since geom_point() draws points (not lines), mapping a variable to linewidth has no visible effect on the plot and may produce a warning.
+# 
+# In practice, linewidth is meaningful for geoms like geom_line() or geom_smooth(), but not for scatterplots made with geom_point().
+
+
+# 4. What happens if you map the same variable to multiple aesthetics?
+
+# If you map the same variable to multiple aesthetics, ggplot2 uses that variable to control all of those visual properties at the same time. For example, mapping one variable to both colour and size means that changes in the data are shown using both colour and point size, reinforcing the same pattern in two ways. This can make trends more noticeable, but it can also make the plot harder to read or visually cluttered if overused.
+
+
+# 5. Make a scatterplot of bill_depth_mm vs. bill_length_mm and color the points by species. What does adding coloring by species reveal about the relationship between these two variables? What about faceting by species?
+
+ggplot(penguins, aes(bill_depth_mm,bill_length_mm)) +
+  geom_point()
+
+ggplot(penguins, aes(bill_depth_mm,bill_length_mm, colour = species)) +
+  geom_point()
+
+# Coloring the points by species reveals that the overall relationship between bill length and bill depth is actually made up of distinct clusters, with each species occupying a different region of the plot. This shows that species is an important factor explaining the relationship, which is hidden when all penguins are shown in one colour.
+
+
+# 6. Why does the following yield two separate legends? How would you fix it to combine the two legends?
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = bill_length_mm, y = bill_depth_mm, 
+    color = species, shape = species
+  )
+) +
+  geom_point() +
+  labs(color = "Species" )
+
+# Answer
+# This plot produces two separate legends because colour and shape are different aesthetics, and ggplot2 creates a separate legend for each aesthetic by default, even if they are mapped to the same variable (species). Since only the colour legend is relabelled with labs(color = "Species"), the shape legend keeps its own default title, so they appear as two legends.
+
+# To combine the two legends, you need to give both aesthetics the same legend title:
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = bill_length_mm, y = bill_depth_mm,
+    color = species, shape = species
+  )
+) +
+  geom_point() +
+  labs(color = "Species", shape = "Species")
+
+
+# 7. Create the two following stacked bar plots. Which question can you answer with the first one? Which question can you answer with the second one?
+
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar(position = "fill")
+
+
+ggplot(penguins, aes(x = species, fill = island)) +
+  geom_bar(position = "fill")
+
+
+# What question does each plot answer?
+#   
+#   First plot (x = island, fill = species):
+#   This plot answers the question: “For each island, what proportion of penguins belongs to each species?”
+# Each bar represents an island, and the colours show how the species are distributed within that island.
+# 
+# Second plot (x = species, fill = island):
+#   This plot answers the question: “For each species, what proportion of penguins comes from each island?”
+# Each bar represents a species, and the colours show how penguins of that species are distributed across islands.
+# 
+# Key difference
+# 
+# Both plots show proportions, but they answer different conditional questions depending on what variable is placed on the x axis.
+
+
+# 1.6 Saving your plots
+
+# Once you’ve made a plot, you might want to get it out of R by saving it as an image that you can use elsewhere. That’s the job of ggsave(), which will save the plot most recently created to disk:
+
+ggplot(penguins, aes(flipper_length_mm, body_mass_g, colour = species)) + 
+  geom_point() +
+  ggsave(filename = "./graphs/penguin-plot.png")
+
+# 1.6.1 Exercises
+
+# 1. Run the following lines of code. Which of the two plots is saved as mpg-plot.png? Why?
   
+ggplot(mpg, aes(x = class)) +
+  geom_bar()
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_point()
+ggsave("mpg-plot.png")
+
+# Only the last plot (the scatterplot of cty vs hwy) is saved.
+# 
+# This is because ggsave() always saves the most recently displayed plot by default. Even though you created a bar plot first, it is overwritten as the “last plot” when you run the scatterplot code, so ggsave("mpg-plot.png") saves the scatterplot, not the bar chart.
+# 
+# If you wanted to save a specific plot, you would need to assign it to an object and pass it to ggsave().
+
+# 2. What do you need to change in the code above to save the plot as a PDF instead of a PNG? How could you find out what types of image files would work in ggsave()?
+
+ggplot(mpg, aes(x = class)) +
+  geom_bar() +
+  ggsave(filename = "./graphs/class-bar.pdf")
+
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_point()+
+ ggsave("./graphs/mpg-plot.pdf")
+
+?ggplot()
