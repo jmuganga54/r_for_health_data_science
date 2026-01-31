@@ -25,7 +25,8 @@ flights |>
   group_by(year, month, day) |>
   summarize(
     arr_delay = mean(arr_delay, na.rm = TRUE)
-    )
+    ) |>
+  view()
   
 # 3.2 Rows
 
@@ -118,4 +119,43 @@ flights |>
 # You can use desc() on a column inside of arrange() to re-order the data frame based on that column in descending (big-to-small) order. For example, this code orders flights from most to least delayed:
 
 flights |>
-  arrange(desc(dep))
+  arrange(desc(dep_time)) |>
+  view()
+
+# 3.2.4 distinct()
+# distinct() finds all the unique rows in a dataset, so technically, it primarily operates on the rows. Most of the time, however, you’ll want the distinct combination of some variables, so you can also optionally supply column names:
+
+# Remove duplicate rows, if any
+flights |>
+  distinct() |>
+  view()
+
+
+# Find all unique origin and destination pairs
+flights |>
+  distinct(origin, dest) |>
+  view()
+
+flights |>
+  distinct(dest) |>
+  view()
+
+flights |>
+  distinct(year) |>
+  view()
+
+
+# Alternatively, if you want to keep the other columns when filtering for unique rows, you can use the .keep_all = TRUE option.
+
+flights |>
+  distinct(origin, dest, .keep_all = TRUE) |>
+  view()
+
+
+# If you want to find the number of occurrences instead, you’re better off swapping distinct() for count(). With the sort = TRUE argument, you can arrange them in descending order of the number of occurrences. You’ll learn more about count in
+
+flights |>
+  count(origin, dest, sort = TRUE)
+
+# 3.2.5 Exercises
+  
