@@ -158,4 +158,80 @@ flights |>
   count(origin, dest, sort = TRUE)
 
 # 3.2.5 Exercises
+
+# 1.In a single pipeline for each condition, find all flights that meet the condition:
+#   
+#   Had an arrival delay of two or more hours
+#   Flew to Houston (IAH or HOU)
+#   Were operated by United, American, or Delta
+#   Departed in summer (July, August, and September)
+#   Arrived more than two hours late but didn’t leave late
+#   Were delayed by at least an hour, but made up over 30 minutes in flight
+
+
+
+  # 1) Had an arrival delay of two or more hours
+  flights |>
+    filter(arr_delay >= 120)
   
+  # 2) Flew to Houston (IAH or HOU)
+  flights |>
+    filter(dest %in% c("IAH", "HOU"))
+  
+  # 3) Were operated by United, American, or Delta
+  flights |>
+    filter(carrier %in% c("UA", "AA", "DL"))
+  
+  # 4) Departed in summer (July, August, and September)
+  flights |>
+    filter(month %in% 7:9)
+  
+  # 5) Arrived more than two hours late but did not leave late
+  flights |>
+    filter(arr_delay > 120, dep_delay <= 0)
+  
+  # 6) Were delayed by at least an hour, but made up over 30 minutes in flight
+  # (Departure delay is at least 60, and arrival delay is more than 30 minutes less than departure delay)
+  flights |>
+    filter(dep_delay >= 60, (dep_delay - arr_delay) > 30)
+
+# 2. Sort flights to find the flights with the longest departure delays. Find the flights that left earliest in the morning.
+  
+# Flights with the longest departure delays
+  
+flights |>
+  filter(!is.na(dep_delay)) |>
+  arrange(desc(dep_delay)) |>
+  view()
+
+# If you only want the top 10:
+
+flights |>
+  filter(!is.na(dep_delay)) |>
+  arrange(desc(dep_delay)) |>
+  slice_head(n = 10) |>
+  view()
+
+# Flights that left earliest in the morning
+
+# The actual departure time is in dep_time (HHMM). We sort ascending.
+
+flights |>
+  filter(!is.na(dep_time)) |>
+  arrange(dep_time) |>
+  view()
+
+# If you mean “early morning” as, for example, before 6:00 AM:
+
+flights |>
+  filter(!is.na(dep_time), dep_time < 600) |>
+  view()
+  
+# Top 10 earliest:
+
+flights |>
+  filter(!is.na(dep_time)) |>
+  arrange(dep_time) |>
+  slice_head(n = 10) |>
+  view()
+
