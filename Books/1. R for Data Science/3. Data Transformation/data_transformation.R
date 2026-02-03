@@ -235,3 +235,40 @@ flights |>
   slice_head(n = 10) |>
   view()
 
+# 3. Sort flights to find the fastest flights. (Hint: Try including a math calculation inside of your function.)
+
+
+flights |>
+  filter(!is.na(air_time), air_time > 0, !is.na(distance)) |>
+  mutate(speed_mph = (distance/ air_time) * 60) |>
+  arrange(desc(speed_mph)) |>
+  select(year, month, day, carrier, flight, tailnum, origin, dest,
+         distance, air_time, speed_mph) |>
+  slice_head(n = 10) |>
+  view()
+  
+# 4. Was there a flight on every day of 2013?
+
+# You can check this by counting flights per day and then seeing whether any day has zero flights.
+# 
+# Here is a clear and simple way to do it using nycflights13:
+
+flights |>
+  count(year,month, day, sort = TRUE) |>
+  filter(n == 0) |>
+  view()
+
+# If this returns no rows, it means there was at least one flight on every day of 2013.
+
+# Alternative
+flights |>
+  count(year, month, day) |>
+  summarise(min_flights  = min()) |>
+  view()
+
+# If min_flights is greater than 0 → yes, there was a flight every day.
+# 
+# If min_flights is 0 → no, at least one day had no flights.  
+  
+  
+  
