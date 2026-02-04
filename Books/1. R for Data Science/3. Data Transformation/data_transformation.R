@@ -269,6 +269,40 @@ flights |>
 # If min_flights is greater than 0 → yes, there was a flight every day.
 # 
 # If min_flights is 0 → no, at least one day had no flights.  
+
+# 5. Which flights traveled the farthest distance? Which traveled the least distance?
+
+# You can answer this by finding the maximum and minimum values of the distance variable in the flights dataset.
   
-  
+# Flights that traveled the farthest distance
+flights |>
+  filter(distance == max(distance, na.rm = TRUE)) |>
+  select(year, month, day, carrier, flight, origin, dest, distance) |>
+  view()
+
+# Flights that traveled the least distance
+flights |>
+  filter(distance == min(distance, na.rm = TRUE)) |>
+  select(year, month, day, carrier, flight, origin, dest, distance) |>
+  view()
+
+# Does it matter what order you used filter() and arrange() if you’re using both? Why/why not? Think about the results and how much work the functions would have to do.
+
+
+# For the final results, it usually does not matter whether you use filter() before arrange(). You will end up with the same rows in the same order as long as you arrange on the same variables.
+# 
+# However, it does matter for efficiency.
+# 
+# If you use filter() first, you reduce the number of rows early, so arrange() has less data to sort.
+# 
+# If you use arrange() first, R sorts the entire dataset, including rows that will later be discarded by filter(), which is unnecessary work.
+# 
+# So while the output is the same, the better practice is to filter first, then arrange, because it is faster and more efficient, especially for large datasets.
+
+# 3.3 Columns
+
+# There are four important verbs that affect the columns without changing the rows: mutate() creates new columns that are derived from the existing columns, select() changes which columns are present, rename() changes the names of the columns, and relocate() changes the positions of the columns.
+
+
+
   
